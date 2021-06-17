@@ -13,15 +13,30 @@ const navigation: INavigationItem[] = [
     path: "/dashboard",
   },
   {
-    name: "Team",
-    icon: UsersIcon,
-    path: "/team",
-    children: [{ name: "SubTeam", icon: UsersIcon, path: "/subteam" }],
+    name: "Patient",
+    icon: HomeIcon,
+    path: "/patient",
   },
   {
-    name: "Projects",
+    name: "Lab",
+    icon: UsersIcon,
+    path: "/lab",
+    children: [{ name: "Invoice", icon: UsersIcon, path: "/labinvoice" }],
+  },
+  {
+    name: "Doctors",
     icon: FolderIcon,
-    path: "/projects",
+    path: "/doctor",
+  },
+  {
+    name: "Appointments",
+    icon: FolderIcon,
+    path: "/appointments",
+  },
+  {
+    name: "Pharmacy",
+    icon: FolderIcon,
+    path: "/pharmacy",
   },
 ]
 
