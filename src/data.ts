@@ -1,36 +1,41 @@
 import {
   FolderIcon,
   HomeIcon,
+  NewspaperIcon,
+  OfficeBuildingIcon,
   ScaleIcon,
+  UserAddIcon,
+  UserIcon,
   UsersIcon,
+  CalendarIcon
 } from "@heroicons/react/outline"
 import { INavigationItem } from "./types/INavigationItem"
 
 const navigation: INavigationItem[] = [
   {
     name: "Dashboard",
-    icon: HomeIcon,
+    icon: OfficeBuildingIcon,
     path: "/dashboard",
   },
   {
     name: "Patient",
-    icon: HomeIcon,
+    icon: UserIcon,
     path: "/patient",
   },
   {
     name: "Lab",
-    icon: UsersIcon,
+    icon: NewspaperIcon,
     path: "/lab",
     children: [{ name: "Invoice", icon: UsersIcon, path: "/labinvoice" }],
   },
   {
     name: "Doctors",
-    icon: FolderIcon,
+    icon: UserAddIcon,
     path: "/doctor",
   },
   {
     name: "Appointments",
-    icon: FolderIcon,
+    icon: CalendarIcon,
     path: "/appointments",
   },
   {
