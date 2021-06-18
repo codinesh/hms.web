@@ -1,16 +1,19 @@
-import React, { Fragment, useState } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { BellIcon, MenuAlt2Icon } from "@heroicons/react/outline";
-import { SearchIcon } from "@heroicons/react/solid";
-import Sidebar from "./Sidebar";
-import { classNames } from "../helpers/csshelpers";
-import { INavigationItem } from "../types/INavigationItem";
-import { data } from "../data";
-import Page from "./Page";
-import Image from "next/image";
+import React, { Fragment, useEffect, useState } from 'react';
+import { Menu, Transition } from '@headlessui/react';
+import { BellIcon, MenuAlt2Icon } from '@heroicons/react/outline';
+import { SearchIcon } from '@heroicons/react/solid';
+import Sidebar from './Sidebar';
+import { classNames } from '../helpers/csshelpers';
+import { INavigationItem } from '../types/INavigationItem';
+import { data } from '../data';
+import Page from './Page';
+import Image from 'next/image';
+import { GlobalStateAction, useGlobalDispatch } from '../store/GlobalStore';
 
 const Layout: React.FC = (props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const globalDispatch = useGlobalDispatch();
 
   return (
     <div className='flex h-screen overflow-hidden bg-gray-100'>
@@ -25,7 +28,16 @@ const Layout: React.FC = (props) => {
           </button>
           <div className='flex justify-between flex-1 px-4'>
             <div className='flex flex-1'>
-              <form className='flex w-full md:ml-0' action='#' method='GET'>
+              <form
+                className='flex w-full md:ml-0'
+                method='GET'
+                onSubmit={(e) => {
+                  globalDispatch({
+                    type: GlobalStateAction.SetSearchQuery,
+                    searchQuery: query,
+                  });
+                  e.preventDefault();
+                }}>
                 <label htmlFor='search_field' className='sr-only'>
                   Search
                 </label>
@@ -34,6 +46,10 @@ const Layout: React.FC = (props) => {
                     <SearchIcon className='w-5 h-5' aria-hidden='true' />
                   </div>
                   <input
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                    }}
+                    value={query}
                     id='search_field'
                     className='block w-full h-full py-2 pl-8 pr-3 text-gray-900 placeholder-gray-500 border-transparent focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm'
                     placeholder='Search'
@@ -81,8 +97,8 @@ const Layout: React.FC = (props) => {
                               <a
                                 href={item.path}
                                 className={classNames(
-                                  active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm text-gray-700"
+                                  active ? 'bg-gray-100' : '',
+                                  'block px-4 py-2 text-sm text-gray-700'
                                 )}>
                                 {item.name}
                               </a>

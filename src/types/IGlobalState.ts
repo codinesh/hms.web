@@ -6,4 +6,5 @@ export interface IGlobalState {
   error: boolean
   errorMessage?: string
   pageTitle: string
+  searchQuery?: string
 }

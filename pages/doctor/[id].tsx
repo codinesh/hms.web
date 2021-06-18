@@ -1,5 +1,5 @@
 import React from 'react';
-import Patient from '../../src/models/Patient';
+import Doctor from '../../src/models/Doctor';
 import { PaperClipIcon } from '@heroicons/react/solid';
 import { GetStaticProps } from 'next';
 import constants from '../../src/const';
@@ -12,35 +12,35 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 
   const res = await fetch(
-    `${constants.baseApiUrl}${constants.patientByIdUrl}${context.params.id}`
+    `${constants.baseApiUrl}${constants.doctorByIdUrl}${context.params.id}`
   );
 
-  const patient: Patient = await res.json();
+  const doctor: Doctor = await res.json();
 
-  if (!patient) {
+  if (!doctor) {
     return {
       notFound: true,
     };
   }
 
   return {
-    props: { patient },
+    props: { doctor },
     revalidate: 5,
   };
 };
 
 export async function getStaticPaths() {
-  const res = await fetch(`${constants.baseApiUrl}${constants.patientUrl}`);
-  const patients: Patient[] = await res.json();
+  const res = await fetch(`${constants.baseApiUrl}${constants.doctorUrl}`);
+  const doctors: Doctor[] = await res.json();
 
-  if (!patients) {
+  if (!doctors) {
     return {
       notFound: true,
     };
   }
 
   return {
-    paths: patients.map((p) => ({
+    paths: doctors.map((p) => ({
       params: {
         id: p.id.toString(),
       },
@@ -49,14 +49,13 @@ export async function getStaticPaths() {
   };
 }
 
-const PatientDetail: React.FC<{ patient: Patient }> = (props) => {
-  const { patient } = props;
-  patient.healthConditions = ['first', 'second'];
+const DoctorDetail: React.FC<{ doctor: Doctor }> = (props) => {
+  const { doctor } = props;
   return (
     <div className='bg-white shadow overflow-hidden sm:rounded-lg'>
       <div className='px-4 py-5 sm:px-6'>
         <h3 className='text-lg leading-6 font-medium text-gray-900'>
-          Patient Details
+          Doctor Details
         </h3>
         <p className='mt-1 max-w-2xl text-sm text-gray-500'>
           Personal details and appointments.
@@ -67,7 +66,7 @@ const PatientDetail: React.FC<{ patient: Patient }> = (props) => {
           <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
             <dt className='text-sm font-medium text-gray-500'>Full name</dt>
             <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-              {patient.fullName}
+              {doctor.fullName}
             </dd>
           </div>
           <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
@@ -75,52 +74,34 @@ const PatientDetail: React.FC<{ patient: Patient }> = (props) => {
               Contact number
             </dt>
             <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-              {patient.contactNumber}
+              {doctor.contactNumber}
             </dd>
           </div>
           <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
             <dt className='text-sm font-medium text-gray-500'>Email address</dt>
             <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-              {patient.email}
+              {doctor.email}
             </dd>
           </div>
           <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
             <dt className='text-sm font-medium text-gray-500'>Age</dt>
             <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-              {patient.age}
+              {doctor.experience}
             </dd>
           </div>
           <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-            <dt className='text-sm font-medium text-gray-500'>
-              Medical history
-            </dt>
+            <dt className='text-sm font-medium text-gray-500'>Department</dt>
             <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-              {patient.medicalHistory}
+              {doctor.department.name}
             </dd>
           </div>
           <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-            <dt className='text-sm font-medium text-gray-500'>
-              Medical history
-            </dt>
+            <dt className='text-sm font-medium text-gray-500'>Qualification</dt>
             <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-              {patient.address}
+              {doctor.qualification}
             </dd>
           </div>
-          <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-            <dt className='text-sm font-medium text-gray-500'>
-              Health conditions
-            </dt>
-            <dd className='mt-1 text-sm flex gap-1 text-gray-900 sm:mt-0 sm:col-span-2'>
-              {patient.healthConditions &&
-                patient.healthConditions.map((x) => (
-                  <span
-                    key={x}
-                    className='hover:bg-red-200 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 text-opacity-75'>
-                    {x}
-                  </span>
-                ))}
-            </dd>
-          </div>
+
           <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
             <dt className='text-sm font-medium text-gray-500'>Attachments</dt>
             <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
@@ -170,4 +151,4 @@ const PatientDetail: React.FC<{ patient: Patient }> = (props) => {
   );
 };
 
-export default PatientDetail;
+export default DoctorDetail;

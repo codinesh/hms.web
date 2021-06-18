@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useReducer } from "react"
-import { IGlobalState } from "../types/IGlobalState"
-import IUser from "../types/IUser"
+import React, { createContext, useContext, useEffect, useReducer } from 'react';
+import { IGlobalState } from '../types/IGlobalState';
+import IUser from '../types/IUser';
 
 export enum GlobalStateAction {
   Busy,
@@ -9,6 +9,7 @@ export enum GlobalStateAction {
   LogIn,
   LogOut,
   SetPageTitle,
+  SetSearchQuery,
 }
 
 export type GlobalAction =
@@ -16,45 +17,48 @@ export type GlobalAction =
   | { type: GlobalStateAction.Idle }
   | { type: GlobalStateAction.Error; error: string }
   | { type: GlobalStateAction.SetPageTitle; title: string }
+  | { type: GlobalStateAction.SetSearchQuery; searchQuery: string }
   | { type: GlobalStateAction.LogIn; user: IUser }
-  | { type: GlobalStateAction.LogOut }
+  | { type: GlobalStateAction.LogOut };
 
 const initialState: IGlobalState = {
   busy: false,
   error: false,
-  pageTitle: "Home",
-}
+  pageTitle: '',
+};
 
-const globalStateContext = createContext<IGlobalState>(initialState)
+const globalStateContext = createContext<IGlobalState>(initialState);
 const globalDispatchContext = createContext<React.Dispatch<GlobalAction>>(
   () => {}
-)
+);
 
 const reducer = (state: IGlobalState, action: GlobalAction): IGlobalState => {
   switch (action.type) {
     case GlobalStateAction.Busy:
-      return { ...state, busy: true }
+      return { ...state, busy: true };
     case GlobalStateAction.Idle:
-      return { ...state, busy: false }
+      return { ...state, busy: false };
     case GlobalStateAction.Error:
-      return { ...state, error: true, errorMessage: action.error }
+      return { ...state, error: true, errorMessage: action.error };
     case GlobalStateAction.LogIn:
-      return { ...state, user: action.user }
+      return { ...state, user: action.user };
     case GlobalStateAction.LogOut:
-      return { ...state, user: undefined }
+      return { ...state, user: undefined };
     case GlobalStateAction.SetPageTitle:
-      return { ...state, pageTitle: action.title }
+      return { ...state, pageTitle: action.title };
+    case GlobalStateAction.SetSearchQuery:
+      return { ...state, searchQuery: action.searchQuery };
     default:
-      return state
+      return state;
   }
-}
+};
 
 const GlobalStateProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer<
     React.Reducer<IGlobalState, GlobalAction>
-  >(reducer, initialState)
+  >(reducer, initialState);
 
-  useEffect(() => {}, [])
+  useEffect(() => {}, []);
 
   return (
     <globalStateContext.Provider value={state}>
@@ -62,12 +66,10 @@ const GlobalStateProvider: React.FC = ({ children }) => {
         {children}
       </globalDispatchContext.Provider>
     </globalStateContext.Provider>
-  )
-}
+  );
+};
 
-const useGlobalState = () => useContext(globalStateContext)
-const useGlobalDispatch = () => useContext(globalDispatchContext)
-const setTitle = (title: string) =>
-  useGlobalDispatch()({ type: GlobalStateAction.SetPageTitle, title })
+const useGlobalState = () => useContext(globalStateContext);
+const useGlobalDispatch = () => useContext(globalDispatchContext);
 
-export { GlobalStateProvider, useGlobalState, useGlobalDispatch, setTitle }
+export { GlobalStateProvider, useGlobalState, useGlobalDispatch };

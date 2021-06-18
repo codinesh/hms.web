@@ -1,0 +1,34 @@
+import Gender from './Gender';
+
+export interface Department {
+  name: string;
+  id: number;
+  createdOn: Date;
+  updatedOn?: any;
+  deleted: boolean;
+}
+
+interface Doctor {
+  experience: number;
+  qualification: string;
+  departmentId: number;
+  payGradeId: number;
+  registrationNo: string;
+  department: Department;
+  payGrade?: any;
+  id: number;
+  fullName: string;
+  gender: Gender;
+  maritialStatus: string;
+  bloodGroup?: any;
+  contactNumber: string;
+  alternateContactNumber?: any;
+  email: string;
+  role: number;
+  age: number;
+  ageInMonths: number;
+  createdOn: Date;
+  updatedOn: Date;
+}
+
+export default Doctor

@@ -1,3 +1,5 @@
+import Gender from './Gender';
+
 export default interface Patient {
     patientCategory?: any;
     insuranceId: number;
@@ -9,7 +11,7 @@ export default interface Patient {
     diagnoses: any[];
     id: number;
     fullName: string;
-    gender: number;
+    gender: Gender;
     maritialStatus?: any;
     bloodGroup?: any;
     contactNumber: string;
