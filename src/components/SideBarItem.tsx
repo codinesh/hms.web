@@ -1,7 +1,6 @@
 import { Disclosure } from '@headlessui/react';
 import React from 'react';
 import Link from 'next/link';
-import { setTitle, useGlobalState } from '../store/GlobalStore';
 import { useRouter } from 'next/dist/client/router';
 import { classNames } from '../helpers/csshelpers';
 import { INavigationItem } from '../types/INavigationItem';
