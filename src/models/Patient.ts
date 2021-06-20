@@ -6,12 +6,12 @@ export default interface Patient {
     insuranceNumber: string;
     remarks?: any;
     address: string;
-    healthConditions: any[];
+    healthConditions: number[];
     medicalHistory: string;
     diagnoses: any[];
     id: number;
     fullName: string;
-    gender: Gender;
+    gender: number;
     maritialStatus?: any;
     bloodGroup?: any;
     contactNumber: string;

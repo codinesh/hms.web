@@ -16,12 +16,6 @@ const Page: React.FC = (props) => {
     let title =
       data.navigation.filter((x) => x.path == router.pathname)[0]?.name ?? '';
     globalDispatch({ type: GlobalStateAction.SetPageTitle, title });
-
-    router.beforePopState(({ url, as, options }) => {
-      console.log(url, as, options);
-
-      return true;
-    });
   }, [router.pathname]);
 
   return (

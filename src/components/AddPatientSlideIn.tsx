@@ -6,35 +6,42 @@ import React, {
   useState,
 } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { XIcon } from '@heroicons/react/outline';
-import { Field, Form, Formik, useFormik } from 'formik';
+import { HomeIcon, XIcon } from '@heroicons/react/outline';
+import { Field, FieldArray, Form, Formik, useFormik } from 'formik';
 
 import Patient from '../models/Patient';
 import Gender from '../models/Gender';
 import clsx from 'clsx';
+import enumKeys from '../helpers/enumUtils';
+import HealthConditions from '../models/HealthCondition';
 
 const AddPatientSlideIn: React.FC<{
   patient?: Patient;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  onClose: () => void;
+  onSubmit: (patient: Patient) => void;
 }> = (props) => {
   const { patient, open, setOpen } = props;
-  let isNew = false;
-  const initialPatientData: Patient = {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(true);
+  const [ageType, setAgeType] = useState(0);
+  let isEdit = patient != null ?? false;
+  const initialPatientData: Patient = patient ?? {
     address: '',
     age: 0,
     ageInMonths: 0,
-    contactNumber: '09870987',
+    contactNumber: '',
     createdOn: new Date(),
     diagnoses: [],
-    email: 'asfd@tea.com',
-    fullName: 'Dinesh Kumar',
-    gender: Gender.Female,
-    healthConditions: ['BP'],
+    email: '',
+    fullName: '',
+    gender: Gender.Male,
+    healthConditions: [],
     id: 0,
     insuranceId: 0,
-    insuranceNumber: 'INSNum',
-    medicalHistory: 'nothing major,',
+    insuranceNumber: '',
+    medicalHistory: '',
     role: 0,
     updatedOn: new Date(),
   };
@@ -46,7 +53,10 @@ const AddPatientSlideIn: React.FC<{
         static
         className='z-30 fixed inset-0 overflow-hidden'
         open={open}
-        onClose={setOpen}>
+        onClose={() => {
+          setLoading(false);
+          setOpen(false);
+        }}>
         <div className='absolute inset-0 overflow-hidden'>
           <Transition.Child
             as={Fragment}
@@ -68,21 +78,43 @@ const AddPatientSlideIn: React.FC<{
               leaveFrom='translate-x-0'
               leaveTo='translate-x-full'>
               <div className='w-screen max-w-2xl'>
-                  <Formik
-                    initialValues={{ ...initialPatientData }}
-                    onSubmit={(values, actions) => {
-                      console.log({ values, actions });
-                      console.log(JSON.stringify(values, null, 2));
-                      actions.setSubmitting(false);
-                    }}>
+                <Formik
+                  initialValues={initialPatientData}
+                  onSubmit={async (values, actions) => {
+                    setError(false);
+                    setLoading(true);
+                    actions.setSubmitting(false);
+                    try {
+                      setLoading(true);
+                      if (ageType == 1) {
+                        values.ageInMonths = values.age;
+                        values.age = 0;
+                      }
+
+                      values.gender = parseInt(values.gender.toString());
+
+                      await props.onSubmit(values);
+                      setOpen(false);
+                    } catch (error) {
+                      setError(true);
+                    }
+
+                    setLoading(false);
+                  }}
+                  render={({ values }) => (
                     <Form className='h-full flex flex-col bg-white shadow-xl overflow-y-scroll'>
                       <div className='flex-1'>
-                        {/* Header */}
-                        <div className='px-4 py-6 bg-gray-100 sm:px-6'>
+                        <Field
+                          type='hidden'
+                          name='id'
+                          id='id'
+                          className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                        />
+                        <div className='py-6 bg-gray-100 sm:px-6'>
                           <div className='flex items-start justify-between space-x-3'>
                             <div className='space-y-1'>
                               <Dialog.Title className='text-lg font-medium text-gray-900'>
-                                Add patient
+                                {isEdit ? 'Edit patient' : 'Add patient'}
                               </Dialog.Title>
                             </div>
                             <div className='h-7 flex items-center'>
@@ -96,8 +128,6 @@ const AddPatientSlideIn: React.FC<{
                             </div>
                           </div>
                         </div>
-
-                        {/* Divider container */}
                         <div className='py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200'>
                           {/* Project name */}
                           <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
@@ -157,7 +187,7 @@ const AddPatientSlideIn: React.FC<{
                           <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
                             <div>
                               <label
-                                htmlFor='project_name'
+                                htmlFor='gender'
                                 className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
                                 Gender
                               </label>
@@ -167,12 +197,49 @@ const AddPatientSlideIn: React.FC<{
                                 as='select'
                                 id='gender'
                                 name='gender'
-                                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'
-                                defaultValue='Canada'>
-                                <option value='Male'>Male</option>
-                                <option value='Female'>Female</option>
-                                <option value='Other'>Other</option>
+                                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'>
+                                {enumKeys(Gender).map((a) => (
+                                  <option value={Gender[a]}>{a}</option>
+                                ))}
                               </Field>
+                            </div>
+                          </div>
+
+                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                            <div>
+                              <label
+                                htmlFor='age'
+                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                Age
+                              </label>
+                            </div>
+                            <div className='sm:col-span-2'>
+                              <div className='relative rounded-md shadow-sm'>
+                                <Field
+                                  type='text'
+                                  name='age'
+                                  id='age'
+                                  className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-gray-300 rounded-md'
+                                  placeholder='age'
+                                />
+                                <div className='absolute inset-y-0 right-0 flex items-center'>
+                                  <label
+                                    htmlFor='insuranceId'
+                                    className='sr-only'>
+                                    AgeType
+                                  </label>
+                                  <Field
+                                    as='select'
+                                    onChange={(e: any) => {
+                                      setAgeType(e.target.value);
+                                    }}
+                                    value={ageType}
+                                    className='focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md'>
+                                    <option value={0}>Years</option>
+                                    <option value={1}>Months</option>
+                                  </Field>
+                                </div>
+                              </div>
                             </div>
                           </div>
 
@@ -234,6 +301,26 @@ const AddPatientSlideIn: React.FC<{
                             </div>
                           </div>
 
+                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                            <div>
+                              <label
+                                htmlFor='medicalHistory'
+                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                Address
+                              </label>
+                            </div>
+                            <div className='sm:col-span-2'>
+                              <Field
+                                as='textarea'
+                                type='textarea'
+                                id='address'
+                                name='address'
+                                rows={3}
+                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md'
+                              />
+                            </div>
+                          </div>
+
                           {/* Team members */}
                           <div className='space-y-2 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:px-6 sm:py-5'>
                             <div>
@@ -243,54 +330,41 @@ const AddPatientSlideIn: React.FC<{
                             </div>
                             <div className='sm:col-span-2'>
                               <div className='flex space-x-2'>
-                                {[
-                                  'BP',
-                                  'Sugar',
-                                  'Fertility',
-                                  'Heart',
-                                  'Others',
-                                ].map((hc) => (
-                                  <span
-                                    onClick={() => {
-                                      if (
-                                        patientState.healthConditions.some(
-                                          (p) => p == hc
-                                        )
-                                      ) {
-                                        setPatientState({
-                                          ...patientState,
-                                          healthConditions: [
-                                            patientState.healthConditions.filter(
-                                              (f) => f !== hc
-                                            ),
-                                          ],
-                                        });
-                                      } else {
-                                        setPatientState({
-                                          ...patientState,
-                                          healthConditions: [
-                                            ...patientState.healthConditions,
-                                            hc,
-                                          ],
-                                        });
-                                      }
-                                    }}
-                                    className={clsx(
-                                      'inline-flex cursor-pointer items-center px-3 py-0.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800',
-                                      patientState.healthConditions.some(
-                                        (x) => x == hc
-                                      ) && 'bg-red-200'
-                                    )}>
-                                    {hc}
-                                  </span>
-                                ))}
+                                <FieldArray
+                                  name='healthConditions'
+                                  render={(arrhelpers) =>
+                                    enumKeys(HealthConditions).map((hc) => (
+                                      <span
+                                        onClick={() => {
+                                          let item =
+                                            values.healthConditions.indexOf(
+                                              HealthConditions[hc]
+                                            );
+
+                                          if (item >= 0) {
+                                            arrhelpers.remove(item);
+                                          } else
+                                            arrhelpers.push(
+                                              HealthConditions[hc]
+                                            );
+                                        }}
+                                        className={clsx(
+                                          'inline-flex cursor-pointer items-center px-3 py-0.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800',
+                                          values.healthConditions.some(
+                                            (x) => x == HealthConditions[hc]
+                                          ) && 'bg-red-200'
+                                        )}>
+                                        {hc}
+                                      </span>
+                                    ))
+                                  }
+                                />
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Action buttons */}
                       <div className='flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6'>
                         <div className='space-x-3 flex justify-end'>
                           <button
@@ -301,14 +375,34 @@ const AddPatientSlideIn: React.FC<{
                           </button>
                           <button
                             type='submit'
-                            className='inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                            Create
+                            disabled={loading}
+                            className='text-center inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                            {loading && (
+                              <svg
+                                className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
+                                xmlns='http://www.w3.org/2000/svg'
+                                fill='none'
+                                viewBox='0 0 24 24'>
+                                <circle
+                                  className='opacity-25'
+                                  cx='12'
+                                  cy='12'
+                                  r='10'
+                                  stroke='currentColor'
+                                  stroke-width='4'></circle>
+                                <path
+                                  className='opacity-75'
+                                  fill='currentColor'
+                                  d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                              </svg>
+                            )}
+                            {isEdit ? 'Update' : 'Create'}
                           </button>
                         </div>
                       </div>
                     </Form>
-                  </Formik>
-                )}
+                  )}
+                />
               </div>
             </Transition.Child>
           </div>

@@ -2,6 +2,9 @@
     baseApiUrl = "http://localhost:5050/api/"
     // patient endpoints
     patientUrl = "patient/all"
+    patientSearchUrl = "patient?searchFilter="
+    addPatientUrl = "patient/add"
+    editPatientUrl = "patient/edit"
     patientByIdUrl = "patient/byid?patientId="
 
     // doctor endpoints
