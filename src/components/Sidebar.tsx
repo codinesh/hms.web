@@ -125,7 +125,7 @@ const Sidebar: React.FC<{
                     </div>
                     <div className='ml-3'>
                       <p className='text-base font-medium text-white'>
-                        Tom Cook
+                        User name
                       </p>
                       <p className='text-sm font-medium text-gray-400 group-hover:text-gray-300'>
                         Sign out

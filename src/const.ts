@@ -15,7 +15,7 @@
 
     stockUrl = "pharmacy/stock"
     stockSearchUrl = "pharmacy/availabilitybyname?medicineName="
-    expiringStockUrl = "pharmacy/expiringstock?startDate="
+    expiringStockUrl = "pharmacy/expiringstock?"
     addStockUrl = "pharmacy/addStock"
     updateStockUrl = "pharmacy/editStock"
 }

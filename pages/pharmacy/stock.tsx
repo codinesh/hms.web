@@ -1,3 +1,4 @@
+import { Switch } from '@headlessui/react';
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -6,7 +7,7 @@ import {
 import clsx from 'clsx';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/dist/client/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ApiHelper from '../../src/ApiHelper';
 import AddStockSlideIn from '../../src/components/AddStockSlideIn';
 import SearchBox from '../../src/components/SearchBox';
@@ -36,6 +37,7 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
   const [filteredStocks, setFilteredStocks] = useState([...stocks]);
   const router = useRouter();
   const [loading, setloading] = useState(false);
+  const [isExpiringStock, setIsExpiringStock] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Stock>();
 
@@ -67,6 +69,26 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
       setFilteredStocks(results);
     }
   };
+  useEffect(() => {
+    console.log('useEffect');
+
+    if (isExpiringStock) {
+      console.log('expiring');
+      fetchExpiringStock();
+    } else {
+      console.log('not expiring');
+
+      setFilteredStocks([...stocks]);
+    }
+  }, [isExpiringStock]);
+
+  const fetchExpiringStock = async () => {
+    let results = await ApiHelper.getItem<Stock[]>(
+      `${constants.expiringStockUrl}`
+    );
+
+    setFilteredStocks(results);
+  };
 
   const closeSlideIn = (isOpen: boolean) => {
     setOpen(isOpen);
@@ -76,12 +98,40 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
   return (
     <div className='flex flex-col gap-2'>
       <div className='flex justify-between items-center'>
-        <SearchBox
-          className=''
-          placeholderText='search stocks'
-          onSearch={search}
-          onClear={() => {}}
-        />
+        <div className='flex gap-2 items-center'>
+          <SearchBox
+            className=''
+            placeholderText='search stocks'
+            onSearch={search}
+            onClear={() => {}}
+          />
+
+          <div className='flex pl-6 items-start'>
+            <div className='flex items-center h-5'>
+              <input
+                id='expiringStock'
+                name='expiringStock'
+                checked={isExpiringStock}
+                onChange={(e) => {
+                  console.log('useEffect outside');
+
+                  setIsExpiringStock((val) => {
+                    return !val;
+                  });
+                }}
+                type='checkbox'
+                className='focus:ring-indigo-500 h-6 w-6  text-indigo-600 border-gray-300 rounded-md'
+              />
+            </div>
+            <div className='ml-1 text-sm'>
+              <label
+                htmlFor='expiringStock'
+                className='font-medium text-gray-700'>
+                Show expiring stock?
+              </label>
+            </div>
+          </div>
+        </div>
 
         <AddStockSlideIn
           onSubmit={addStock}
