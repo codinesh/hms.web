@@ -7,7 +7,14 @@ import React, {
 } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { HomeIcon, XIcon } from '@heroicons/react/outline';
-import { Field, FieldArray, Form, Formik, useFormik } from 'formik';
+import {
+  Field,
+  FieldArray,
+  FieldAttributes,
+  Form,
+  Formik,
+  useFormik,
+} from 'formik';
 import Gender from '../models/Gender';
 import clsx from 'clsx';
 import enumKeys from '../helpers/enumUtils';
@@ -26,6 +33,10 @@ const AddStockSlideIn: React.FC<{
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(true);
   let isEdit = stock != null ?? false;
+  let curDate = new Date();
+  let defaultExpiry = new Date();
+  defaultExpiry.setUTCFullYear(curDate.getFullYear() + 1);
+
   const initialStockData: Stock = stock ?? {
     id: 0,
     itemName: '',
@@ -35,7 +46,7 @@ const AddStockSlideIn: React.FC<{
     schedule: '',
     manufacturer: '',
     batchNo: '',
-    expiryDate: new Date(),
+    expiryDate: defaultExpiry,
     totalQuantityAvailable: 0,
     quantityPerStrip: 0,
     mrpPerStrip: 0,
@@ -413,6 +424,31 @@ const AddStockSlideIn: React.FC<{
                                       </label>
                                     </div>
                                   </div>
+                                </div>
+                              </div>
+
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='expiryDate'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Free strips
+                                  </label>
+                                </div>
+                                <div className='sm:col-span-2'>
+                                  <Field
+                                    value={
+                                      typeof values.expiryDate == 'string'
+                                        ? values.expiryDate
+                                        : values.expiryDate
+                                            .toISOString()
+                                            .split('T')[0]
+                                    }
+                                    type='date'
+                                    name='expiryDate'
+                                    id='expiryDate'
+                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  />
                                 </div>
                               </div>
 

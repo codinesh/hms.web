@@ -33,7 +33,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 const StockList: React.FC<PageProps<Stock[]>> = (props) => {
-  const { pageContent: stocks } = props;
+  const stocks = props.pageContent.map((x) => ({
+    ...x,
+    expiryDate: new Date(x.expiryDate),
+  }));
   const [filteredStocks, setFilteredStocks] = useState([...stocks]);
   const router = useRouter();
   const [loading, setloading] = useState(false);
@@ -247,7 +250,7 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
                       {stock.mrpPerStrip}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {stock.expiryDate ?? ''}
+                      {stock.expiryDate?.toLocaleDateString() ?? ''}
                     </td>
                   </tr>
                 ))}
