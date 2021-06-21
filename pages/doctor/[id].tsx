@@ -44,7 +44,7 @@ export async function getStaticPaths() {
           id: p.id.toString(),
         },
       })),
-      fallback: false,
+      fallback: true,
     };
   } catch (error) {
     console.error(error);

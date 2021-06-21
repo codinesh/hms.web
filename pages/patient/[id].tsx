@@ -49,7 +49,7 @@ export async function getStaticPaths() {
         id: p.id.toString(),
       },
     })),
-    fallback: false,
+    fallback: true,
   };
 }
 
