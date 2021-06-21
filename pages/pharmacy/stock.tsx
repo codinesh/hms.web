@@ -8,8 +8,10 @@ import { GetStaticProps } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import React, { useState } from 'react';
 import ApiHelper from '../../src/ApiHelper';
+import AddStockSlideIn from '../../src/components/AddStockSlideIn';
 import SearchBox from '../../src/components/SearchBox';
 import constants from '../../src/const';
+import AddStockModel from '../../src/models/AddStockModel';
 import { Stock } from '../../src/models/Stock';
 import { PageProps } from '../../src/types/PageProps';
 
@@ -37,11 +39,13 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
   const [loading, setloading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const addStock = async (stock: Stock) => {
-    console.log();
-    await ApiHelper.postItem<Stock, number>(constants.addStockUrl, stock);
+  const addStock = async (stock: AddStockModel) => {
+    await ApiHelper.postItem<AddStockModel, number>(
+      constants.addStockUrl,
+      stock
+    );
 
-    refreshData();
+    // refreshData();
   };
 
   const refreshData = () => {
@@ -69,6 +73,13 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
           placeholderText='search stocks'
           onSearch={search}
           onClear={() => {}}
+        />
+
+        <AddStockSlideIn
+          onSubmit={addStock}
+          onClose={() => {}}
+          open={open}
+          setOpen={setOpen}
         />
 
         <button
