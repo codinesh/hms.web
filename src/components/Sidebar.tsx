@@ -1,8 +1,8 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
-import React, { Dispatch, Fragment, SetStateAction } from "react";
-import { data } from "../data";
-import SidebarItem from "./SideBarItem";
+import { Dialog, Transition } from '@headlessui/react';
+import { UserCircleIcon, XIcon } from '@heroicons/react/outline';
+import React, { Dispatch, Fragment, SetStateAction } from 'react';
+import { data } from '../data';
+import SidebarItem from './SideBarItem';
 
 const Sidebar: React.FC<{
   sidebarOpen: boolean;
@@ -61,7 +61,7 @@ const Sidebar: React.FC<{
                   alt='Workflow'
                 />
               </div>
-              <div className='flex-1 h-0 mt-5 overflow-y-auto'>
+              <div className='flex flex-col flex-1 h-0 mt-5 overflow-y-auto'>
                 <nav className='px-2 space-y-1'>
                   {data.navigation.map((item) => (
                     <Transition.Child
@@ -76,6 +76,24 @@ const Sidebar: React.FC<{
                     </Transition.Child>
                   ))}
                 </nav>
+
+                <div className='flex-shrink-0 flex bg-gray-700 p-4'>
+                  <a href='#' className='flex-shrink-0 group block'>
+                    <div className='flex items-center'>
+                      <div>
+                        <UserCircleIcon className='w-8 h-8 text-gray-300' />
+                      </div>
+                      <div className='ml-3'>
+                        <p className='text-base font-medium text-white'>
+                          User name
+                        </p>
+                        <p className='text-sm font-medium text-gray-400 group-hover:text-gray-300'>
+                          Sign out
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
           </Transition.Child>
@@ -99,6 +117,23 @@ const Sidebar: React.FC<{
                   <SidebarItem key={item.name} item={item} />
                 ))}
               </nav>
+              <div className='flex-shrink-0 px-2 flex bg-gray-700 p-4'>
+                <a href='#' className='flex-shrink-0 group block'>
+                  <div className='flex items-center'>
+                    <div>
+                      <UserCircleIcon className='w-8 h-8 text-gray-300' />
+                    </div>
+                    <div className='ml-3'>
+                      <p className='text-base font-medium text-white'>
+                        Tom Cook
+                      </p>
+                      <p className='text-sm font-medium text-gray-400 group-hover:text-gray-300'>
+                        Sign out
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </div>
