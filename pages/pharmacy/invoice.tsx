@@ -1,6 +1,8 @@
 import React from 'react';
 
-const invoice = () => {
+const invoice = (props: any) => {
+  console.log(props);
+
   return <div>Invoice</div>;
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 
-const addStock = () => {
+const addStock = (props: any) => {
+  console.log(props);
   return <div>Add Stock</div>;
 };
 

@@ -6,6 +6,7 @@ import constants from '../../src/const';
 import ApiHelper from '../../src/ApiHelper';
 import AddPatientSlideIn from '../../src/components/AddPatientSlideIn';
 import HealthCondition from '../../src/models/HealthCondition';
+import { useRouter } from 'next/dist/client/router';
 
 export const getStaticProps: GetStaticProps = async (context) => {
   if (!context.params?.id) {
@@ -48,13 +49,14 @@ export async function getStaticPaths() {
         id: p.id.toString(),
       },
     })),
-    fallback: true,
+    fallback: false,
   };
 }
 
 const PatientDetail: React.FC<{ patient: Patient }> = (props) => {
   const { patient } = props;
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const editPatientUrl = async (patientToEdit: Patient) => {
     var response = await ApiHelper.postItem<Patient, number>(
@@ -62,6 +64,10 @@ const PatientDetail: React.FC<{ patient: Patient }> = (props) => {
       patientToEdit
     );
   };
+
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>

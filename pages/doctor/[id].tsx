@@ -1,8 +1,9 @@
 import React from 'react';
 import Doctor from '../../src/models/Doctor';
 import { PaperClipIcon } from '@heroicons/react/solid';
-import { GetStaticProps } from 'next';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import constants from '../../src/const';
+import { useRouter } from 'next/dist/client/router';
 
 export const getStaticProps: GetStaticProps = async (context) => {
   if (!context.params?.id) {
@@ -10,6 +11,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
       notFound: true,
     };
   }
+
+  console.log(`Building slug: ${context.params?.id}`);
 
   const res = await fetch(
     `${constants.baseApiUrl}${constants.doctorByIdUrl}${context.params.id}`
@@ -30,27 +33,35 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 export async function getStaticPaths() {
-  const res = await fetch(`${constants.baseApiUrl}${constants.doctorUrl}`);
-  const doctors: Doctor[] = await res.json();
+  console.log(`${constants.baseApiUrl}${constants.doctorUrl}`);
 
-  if (!doctors) {
+  try {
+    const res = await fetch(`${constants.baseApiUrl}${constants.doctorUrl}`);
+    const doctors: any[] = await res.json();
     return {
-      notFound: true,
+      paths: doctors.map((p) => ({
+        params: {
+          id: p.id.toString(),
+        },
+      })),
+      fallback: false,
     };
+  } catch (error) {
+    console.error(error);
   }
 
   return {
-    paths: doctors.map((p) => ({
-      params: {
-        id: p.id.toString(),
-      },
-    })),
-    fallback: true,
+    notFound: true,
   };
 }
 
 const DoctorDetail: React.FC<{ doctor: Doctor }> = (props) => {
   const { doctor } = props;
+  const router = useRouter();
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='bg-white shadow overflow-hidden sm:rounded-lg'>
       <div className='px-4 py-5 sm:px-6'>
