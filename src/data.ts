@@ -7,332 +7,344 @@ import {
   UserAddIcon,
   UserIcon,
   UsersIcon,
-  CalendarIcon
-} from "@heroicons/react/outline"
-import { INavigationItem } from "./types/INavigationItem"
+  CalendarIcon,
+} from '@heroicons/react/outline';
+import { INavigationItem } from './types/INavigationItem';
 
 const navigation: INavigationItem[] = [
   {
-    name: "Dashboard",
+    name: 'Dashboard',
     icon: OfficeBuildingIcon,
-    path: "/dashboard",
+    path: '/dashboard',
   },
   {
-    name: "Patient",
+    name: 'Patient',
     icon: UserIcon,
-    path: "/patient",
+    path: '/patient',
   },
   {
-    name: "Lab",
+    name: 'Lab',
     icon: NewspaperIcon,
-    path: "/lab",
-    children: [{ name: "Invoice", icon: UsersIcon, path: "/labinvoice" }],
+    path: '/lab',
+    children: [{ name: 'Invoice', icon: UsersIcon, path: '/labinvoice' }],
   },
   {
-    name: "Doctors",
+    name: 'Doctors',
     icon: UserAddIcon,
-    path: "/doctor",
+    path: '/doctor',
   },
   {
-    name: "Appointments",
+    name: 'Appointments',
     icon: CalendarIcon,
-    path: "/appointments",
+    path: '/appointments',
   },
   {
-    name: "Pharmacy",
+    name: 'Pharmacy',
     icon: FolderIcon,
-    path: "/pharmacy",
+    path: '/pharmacy',
+    children: [
+      {
+        name: 'Manage stock',
+        icon: FolderIcon,
+        path: '/pharmacy/stock',
+      },
+      {
+        name: 'Invoice',
+        icon: FolderIcon,
+        path: '/pharmacy/invoice',
+      },
+    ],
   },
-]
+];
 
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-]
+  { name: 'Your Profile', href: '#' },
+  { name: 'Settings', href: '#' },
+  { name: 'Sign out', href: '#' },
+];
 
 const projects = [
   {
     id: 1,
-    title: "GraphQL API",
-    initials: "GA",
-    team: "Engineering",
+    title: 'GraphQL API',
+    initials: 'GA',
+    team: 'Engineering',
     members: [
       {
-        name: "Dries Vincent",
-        handle: "driesvincent",
+        name: 'Dries Vincent',
+        handle: 'driesvincent',
         imageUrl:
-          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Lindsay Walton",
-        handle: "lindsaywalton",
+        name: 'Lindsay Walton',
+        handle: 'lindsaywalton',
         imageUrl:
-          "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Courtney Henry",
-        handle: "courtneyhenry",
+        name: 'Courtney Henry',
+        handle: 'courtneyhenry',
         imageUrl:
-          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Tom Cook",
-        handle: "tomcook",
+        name: 'Tom Cook',
+        handle: 'tomcook',
         imageUrl:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
     ],
     totalMembers: 12,
-    lastUpdated: "March 17, 2020",
+    lastUpdated: 'March 17, 2020',
     pinned: true,
-    bgColorClass: "bg-blue-600",
+    bgColorClass: 'bg-blue-600',
   },
   {
     id: 2,
-    title: "GraphQL API",
-    initials: "GA",
-    team: "Engineering",
+    title: 'GraphQL API',
+    initials: 'GA',
+    team: 'Engineering',
     members: [
       {
-        name: "Dries Vincent",
-        handle: "driesvincent",
+        name: 'Dries Vincent',
+        handle: 'driesvincent',
         imageUrl:
-          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Lindsay Walton",
-        handle: "lindsaywalton",
+        name: 'Lindsay Walton',
+        handle: 'lindsaywalton',
         imageUrl:
-          "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Courtney Henry",
-        handle: "courtneyhenry",
+        name: 'Courtney Henry',
+        handle: 'courtneyhenry',
         imageUrl:
-          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Tom Cook",
-        handle: "tomcook",
+        name: 'Tom Cook',
+        handle: 'tomcook',
         imageUrl:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
     ],
     totalMembers: 12,
-    lastUpdated: "March 17, 2020",
+    lastUpdated: 'March 17, 2020',
     pinned: true,
-    bgColorClass: "bg-yellow-600",
+    bgColorClass: 'bg-yellow-600',
   },
   {
     id: 3,
-    title: "GraphQL API",
-    initials: "GA",
-    team: "Engineering",
+    title: 'GraphQL API',
+    initials: 'GA',
+    team: 'Engineering',
     members: [
       {
-        name: "Dries Vincent",
-        handle: "driesvincent",
+        name: 'Dries Vincent',
+        handle: 'driesvincent',
         imageUrl:
-          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Lindsay Walton",
-        handle: "lindsaywalton",
+        name: 'Lindsay Walton',
+        handle: 'lindsaywalton',
         imageUrl:
-          "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Courtney Henry",
-        handle: "courtneyhenry",
+        name: 'Courtney Henry',
+        handle: 'courtneyhenry',
         imageUrl:
-          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Tom Cook",
-        handle: "tomcook",
+        name: 'Tom Cook',
+        handle: 'tomcook',
         imageUrl:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
     ],
     totalMembers: 12,
-    lastUpdated: "March 17, 2020",
+    lastUpdated: 'March 17, 2020',
     pinned: true,
-    bgColorClass: "bg-indigo-600",
+    bgColorClass: 'bg-indigo-600',
   },
   {
     id: 4,
-    title: "GraphQL API",
-    initials: "GA",
-    team: "Engineering",
+    title: 'GraphQL API',
+    initials: 'GA',
+    team: 'Engineering',
     members: [
       {
-        name: "Dries Vincent",
-        handle: "driesvincent",
+        name: 'Dries Vincent',
+        handle: 'driesvincent',
         imageUrl:
-          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Lindsay Walton",
-        handle: "lindsaywalton",
+        name: 'Lindsay Walton',
+        handle: 'lindsaywalton',
         imageUrl:
-          "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Courtney Henry",
-        handle: "courtneyhenry",
+        name: 'Courtney Henry',
+        handle: 'courtneyhenry',
         imageUrl:
-          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Tom Cook",
-        handle: "tomcook",
+        name: 'Tom Cook',
+        handle: 'tomcook',
         imageUrl:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
     ],
     totalMembers: 12,
-    lastUpdated: "March 17, 2020",
+    lastUpdated: 'March 17, 2020',
     pinned: true,
-    bgColorClass: "bg-pink-600",
+    bgColorClass: 'bg-pink-600',
   },
   {
     id: 5,
-    title: "GraphQL API",
-    initials: "GA",
-    team: "Engineering",
+    title: 'GraphQL API',
+    initials: 'GA',
+    team: 'Engineering',
     members: [
       {
-        name: "Dries Vincent",
-        handle: "driesvincent",
+        name: 'Dries Vincent',
+        handle: 'driesvincent',
         imageUrl:
-          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Lindsay Walton",
-        handle: "lindsaywalton",
+        name: 'Lindsay Walton',
+        handle: 'lindsaywalton',
         imageUrl:
-          "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Courtney Henry",
-        handle: "courtneyhenry",
+        name: 'Courtney Henry',
+        handle: 'courtneyhenry',
         imageUrl:
-          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
       {
-        name: "Tom Cook",
-        handle: "tomcook",
+        name: 'Tom Cook',
+        handle: 'tomcook',
         imageUrl:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       },
     ],
     totalMembers: 12,
-    lastUpdated: "March 17, 2020",
+    lastUpdated: 'March 17, 2020',
     pinned: true,
-    bgColorClass: "bg-gray-600",
+    bgColorClass: 'bg-gray-600',
   },
-]
+];
 
 const cards = [
-  { name: "Account balance", href: "#", icon: ScaleIcon, amount: "$30,659.45" },
+  { name: 'Account balance', href: '#', icon: ScaleIcon, amount: '$30,659.45' },
   {
-    name: "Account balance1",
-    href: "#",
+    name: 'Account balance1',
+    href: '#',
     icon: ScaleIcon,
-    amount: "$30,659.45",
+    amount: '$30,659.45',
   },
   {
-    name: "Account balance2",
-    href: "#",
+    name: 'Account balance2',
+    href: '#',
     icon: ScaleIcon,
-    amount: "$30,659.45",
+    amount: '$30,659.45',
   },
   {
-    name: "Account balance3",
-    href: "#",
+    name: 'Account balance3',
+    href: '#',
     icon: ScaleIcon,
-    amount: "$30,659.45",
+    amount: '$30,659.45',
   },
   {
-    name: "Account balance4",
-    href: "#",
+    name: 'Account balance4',
+    href: '#',
     icon: ScaleIcon,
-    amount: "$30,659.45",
+    amount: '$30,659.45',
   },
   // More items...
-]
+];
 
 const transactions = [
   {
     id: 1,
-    name: "Payment to Molly Sanders",
-    href: "#",
-    amount: "$20,000",
-    currency: "USD",
-    status: "success",
-    date: "July 11, 2020",
-    datetime: "2020-07-11",
+    name: 'Payment to Molly Sanders',
+    href: '#',
+    amount: '$20,000',
+    currency: 'USD',
+    status: 'success',
+    date: 'July 11, 2020',
+    datetime: '2020-07-11',
   },
   {
     id: 2,
-    name: "Payment to Molly Sanders",
-    href: "#",
-    amount: "$20,000",
-    currency: "USD",
-    status: "processing",
-    date: "July 11, 2020",
-    datetime: "2020-07-11",
+    name: 'Payment to Molly Sanders',
+    href: '#',
+    amount: '$20,000',
+    currency: 'USD',
+    status: 'processing',
+    date: 'July 11, 2020',
+    datetime: '2020-07-11',
   },
   {
     id: 3,
-    name: "Payment to Molly Sanders",
-    href: "#",
-    amount: "$20,000",
-    currency: "USD",
-    status: "processing",
-    date: "July 11, 2020",
-    datetime: "2020-07-11",
+    name: 'Payment to Molly Sanders',
+    href: '#',
+    amount: '$20,000',
+    currency: 'USD',
+    status: 'processing',
+    date: 'July 11, 2020',
+    datetime: '2020-07-11',
   },
   {
     id: 4,
-    name: "Payment to Molly Sanders",
-    href: "#",
-    amount: "$20,000",
-    currency: "USD",
-    status: "failed",
-    date: "July 11, 2020",
-    datetime: "2020-07-11",
+    name: 'Payment to Molly Sanders',
+    href: '#',
+    amount: '$20,000',
+    currency: 'USD',
+    status: 'failed',
+    date: 'July 11, 2020',
+    datetime: '2020-07-11',
   },
   {
     id: 5,
-    name: "Payment to Molly Sanders",
-    href: "#",
-    amount: "$20,000",
-    currency: "USD",
-    status: "success",
-    date: "July 11, 2020",
-    datetime: "2020-07-11",
+    name: 'Payment to Molly Sanders',
+    href: '#',
+    amount: '$20,000',
+    currency: 'USD',
+    status: 'success',
+    date: 'July 11, 2020',
+    datetime: '2020-07-11',
   },
   {
     id: 6,
-    name: "Payment to Molly Sanders",
-    href: "#",
-    amount: "$20,000",
-    currency: "USD",
-    status: "failed",
-    date: "July 11, 2020",
-    datetime: "2020-07-11",
+    name: 'Payment to Molly Sanders',
+    href: '#',
+    amount: '$20,000',
+    currency: 'USD',
+    status: 'failed',
+    date: 'July 11, 2020',
+    datetime: '2020-07-11',
   },
-]
+];
 
 const statusStyles = {
-  success: "bg-green-100 text-green-800",
-  processing: "bg-yellow-100 text-yellow-800",
-  failed: "bg-red-300 text-gray-800",
-}
+  success: 'bg-green-100 text-green-800',
+  processing: 'bg-yellow-100 text-yellow-800',
+  failed: 'bg-red-300 text-gray-800',
+};
 
-const pinnedProjects = projects.filter((project) => project.pinned)
+const pinnedProjects = projects.filter((project) => project.pinned);
 
 export const data = {
   navigation,
@@ -342,4 +354,4 @@ export const data = {
   transactions,
   cards,
   statusStyles,
-}
+};
