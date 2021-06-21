@@ -1,5 +1,5 @@
  class Constants {
-    baseApiUrl = "http://localhost:5050/api/"
+    baseApiUrl = process.env.NEXT_PUBLIC_API_HOST
     // patient endpoints
     patientUrl = "patient/all"
     patientSearchUrl = "patient?searchFilter="
