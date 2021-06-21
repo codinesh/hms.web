@@ -11,7 +11,6 @@ import ApiHelper from '../../src/ApiHelper';
 import AddStockSlideIn from '../../src/components/AddStockSlideIn';
 import SearchBox from '../../src/components/SearchBox';
 import constants from '../../src/const';
-import AddStockModel from '../../src/models/AddStockModel';
 import { Stock } from '../../src/models/Stock';
 import { PageProps } from '../../src/types/PageProps';
 
@@ -38,18 +37,22 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
   const router = useRouter();
   const [loading, setloading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedStock, setSelectedStock] = useState<Stock>();
 
-  const addStock = async (stock: AddStockModel) => {
-    await ApiHelper.postItem<AddStockModel, number>(
-      constants.addStockUrl,
-      stock
-    );
+  const addStock = async (stock: Stock) => {
+    await ApiHelper.postItem<Stock, number>(constants.addStockUrl, stock);
 
     // refreshData();
   };
 
   const refreshData = () => {
     router.replace(router.asPath);
+  };
+
+  const updateStock = async (stock: Stock) => {
+    await ApiHelper.postItem<Stock, number>(constants.addStockUrl, stock);
+
+    // refreshData();
   };
 
   const search = async (a: string) => {
@@ -65,6 +68,11 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
     }
   };
 
+  const closeSlideIn = (isOpen: boolean) => {
+    setOpen(isOpen);
+    setSelectedStock(undefined);
+  };
+
   return (
     <div className='flex flex-col gap-2'>
       <div className='flex justify-between items-center'>
@@ -77,9 +85,11 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
 
         <AddStockSlideIn
           onSubmit={addStock}
+          onUpdate={updateStock}
           onClose={() => {}}
-          open={open}
-          setOpen={setOpen}
+          stock={selectedStock}
+          open={open || selectedStock != undefined}
+          setOpen={closeSlideIn}
         />
 
         <button
@@ -155,6 +165,9 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
               <tbody className='bg-white divide-y divide-gray-200'>
                 {filteredStocks.map((stock) => (
                   <tr
+                    onDoubleClick={() => {
+                      setSelectedStock(stock);
+                    }}
                     className={clsx(
                       'hover:bg-gray-100 cursor-pointer select-none'
                     )}

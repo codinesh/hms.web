@@ -15,4 +15,10 @@ export interface Stock {
     discountPercent: number;
     cgstPercent: number;
     sgstPercent: number;
+    totalQuantityProcured: number
+    numberOfStrips: number
+    freeStrips: number
+    ratePerStrip: number
+    ratePerUnit: number
+    isReturned: boolean
 }

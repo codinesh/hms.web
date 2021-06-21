@@ -13,20 +13,20 @@ import clsx from 'clsx';
 import enumKeys from '../helpers/enumUtils';
 import HealthConditions from '../models/HealthCondition';
 import { Stock } from '../models/Stock';
-import AddStockModel from '../models/AddStockModel';
 
 const AddStockSlideIn: React.FC<{
-  stock?: AddStockModel;
+  stock?: Stock;
   open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  setOpen: (open: boolean) => void;
   onClose: () => void;
-  onSubmit: (stock: AddStockModel) => void;
+  onSubmit: (stock: Stock) => void;
+  onUpdate: (stock: Stock) => void;
 }> = (props) => {
   const { stock, open, setOpen } = props;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(true);
   let isEdit = stock != null ?? false;
-  const initialStockData: AddStockModel = stock ?? {
+  const initialStockData: Stock = stock ?? {
     id: 0,
     itemName: '',
     measuringUnit: '',
@@ -91,8 +91,11 @@ const AddStockSlideIn: React.FC<{
                     actions.setSubmitting(false);
                     try {
                       setLoading(true);
-
-                      await props.onSubmit(values);
+                      if (isEdit) {
+                        await props.onSubmit(values);
+                      } else {
+                        await props.onSubmit(values);
+                      }
                       setOpen(false);
                     } catch (er) {
                       console.error(er);
@@ -129,322 +132,348 @@ const AddStockSlideIn: React.FC<{
                           </div>
                         </div>
                         <div className='py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200'>
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='itemName'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Medicine name
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                type='text'
-                                name='itemName'
-                                id='itemName'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='drugName'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Drug name
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                type='text'
-                                name='drugName'
-                                id='drugName'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='manufacturer'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Manufacturer
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                type='text'
-                                name='manufacturer'
-                                id='manufacturer'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='batchNo'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Batch number
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                type='text'
-                                name='batchNo'
-                                id='batchNo'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='gender'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Schedule
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                type='text'
-                                name='schedule'
-                                id='schedule'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='hsnCode'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                HSN Code
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                type='text'
-                                name='hsnCode'
-                                id='hsnCode'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='numberOfStrips'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Quantity
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <div className='relative rounded-md shadow-sm'>
-                                <Field
-                                  type='text'
-                                  name='numberOfStrips'
-                                  id='numberOfStrips'
-                                  className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-gray-300 rounded-md'
-                                  placeholder='age'
-                                />
-                                <div className='absolute inset-y-0 right-0 flex items-center'>
+                          {!values.isReturned && (
+                            <>
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
                                   <label
-                                    htmlFor='measuringUnit'
-                                    className='sr-only'>
-                                    Measuring unit
+                                    htmlFor='itemName'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Medicine name
                                   </label>
+                                </div>
+                                <div className='sm:col-span-2'>
                                   <Field
-                                    as='select'
-                                    name='measuringUnit'
-                                    id='measuringUnit'
-                                    className='focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md'>
-                                    <option value={'mg'}>mg</option>
-                                    <option value={'ml'}>ml</option>
-                                    <option value={'unit'}>unit</option>
-                                    <option value={'other'}>other</option>
-                                  </Field>
+                                    type='text'
+                                    name='itemName'
+                                    id='itemName'
+                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  />
                                 </div>
                               </div>
-                            </div>
-                          </div>
 
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='quantityPerStrip'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Pack size
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                type='number'
-                                name='quantityPerStrip'
-                                id='quantityPerStrip'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='quantityPerStrip'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                MRP
-                              </label>
-                            </div>
-                            <div className='flex justify-between sm:col-span-2'>
-                              <div className='relative'>
-                                <Field
-                                  type='text'
-                                  name='mrpPerStrip'
-                                  id='mrpPerStrip'
-                                  className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                                />
-                                <div className='absolute inset-y-0 right-0 flex items-center'>
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
                                   <label
-                                    htmlFor='measuringUnit'
-                                    className=' text-gray-500 pr-2 '>
-                                    per strip
+                                    htmlFor='drugName'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Drug name
                                   </label>
                                 </div>
+                                <div className='sm:col-span-2'>
+                                  <Field
+                                    type='text'
+                                    name='drugName'
+                                    id='drugName'
+                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  />
+                                </div>
                               </div>
-                              <div className='relative'>
-                                <Field
-                                  type='text'
-                                  name='mrpPerUnit'
-                                  id='mrpPerUnit'
-                                  className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                                />
-                                <div className='absolute inset-y-0 right-0 flex items-center'>
+
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
                                   <label
-                                    htmlFor='measuringUnit'
-                                    className='text-gray-500 pr-2'>
-                                    per unit
+                                    htmlFor='manufacturer'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Manufacturer
                                   </label>
                                 </div>
+                                <div className='sm:col-span-2'>
+                                  <Field
+                                    type='text'
+                                    name='manufacturer'
+                                    id='manufacturer'
+                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  />
+                                </div>
                               </div>
-                            </div>
-                          </div>
 
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='ratePerStrip'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Rate
-                              </label>
-                            </div>
-                            <div className='flex justify-between sm:col-span-2'>
-                              <div className='relative'>
-                                <Field
-                                  type='text'
-                                  name='ratePerStrip'
-                                  id='ratePerStrip'
-                                  className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                                />
-                                <div className='absolute inset-y-0 right-0 flex items-center'>
-                                  <label className=' text-gray-500 pr-2 '>
-                                    per strip
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='batchNo'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Batch number
                                   </label>
                                 </div>
-                              </div>
-                              <div className='relative'>
-                                <Field
-                                  type='text'
-                                  name='ratePerUnit'
-                                  id='ratePerUnit'
-                                  className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                                />
-                                <div className='absolute inset-y-0 right-0 flex items-center'>
-                                  <label className='text-gray-500 pr-2'>
-                                    per unit
-                                  </label>
+                                <div className='sm:col-span-2'>
+                                  <Field
+                                    type='text'
+                                    name='batchNo'
+                                    id='batchNo'
+                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  />
                                 </div>
                               </div>
-                            </div>
-                          </div>
 
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='cgstPercent'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Tax %
-                              </label>
-                            </div>
-                            <div className='flex justify-between sm:col-span-2'>
-                              <div className='relative'>
-                                <Field
-                                  type='text'
-                                  name='cgstPercent'
-                                  id='cgstPercent'
-                                  className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                                />
-                                <div className='absolute inset-y-0 right-0 flex items-center'>
-                                  <label className=' text-gray-500 pr-2 '>
-                                    cgst
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='gender'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Schedule
                                   </label>
                                 </div>
-                              </div>
-                              <div className='relative'>
-                                <Field
-                                  type='text'
-                                  name='sgstPercent'
-                                  id='sgstPercent'
-                                  className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                                />
-                                <div className='absolute inset-y-0 right-0 flex items-center'>
-                                  <label className='text-gray-500 pr-2'>
-                                    sgst
-                                  </label>
+                                <div className='sm:col-span-2'>
+                                  <Field
+                                    type='text'
+                                    name='schedule'
+                                    id='schedule'
+                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  />
                                 </div>
                               </div>
-                            </div>
-                          </div>
 
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='discountPercent'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Discount percent
-                              </label>
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='hsnCode'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    HSN Code
+                                  </label>
+                                </div>
+                                <div className='sm:col-span-2'>
+                                  <Field
+                                    type='text'
+                                    name='hsnCode'
+                                    id='hsnCode'
+                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  />
+                                </div>
+                              </div>
+
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='numberOfStrips'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Quantity
+                                  </label>
+                                </div>
+                                <div className='sm:col-span-2'>
+                                  <div className='relative rounded-md shadow-sm'>
+                                    <Field
+                                      type='text'
+                                      name='numberOfStrips'
+                                      id='numberOfStrips'
+                                      className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-gray-300 rounded-md'
+                                      placeholder='age'
+                                    />
+                                    <div className='absolute inset-y-0 right-0 flex items-center'>
+                                      <label
+                                        htmlFor='measuringUnit'
+                                        className='sr-only'>
+                                        Measuring unit
+                                      </label>
+                                      <Field
+                                        as='select'
+                                        name='measuringUnit'
+                                        id='measuringUnit'
+                                        className='focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md'>
+                                        <option value={'mg'}>mg</option>
+                                        <option value={'ml'}>ml</option>
+                                        <option value={'unit'}>unit</option>
+                                        <option value={'other'}>other</option>
+                                      </Field>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='quantityPerStrip'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Pack size
+                                  </label>
+                                </div>
+                                <div className='sm:col-span-2'>
+                                  <Field
+                                    type='number'
+                                    name='quantityPerStrip'
+                                    id='quantityPerStrip'
+                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  />
+                                </div>
+                              </div>
+
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='quantityPerStrip'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    MRP
+                                  </label>
+                                </div>
+                                <div className='flex justify-between sm:col-span-2'>
+                                  <div className='relative'>
+                                    <Field
+                                      type='text'
+                                      name='mrpPerStrip'
+                                      id='mrpPerStrip'
+                                      className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                    />
+                                    <div className='absolute inset-y-0 right-0 flex items-center'>
+                                      <label
+                                        htmlFor='measuringUnit'
+                                        className=' text-gray-500 pr-2 '>
+                                        per strip
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div className='relative'>
+                                    <Field
+                                      type='text'
+                                      name='mrpPerUnit'
+                                      id='mrpPerUnit'
+                                      className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                    />
+                                    <div className='absolute inset-y-0 right-0 flex items-center'>
+                                      <label
+                                        htmlFor='measuringUnit'
+                                        className='text-gray-500 pr-2'>
+                                        per unit
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='ratePerStrip'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Rate
+                                  </label>
+                                </div>
+                                <div className='flex justify-between sm:col-span-2'>
+                                  <div className='relative'>
+                                    <Field
+                                      type='text'
+                                      name='ratePerStrip'
+                                      id='ratePerStrip'
+                                      className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                    />
+                                    <div className='absolute inset-y-0 right-0 flex items-center'>
+                                      <label className=' text-gray-500 pr-2 '>
+                                        per strip
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div className='relative'>
+                                    <Field
+                                      type='text'
+                                      name='ratePerUnit'
+                                      id='ratePerUnit'
+                                      className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                    />
+                                    <div className='absolute inset-y-0 right-0 flex items-center'>
+                                      <label className='text-gray-500 pr-2'>
+                                        per unit
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='cgstPercent'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Tax %
+                                  </label>
+                                </div>
+                                <div className='flex justify-between sm:col-span-2'>
+                                  <div className='relative'>
+                                    <Field
+                                      type='text'
+                                      name='cgstPercent'
+                                      id='cgstPercent'
+                                      className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                    />
+                                    <div className='absolute inset-y-0 right-0 flex items-center'>
+                                      <label className=' text-gray-500 pr-2 '>
+                                        cgst
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div className='relative'>
+                                    <Field
+                                      type='text'
+                                      name='sgstPercent'
+                                      id='sgstPercent'
+                                      className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                    />
+                                    <div className='absolute inset-y-0 right-0 flex items-center'>
+                                      <label className='text-gray-500 pr-2'>
+                                        sgst
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='discountPercent'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Discount percent
+                                  </label>
+                                </div>
+                                <div className='sm:col-span-2'>
+                                  <Field
+                                    type='text'
+                                    name='discountPercent'
+                                    id='discountPercent'
+                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  />
+                                </div>
+                              </div>
+
+                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                                <div>
+                                  <label
+                                    htmlFor='freeStrips'
+                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                    Free strips
+                                  </label>
+                                </div>
+                                <div className='sm:col-span-2'>
+                                  <Field
+                                    type='text'
+                                    name='freeStrips'
+                                    id='freeStrips'
+                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  />
+                                </div>
+                              </div>
+                            </>
+                          )}
+
+                          {isEdit && (
+                            <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                              <div>
+                                <label
+                                  htmlFor='isReturned'
+                                  className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                  Return stock
+                                </label>
+                              </div>
+
+                              <div className='sm:col-span-2'>
+                                <Field
+                                  type='checkbox'
+                                  name='isReturned'
+                                  id='isReturned'
+                                  className='block w-6 h-6 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-800'
+                                />
+                              </div>
                             </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                type='text'
-                                name='discountPercent'
-                                id='discountPercent'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
-                            </div>
-                          </div>
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='freeStrips'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Free strips
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                type='text'
-                                name='freeStrips'
-                                id='freeStrips'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
-                            </div>
-                          </div>
+                          )}
                         </div>
                       </div>
 

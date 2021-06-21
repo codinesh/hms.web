@@ -17,6 +17,7 @@
     stockSearchUrl = "pharmacy/availabilitybyname?medicineName="
     expiringStockUrl = "pharmacy/expiringstock?startDate="
     addStockUrl = "pharmacy/addStock"
+    updateStockUrl = "pharmacy/editStock"
 }
 
 const constants = new Constants()
