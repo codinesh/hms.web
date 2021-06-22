@@ -31,7 +31,9 @@ function DropdownSearch<T extends { value: string }>(
         onChange={(b) => {
           if (b) {
             setSelected(b)
-            setQuery(props.items.filter((x) => x.id == b)[0].value.value)
+            let item = props.items.filter((x) => x.id == b)
+            console.log(item)
+            item.length > 0 && setQuery(item[0].value.value)
           }
         }}>
         <div className='relative mt-1'>
@@ -51,9 +53,6 @@ function DropdownSearch<T extends { value: string }>(
               }}
             />
             <div className='absolute inset-y-0 right-0 flex items-center'>
-              <label htmlFor='insuranceId' className='sr-only'>
-                AgeType
-              </label>
               <button
                 onClick={() => {
                   tes && tes.current?.click()
@@ -86,15 +85,16 @@ function DropdownSearch<T extends { value: string }>(
                       `${
                         active ? 'text-amber-900 bg-amber-100' : 'text-gray-900'
                       }
-                            cursor-default select-none relative py-2 pl-10 pr-4`
+                           bg-red-600  cursor-default select-none relative py-2 pl-10 pr-4`
                     }
-                    value={person}>
+                    value={person.id}>
                     {({ selected, active }) => (
                       <>
+                        {console.log(person.id, selected, active)}
                         <span
                           className={`${
                             selected ? 'font-medium' : 'font-normal'
-                          } block truncate`}>
+                          } block truncate bg-red-600 `}>
                           {person.value.value}
                         </span>
                         {selected ? (
@@ -102,7 +102,7 @@ function DropdownSearch<T extends { value: string }>(
                             className={`${
                               active ? 'text-amber-600' : 'text-amber-600'
                             }
-                                  absolute inset-y-0 left-0 flex items-center pl-3`}>
+                            bg-red-600 absolute inset-y-0 left-0 flex items-center pl-3`}>
                             <CheckIcon className='w-5 h-5' aria-hidden='true' />
                           </span>
                         ) : null}
