@@ -1,102 +1,100 @@
-import { Switch } from '@headlessui/react';
+import { Switch } from '@headlessui/react'
 import {
   ArrowDownIcon,
   ArrowUpIcon,
   UserAddIcon,
-} from '@heroicons/react/outline';
-import clsx from 'clsx';
-import { GetStaticProps } from 'next';
-import { useRouter } from 'next/dist/client/router';
-import React, { useEffect, useState } from 'react';
-import ApiHelper from '../../src/ApiHelper';
-import AddStockSlideIn from '../../src/components/AddStockSlideIn';
-import SearchBox from '../../src/components/SearchBox';
-import constants from '../../src/const';
-import { Stock } from '../../src/models/Stock';
-import { PageProps } from '../../src/types/PageProps';
+} from '@heroicons/react/outline'
+import clsx from 'clsx'
+import { GetStaticProps } from 'next'
+import { useRouter } from 'next/dist/client/router'
+import React, { useEffect, useState } from 'react'
+import ApiHelper from '../../src/ApiHelper'
+import AddStockSlideIn from '../../src/components/AddStockSlideIn'
+import SearchBox from '../../src/components/SearchBox'
+import constants from '../../src/const'
+import { dateUtils } from '../../src/helpers/JSUtils'
+import { Stock } from '../../src/models/Stock'
+import { PageProps } from '../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const stocks = await ApiHelper.getItem<Stock[]>(constants.stockUrl);
+  const stocks = await ApiHelper.getItem<Stock[]>(constants.stockUrl)
   if (!stocks) {
     return {
       notFound: true,
-    };
+    }
   }
 
   let pageProps: PageProps<Stock[]> = {
     pageContent: stocks,
-  };
+  }
 
   return {
     props: { ...pageProps },
-  };
-};
+  }
+}
 
 const StockList: React.FC<PageProps<Stock[]>> = (props) => {
-  const stocks = props.pageContent.map((x) => ({
-    ...x,
-    expiryDate: new Date(x.expiryDate),
-  }));
-  const [filteredStocks, setFilteredStocks] = useState([...stocks]);
-  const router = useRouter();
-  const [loading, setloading] = useState(false);
-  const [isExpiringStock, setIsExpiringStock] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [selectedStock, setSelectedStock] = useState<Stock>();
+  const { pageContent: stocks } = props
+  const [filteredStocks, setFilteredStocks] = useState([...stocks])
+  const router = useRouter()
+  const [loading, setloading] = useState(false)
+  const [isExpiringStock, setIsExpiringStock] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [selectedStock, setSelectedStock] = useState<Stock>()
 
   const addStock = async (stock: Stock) => {
-    await ApiHelper.postItem<Stock, number>(constants.addStockUrl, stock);
+    await ApiHelper.postItem<Stock, number>(constants.addStockUrl, stock)
 
     // refreshData();
-  };
+  }
 
   const refreshData = () => {
-    router.replace(router.asPath);
-  };
+    router.replace(router.asPath)
+  }
 
   const updateStock = async (stock: Stock) => {
-    await ApiHelper.postItem<Stock, number>(constants.addStockUrl, stock);
+    await ApiHelper.postItem<Stock, number>(constants.addStockUrl, stock)
 
     // refreshData();
-  };
+  }
 
   const search = async (a: string) => {
-    console.log(a.length, (a?.length ?? 0) == 0);
+    console.log(a.length, (a?.length ?? 0) == 0)
     if ((a?.length ?? 0) == 0) {
-      setFilteredStocks([...stocks]);
+      setFilteredStocks([...stocks])
     } else {
       let results = await ApiHelper.getItem<Stock[]>(
         `${constants.stockSearchUrl}${a}`
-      );
+      )
 
-      setFilteredStocks(results);
+      setFilteredStocks(results)
     }
-  };
+  }
   useEffect(() => {
-    console.log('useEffect');
+    console.log('useEffect')
 
     if (isExpiringStock) {
-      console.log('expiring');
-      fetchExpiringStock();
+      console.log('expiring')
+      fetchExpiringStock()
     } else {
-      console.log('not expiring');
+      console.log('not expiring')
 
-      setFilteredStocks([...stocks]);
+      setFilteredStocks([...stocks])
     }
-  }, [isExpiringStock]);
+  }, [isExpiringStock])
 
   const fetchExpiringStock = async () => {
     let results = await ApiHelper.getItem<Stock[]>(
       `${constants.expiringStockUrl}`
-    );
+    )
 
-    setFilteredStocks(results);
-  };
+    setFilteredStocks(results)
+  }
 
   const closeSlideIn = (isOpen: boolean) => {
-    setOpen(isOpen);
-    setSelectedStock(undefined);
-  };
+    setOpen(isOpen)
+    setSelectedStock(undefined)
+  }
 
   return (
     <div className='flex flex-col gap-2'>
@@ -116,11 +114,11 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
                 name='expiringStock'
                 checked={isExpiringStock}
                 onChange={(e) => {
-                  console.log('useEffect outside');
+                  console.log('useEffect outside')
 
                   setIsExpiringStock((val) => {
-                    return !val;
-                  });
+                    return !val
+                  })
                 }}
                 type='checkbox'
                 className='focus:ring-indigo-500 h-6 w-6  text-indigo-600 border-gray-300 rounded-md'
@@ -148,7 +146,7 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
         <button
           type='button'
           onClick={() => {
-            setOpen(true);
+            setOpen(true)
           }}
           className='flex-shrink  inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:ml-3 sm:w-auto sm:text-sm'>
           <UserAddIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
@@ -219,7 +217,7 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
                 {filteredStocks.map((stock) => (
                   <tr
                     onDoubleClick={() => {
-                      setSelectedStock(stock);
+                      setSelectedStock(stock)
                     }}
                     className={clsx(
                       'hover:bg-gray-100 cursor-pointer select-none'
@@ -250,7 +248,7 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
                       {stock.mrpPerStrip}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {stock.expiryDate?.toLocaleDateString() ?? ''}
+                      {dateUtils.geLocalDateString(stock.expiryDate)}
                     </td>
                   </tr>
                 ))}
@@ -260,7 +258,7 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default StockList;
+export default StockList

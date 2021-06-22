@@ -23,6 +23,11 @@ const navigation: INavigationItem[] = [
     path: '/patient',
   },
   {
+    name: 'Appontment',
+    icon: UserIcon,
+    path: '/appointment',
+  },
+  {
     name: 'Lab',
     icon: NewspaperIcon,
     path: '/lab',
@@ -32,11 +37,6 @@ const navigation: INavigationItem[] = [
     name: 'Doctors',
     icon: UserAddIcon,
     path: '/doctor',
-  },
-  {
-    name: 'Appointments',
-    icon: CalendarIcon,
-    path: '/appointments',
   },
   {
     name: 'Pharmacy',

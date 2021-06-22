@@ -4,9 +4,9 @@ import React, {
   SetStateAction,
   useEffect,
   useState,
-} from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { HomeIcon, XIcon } from '@heroicons/react/outline';
+} from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { HomeIcon, XIcon } from '@heroicons/react/outline'
 import {
   Field,
   FieldArray,
@@ -14,28 +14,29 @@ import {
   Form,
   Formik,
   useFormik,
-} from 'formik';
-import Gender from '../models/Gender';
-import clsx from 'clsx';
-import enumKeys from '../helpers/enumUtils';
-import HealthConditions from '../models/HealthCondition';
-import { Stock } from '../models/Stock';
+} from 'formik'
+import Gender from '../models/Gender'
+import clsx from 'clsx'
+import enumKeys from '../helpers/enumUtils'
+import HealthConditions from '../models/HealthCondition'
+import { Stock } from '../models/Stock'
+import { dateUtils } from '../helpers/JSUtils'
 
 const AddStockSlideIn: React.FC<{
-  stock?: Stock;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  onClose: () => void;
-  onSubmit: (stock: Stock) => void;
-  onUpdate: (stock: Stock) => void;
+  stock?: Stock
+  open: boolean
+  setOpen: (open: boolean) => void
+  onClose: () => void
+  onSubmit: (stock: Stock) => void
+  onUpdate: (stock: Stock) => void
 }> = (props) => {
-  const { stock, open, setOpen } = props;
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(true);
-  let isEdit = stock != null ?? false;
-  let curDate = new Date();
-  let defaultExpiry = new Date();
-  defaultExpiry.setUTCFullYear(curDate.getFullYear() + 1);
+  const { stock, open, setOpen } = props
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(true)
+  let isEdit = stock != null ?? false
+  let curDate = new Date()
+  let defaultExpiry = new Date()
+  defaultExpiry.setUTCFullYear(curDate.getFullYear() + 1)
 
   const initialStockData: Stock = stock ?? {
     id: 0,
@@ -60,7 +61,7 @@ const AddStockSlideIn: React.FC<{
     ratePerStrip: 0,
     ratePerUnit: 0,
     totalQuantityProcured: 0,
-  };
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -70,8 +71,8 @@ const AddStockSlideIn: React.FC<{
         className='z-30 fixed inset-0 overflow-hidden'
         open={open}
         onClose={() => {
-          setLoading(false);
-          setOpen(false);
+          setLoading(false)
+          setOpen(false)
         }}>
         <div className='absolute inset-0 overflow-hidden'>
           <Transition.Child
@@ -97,23 +98,23 @@ const AddStockSlideIn: React.FC<{
                 <Formik
                   initialValues={initialStockData}
                   onSubmit={async (values, actions) => {
-                    setError(false);
-                    setLoading(true);
-                    actions.setSubmitting(false);
+                    setError(false)
+                    setLoading(true)
+                    actions.setSubmitting(false)
                     try {
-                      setLoading(true);
+                      setLoading(true)
                       if (isEdit) {
-                        await props.onSubmit(values);
+                        await props.onSubmit(values)
                       } else {
-                        await props.onSubmit(values);
+                        await props.onSubmit(values)
                       }
-                      setOpen(false);
+                      setOpen(false)
                     } catch (er) {
-                      console.error(er);
-                      setError(true);
+                      console.error(er)
+                      setError(true)
                     }
 
-                    setLoading(false);
+                    setLoading(false)
                   }}
                   render={({ values }) => (
                     <Form className='h-full flex flex-col bg-white shadow-xl overflow-y-scroll'>
@@ -432,17 +433,15 @@ const AddStockSlideIn: React.FC<{
                                   <label
                                     htmlFor='expiryDate'
                                     className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                    Free strips
+                                    Expiry date
                                   </label>
                                 </div>
                                 <div className='sm:col-span-2'>
                                   <Field
                                     value={
-                                      typeof values.expiryDate == 'string'
-                                        ? values.expiryDate
-                                        : values.expiryDate
-                                            .toISOString()
-                                            .split('T')[0]
+                                      dateUtils
+                                        .getIsoDateString(values.expiryDate)
+                                        .split('T')[0]
                                     }
                                     type='date'
                                     name='expiryDate'
@@ -557,7 +556,7 @@ const AddStockSlideIn: React.FC<{
         </div>
       </Dialog>
     </Transition.Root>
-  );
-};
+  )
+}
 
-export default AddStockSlideIn;
+export default AddStockSlideIn

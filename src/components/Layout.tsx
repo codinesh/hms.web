@@ -1,19 +1,34 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { Menu, Transition } from '@headlessui/react';
-import { BellIcon, MenuAlt2Icon } from '@heroicons/react/outline';
-import { SearchIcon } from '@heroicons/react/solid';
-import Sidebar from './Sidebar';
-import { classNames } from '../helpers/csshelpers';
-import { INavigationItem } from '../types/INavigationItem';
-import { data } from '../data';
-import Page from './Page';
-import Image from 'next/image';
-import { GlobalStateAction, useGlobalDispatch } from '../store/GlobalStore';
+import React, { useEffect, useState } from 'react'
+import { MenuAlt2Icon } from '@heroicons/react/outline'
+import Sidebar from './Sidebar'
+import Page from './Page'
+import Image from 'next/image'
+import { GlobalStateAction, useGlobalDispatch } from '../store/GlobalStore'
+import ApiHelper from '../ApiHelper'
+import Doctor from '../models/Doctor'
+import Patient from '../models/Patient'
+import constants from '../const'
 
 const Layout: React.FC = (props) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [query, setQuery] = useState('');
-  const globalDispatch = useGlobalDispatch();
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const globalDispatch = useGlobalDispatch()
+  const [loaded, setloaded] = useState(false)
+
+  useEffect(() => {
+    console.log('layout')
+    if (!loaded)
+      (async () => {
+        console.log('async layout')
+
+        const doctorsT = ApiHelper.getItem<Doctor[]>(constants.doctorUrl)
+        const patientsT = ApiHelper.getItem<Patient[]>(constants.patientUrl)
+
+        let res = await Promise.all<Doctor[], Patient[]>([doctorsT, patientsT])
+        setloaded(true)
+        globalDispatch({ type: GlobalStateAction.Doctors, doctors: res[0] })
+        globalDispatch({ type: GlobalStateAction.Patients, patients: res[1] })
+      })()
+  }, [])
 
   return (
     <div className='flex h-screen overflow-hidden bg-gray-100'>
@@ -86,7 +101,7 @@ const Layout: React.FC = (props) => {
         </main>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout

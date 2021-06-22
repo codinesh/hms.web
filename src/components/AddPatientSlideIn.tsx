@@ -4,29 +4,30 @@ import React, {
   SetStateAction,
   useEffect,
   useState,
-} from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { HomeIcon, XIcon } from '@heroicons/react/outline';
-import { Field, FieldArray, Form, Formik, useFormik } from 'formik';
+} from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { HomeIcon, XIcon } from '@heroicons/react/outline'
+import { Field, FieldArray, Form, Formik, useFormik } from 'formik'
 
-import Patient from '../models/Patient';
-import Gender from '../models/Gender';
-import clsx from 'clsx';
-import enumKeys from '../helpers/enumUtils';
-import HealthConditions from '../models/HealthCondition';
+import Patient from '../models/Patient'
+import Gender from '../models/Gender'
+import clsx from 'clsx'
+import enumKeys from '../helpers/enumUtils'
+import HealthConditions from '../models/HealthCondition'
 
 const AddPatientSlideIn: React.FC<{
-  patient?: Patient;
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  onClose: () => void;
-  onSubmit: (patient: Patient) => void;
+  patient?: Patient
+  open: boolean
+  setOpen: Dispatch<SetStateAction<boolean>>
+  onClose: () => void
+  onSubmit: (patient: Patient) => void
 }> = (props) => {
-  const { patient, open, setOpen } = props;
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(true);
-  const [ageType, setAgeType] = useState(0);
-  let isEdit = patient != null ?? false;
+  const { patient, open, setOpen } = props
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(true)
+  const [ageType, setAgeType] = useState(0)
+  let isEdit = patient != null ?? false
+
   const initialPatientData: Patient = patient ?? {
     address: '',
     age: 0,
@@ -44,7 +45,7 @@ const AddPatientSlideIn: React.FC<{
     medicalHistory: '',
     role: 0,
     updatedOn: new Date(),
-  };
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -54,8 +55,8 @@ const AddPatientSlideIn: React.FC<{
         className='z-30 fixed inset-0 overflow-hidden'
         open={open}
         onClose={() => {
-          setLoading(false);
-          setOpen(false);
+          setLoading(false)
+          setOpen(false)
         }}>
         <div className='absolute inset-0 overflow-hidden'>
           <Transition.Child
@@ -81,25 +82,25 @@ const AddPatientSlideIn: React.FC<{
                 <Formik
                   initialValues={initialPatientData}
                   onSubmit={async (values, actions) => {
-                    setError(false);
-                    setLoading(true);
-                    actions.setSubmitting(false);
+                    setError(false)
+                    setLoading(true)
+                    actions.setSubmitting(false)
                     try {
-                      setLoading(true);
+                      setLoading(true)
                       if (ageType == 1) {
-                        values.ageInMonths = values.age;
-                        values.age = 0;
+                        values.ageInMonths = values.age
+                        values.age = 0
                       }
 
-                      values.gender = parseInt(values.gender.toString());
+                      values.gender = parseInt(values.gender.toString())
 
-                      await props.onSubmit(values);
-                      setOpen(false);
+                      await props.onSubmit(values)
+                      setOpen(false)
                     } catch (error) {
-                      setError(true);
+                      setError(true)
                     }
 
-                    setLoading(false);
+                    setLoading(false)
                   }}
                   render={({ values }) => (
                     <Form className='h-full flex flex-col bg-white shadow-xl overflow-y-scroll'>
@@ -231,7 +232,7 @@ const AddPatientSlideIn: React.FC<{
                                   <Field
                                     as='select'
                                     onChange={(e: any) => {
-                                      setAgeType(e.target.value);
+                                      setAgeType(e.target.value)
                                     }}
                                     value={ageType}
                                     className='focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md'>
@@ -339,14 +340,14 @@ const AddPatientSlideIn: React.FC<{
                                           let item =
                                             values.healthConditions.indexOf(
                                               HealthConditions[hc]
-                                            );
+                                            )
 
                                           if (item >= 0) {
-                                            arrhelpers.remove(item);
+                                            arrhelpers.remove(item)
                                           } else
                                             arrhelpers.push(
                                               HealthConditions[hc]
-                                            );
+                                            )
                                         }}
                                         className={clsx(
                                           'inline-flex cursor-pointer items-center px-3 py-0.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800',
@@ -409,7 +410,7 @@ const AddPatientSlideIn: React.FC<{
         </div>
       </Dialog>
     </Transition.Root>
-  );
-};
+  )
+}
 
-export default AddPatientSlideIn;
+export default AddPatientSlideIn

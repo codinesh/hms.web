@@ -1,3 +1,5 @@
+import Doctor from '../models/Doctor';
+import Patient from '../models/Patient';
 import IUser from "./IUser"
 
 export interface IGlobalState {
@@ -7,4 +9,6 @@ export interface IGlobalState {
   errorMessage?: string
   pageTitle: string
   searchQuery?: string
+  doctors:Doctor[]
+  patients:Patient[]
 }

@@ -13,11 +13,17 @@
     doctorUrl = "doctor/all"
     doctorByIdUrl = "doctor?doctorId="
 
+    // stock endpoints
     stockUrl = "pharmacy/stock"
     stockSearchUrl = "pharmacy/availabilitybyname?medicineName="
     expiringStockUrl = "pharmacy/expiringstock?"
     addStockUrl = "pharmacy/addStock"
     updateStockUrl = "pharmacy/editStock"
+
+    //appointment endpoints
+    appointmentUrl = "appointment/all"
+    addAppointmentUrl = "appointment/add"
+    updateAppointmentUrl = "appointment/edit"
 }
 
 const constants = new Constants()
