@@ -2,86 +2,80 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
   UserAddIcon,
-} from '@heroicons/react/outline';
-import clsx from 'clsx';
-import { GetStaticProps } from 'next';
-import React, { useState } from 'react';
-import ApiHelper from '../../src/ApiHelper';
-import AddAppointmentSlideIn from '../../src/components/AddAppointmentSlideIn';
-import DropdownSearch from '../../src/components/DropdownSearch';
-import SearchBox from '../../src/components/SearchBox';
-import constants from '../../src/const';
-import { dateUtils } from '../../src/helpers/JSUtils';
-import { AddAppointment, Appointment } from '../../src/models/Appointment';
-import Doctor from '../../src/models/Doctor';
-import Gender from '../../src/models/Gender';
-import HealthCondition from '../../src/models/HealthCondition';
-import Patient from '../../src/models/Patient';
-import { useGlobalState } from '../../src/store/GlobalStore';
-import { PageProps } from '../../src/types/PageProps';
+} from '@heroicons/react/outline'
+import clsx from 'clsx'
+import { GetStaticProps } from 'next'
+import React, { useState } from 'react'
+import ApiHelper from '../../src/ApiHelper'
+import AddAppointmentSlideIn from '../../src/components/AddAppointmentSlideIn'
+import DropdownSearch from '../../src/components/DropdownSearch'
+import SearchBox from '../../src/components/SearchBox'
+import constants from '../../src/const'
+import { dateUtils } from '../../src/helpers/JSUtils'
+import { AddAppointment, Appointment } from '../../src/models/Appointment'
+import Doctor from '../../src/models/Doctor'
+import Gender from '../../src/models/Gender'
+import HealthCondition from '../../src/models/HealthCondition'
+import Patient from '../../src/models/Patient'
+import { useGlobalState } from '../../src/store/GlobalStore'
+import { PageProps } from '../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const appointments = await ApiHelper.getItem<Appointment[]>(
     constants.appointmentUrl
-  );
+  )
 
   if (!appointments) {
     return {
       notFound: true,
-    };
+    }
   }
 
   let pageProps: PageProps<Appointment[]> = {
     pageContent: appointments,
-  };
+  }
 
   return {
     props: { ...pageProps },
-  };
-};
+  }
+}
 
-const AppointmentPage: React.FC<
-  PageProps<{
-    appointments: Appointment[];
-    doctors: Doctor[];
-    patients: Patient[];
-  }>
-> = (props) => {
-  const { appointments } = props.pageContent;
+const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
+  const { pageContent: appointments } = props
   const [filteredAppointment, setFilteredAppointments] = useState([
     ...appointments,
-  ]);
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment>();
-  const [loading, setloading] = useState(false);
-  const [open, setOpen] = useState(false);
+  ])
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment>()
+  const [loading, setloading] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const search = async (a: string) => {
-    console.log(a.length, (a?.length ?? 0) == 0);
+    console.log(a.length, (a?.length ?? 0) == 0)
     if ((a?.length ?? 0) == 0) {
-      setFilteredAppointments([...appointments]);
+      setFilteredAppointments([...appointments])
     } else {
       let results = await ApiHelper.getItem<Appointment[]>(
         `${constants.appointmentUrl}${a}`
-      );
+      )
 
-      setFilteredAppointments(results);
+      setFilteredAppointments(results)
     }
-  };
+  }
 
   const addAppointment = async (appointment: AddAppointment) => {
-    return false;
-  };
+    return false
+  }
 
   const editAppointment = async (appointment: AddAppointment) => {
-    return false;
-  };
+    return false
+  }
 
   const closeSlideIn = (isOpen: boolean) => {
-    setOpen(isOpen);
-    setSelectedAppointment(undefined);
-  };
+    setOpen(isOpen)
+    setSelectedAppointment(undefined)
+  }
 
-  const { patients, doctors } = useGlobalState();
+  const { patients, doctors } = useGlobalState()
 
   return (
     <div className='flex flex-col gap-2'>
@@ -91,8 +85,8 @@ const AppointmentPage: React.FC<
             className='pb-4'
             placeholderText='search appointments'
             onSearch={(a: string) => {
-              search(a);
-              return { id: a };
+              search(a)
+              return { id: a }
             }}
             onClear={() => {}}
           />
@@ -118,7 +112,7 @@ const AppointmentPage: React.FC<
         <button
           type='button'
           onClick={() => {
-            setOpen(true);
+            setOpen(true)
           }}
           className='flex-shrink  inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:ml-3 sm:w-auto sm:text-sm'>
           <UserAddIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
@@ -179,7 +173,7 @@ const AppointmentPage: React.FC<
                 {filteredAppointment.map((appointment) => (
                   <tr
                     onDoubleClick={() => {
-                      setSelectedAppointment(appointment);
+                      setSelectedAppointment(appointment)
                     }}
                     className={clsx(
                       'hover:bg-gray-100 cursor-pointer select-none'
@@ -224,7 +218,7 @@ const AppointmentPage: React.FC<
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AppointmentPage;
+export default AppointmentPage
