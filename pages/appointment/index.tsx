@@ -8,16 +8,12 @@ import { GetStaticProps } from 'next'
 import React, { useState } from 'react'
 import ApiHelper from '../../src/ApiHelper'
 import AddAppointmentSlideIn from '../../src/components/AddAppointmentSlideIn'
-import DropdownSearch from '../../src/components/DropdownSearch'
 import SearchBox from '../../src/components/SearchBox'
 import constants from '../../src/const'
 import { dateUtils } from '../../src/helpers/JSUtils'
 import { AddAppointment, Appointment } from '../../src/models/Appointment'
-import Doctor from '../../src/models/Doctor'
 import Gender from '../../src/models/Gender'
 import HealthCondition from '../../src/models/HealthCondition'
-import Patient from '../../src/models/Patient'
-import { useGlobalState } from '../../src/store/GlobalStore'
 import { PageProps } from '../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
@@ -37,6 +33,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   return {
     props: { ...pageProps },
+    revalidate: 1,
   }
 }
 
@@ -96,7 +93,9 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
           />
         </div>
         <AddAppointmentSlideIn
-          onSubmit={addAppointment}
+          onSubmit={async (a) => {
+            await addAppointment(a)
+          }}
           onUpdate={editAppointment}
           onClose={() => {}}
           appointment={
