@@ -1,43 +1,43 @@
-import React from 'react';
-import Doctor from '../../src/models/Doctor';
-import { PaperClipIcon } from '@heroicons/react/solid';
-import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import constants from '../../src/const';
-import { useRouter } from 'next/dist/client/router';
+import React from 'react'
+import Doctor from '../../src/models/Doctor'
+import { PaperClipIcon } from '@heroicons/react/solid'
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import constants from '../../src/const'
+import { useRouter } from 'next/dist/client/router'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   if (!context.params?.id) {
     return {
       notFound: true,
-    };
+    }
   }
 
-  console.log(`Building slug: ${context.params?.id}`);
+  console.log(`Building slug: ${context.params?.id}`)
 
   const res = await fetch(
     `${constants.baseApiUrl}${constants.doctorByIdUrl}${context.params.id}`
-  );
+  )
 
-  const doctor: Doctor = await res.json();
+  const doctor: Doctor = await res.json()
 
   if (!doctor) {
     return {
       notFound: true,
-    };
+    }
   }
 
   return {
     props: { doctor },
     revalidate: 5,
-  };
-};
+  }
+}
 
 export async function getStaticPaths() {
-  console.log(`${constants.baseApiUrl}${constants.doctorUrl}`);
+  console.log(`${constants.baseApiUrl}${constants.doctorUrl}`)
 
   try {
-    const res = await fetch(`${constants.baseApiUrl}${constants.doctorUrl}`);
-    const doctors: any[] = await res.json();
+    const res = await fetch(`${constants.baseApiUrl}${constants.doctorUrl}`)
+    const doctors: any[] = await res.json()
     return {
       paths: doctors.map((p) => ({
         params: {
@@ -45,21 +45,21 @@ export async function getStaticPaths() {
         },
       })),
       fallback: true,
-    };
+    }
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 
   return {
     notFound: true,
-  };
+  }
 }
 
 const DoctorDetail: React.FC<{ doctor: Doctor }> = (props) => {
-  const { doctor } = props;
-  const router = useRouter();
+  const { doctor } = props
+  const router = useRouter()
   if (router.isFallback) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   return (
@@ -86,6 +86,15 @@ const DoctorDetail: React.FC<{ doctor: Doctor }> = (props) => {
             </dt>
             <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
               {doctor.contactNumber}
+            </dd>
+          </div>
+
+          <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
+            <dt className='text-sm font-medium text-gray-500'>
+              Registration number
+            </dt>
+            <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
+              {doctor.registrationNo}
             </dd>
           </div>
           <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
@@ -159,7 +168,7 @@ const DoctorDetail: React.FC<{ doctor: Doctor }> = (props) => {
         </dl>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DoctorDetail;
+export default DoctorDetail

@@ -81,12 +81,17 @@ const DoctorPage: React.FC<PageProps<Doctor[]>> = (props) => {
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Email
+                    Registration number
                   </th>
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Phone Number
+                  </th>
+                  <th
+                    scope='col'
+                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    Email
                   </th>
                   <th
                     scope='col'
@@ -97,9 +102,6 @@ const DoctorPage: React.FC<PageProps<Doctor[]>> = (props) => {
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Gender
-                  </th>
-                  <th scope='col' className='relative px-6 py-3'>
-                    <span className='sr-only'>Actions</span>
                   </th>
                 </tr>
               </thead>
@@ -121,6 +123,9 @@ const DoctorPage: React.FC<PageProps<Doctor[]>> = (props) => {
                       {doctor.fullName}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                      {doctor.registrationNo}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {doctor.contactNumber}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
@@ -131,13 +136,6 @@ const DoctorPage: React.FC<PageProps<Doctor[]>> = (props) => {
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {Gender[doctor.gender]}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
-                      <a
-                        href={`/doctor/${doctor.id}`}
-                        className='text-gray-600 bg-red-300 hover:text-indigo-900'>
-                        <TrashIcon className='w-5 h-5 ' aria-hidden='true' />
-                      </a>
                     </td>
                   </tr>
                 ))}

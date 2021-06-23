@@ -25,7 +25,9 @@ const AddPatientSlideIn: React.FC<{
   const { patient, open, setOpen } = props
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(true)
-  const [ageType, setAgeType] = useState(0)
+  const [ageType, setAgeType] = useState(
+    patient?.age ?? patient?.ageInMonths ?? 0
+  )
   let isEdit = patient != null ?? false
 
   const initialPatientData: Patient = patient ?? {

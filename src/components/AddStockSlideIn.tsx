@@ -285,6 +285,7 @@ const AddStockSlideIn: React.FC<{
                                         <option value={'mg'}>mg</option>
                                         <option value={'ml'}>ml</option>
                                         <option value={'unit'}>unit</option>
+                                        <option value={'strip'}>strip</option>
                                         <option value={'other'}>other</option>
                                       </Field>
                                     </div>
