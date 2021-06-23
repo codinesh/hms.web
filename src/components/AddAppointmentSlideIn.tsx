@@ -7,6 +7,7 @@ import { AddAppointment } from '../models/Appointment'
 import { dateUtils } from '../helpers/JSUtils'
 import { useGlobalState } from '../store/GlobalStore'
 import DropdownSearch1 from './DropdownSearch1'
+import DateTimePicker from './DateTimePicker'
 
 const AddAppointmentSlideIn: React.FC<{
   appointment?: AddAppointment
@@ -29,6 +30,13 @@ const AddAppointmentSlideIn: React.FC<{
     appointmentDate: new Date(),
     issue: '',
   }
+
+  // initialAppointmentData.appointmentDate.setHours(
+  //   initialAppointmentData.appointmentDate.getHours() + 5
+  // )
+  // initialAppointmentData.appointmentDate.setMinutes(
+  //   initialAppointmentData.appointmentDate.getMinutes() + 30
+  // )
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -70,7 +78,11 @@ const AddAppointmentSlideIn: React.FC<{
                     actions.setSubmitting(false)
                     try {
                       setLoading(true)
+                      values.appointmentDate = new Date(
+                        values.appointmentDate.toISOString()
+                      )
 
+                      values.appointmentDate.toISOString()
                       if (values.doctorId && values.patientId) {
                         isEdit
                           ? await props.onUpdate(values)
@@ -170,14 +182,12 @@ const AddAppointmentSlideIn: React.FC<{
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <Field
-                                value={dateUtils.getIsoDateTimeString(
-                                  values.appointmentDate
-                                )}
-                                type='datetime-local'
-                                name='appointmentDate'
-                                id='appointmentDate'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                              <DateTimePicker
+                                value={values.appointmentDate}
+                                onSelect={(date) => {
+                                  console.log('change', date)
+                                  values.appointmentDate = date
+                                }}
                               />
                             </div>
                           </div>
