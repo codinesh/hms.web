@@ -25,6 +25,5 @@ export interface AddAppointment {
     patientId: number
     doctorId: number
     appointmentDate: Date
-    appointmentTime: Date
-    diagnosis?: string
+    issue?: string
 }

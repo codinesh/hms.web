@@ -1,12 +1,12 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
-import { Field, Form, Formik } from 'formik'
+import { Field, FieldInputProps, Form, Formik, useField } from 'formik'
 
 import { AddAppointment } from '../models/Appointment'
 import { dateUtils } from '../helpers/JSUtils'
 import { useGlobalState } from '../store/GlobalStore'
-import DropdownSearch from './DropdownSearch'
+import DropdownSearch1 from './DropdownSearch1'
 
 const AddAppointmentSlideIn: React.FC<{
   appointment?: AddAppointment
@@ -27,7 +27,7 @@ const AddAppointmentSlideIn: React.FC<{
     doctorId: 0,
     patientId: 0,
     appointmentDate: new Date(),
-    appointmentTime: new Date(),
+    issue: '',
   }
 
   return (
@@ -70,7 +70,13 @@ const AddAppointmentSlideIn: React.FC<{
                     actions.setSubmitting(false)
                     try {
                       setLoading(true)
-                      await props.onSubmit(values)
+
+                      if (values.doctorId && values.patientId) {
+                        isEdit
+                          ? await props.onUpdate(values)
+                          : await props.onSubmit(values)
+                      }
+
                       setOpen(false)
                     } catch (error) {
                       setError(true)
@@ -118,26 +124,17 @@ const AddAppointmentSlideIn: React.FC<{
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              {/* <Field
-                                as='select'
-                                type='select'
-                                name='patientId'
-                                id='patientId'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'>
-                                <option value={'mg'}>mg</option>
-                                <option value={'ml'}>ml</option>
-                                <option value={'unit'}>unit</option>
-                                <option value={'other'}>other</option>
-                              </Field> */}
-                              {/* <DropdownSearch
+                              <DropdownSearch1
+                                placeholder='select patient'
+                                selected={values.patientId}
                                 items={patients.map((x) => ({
                                   id: x.id,
-                                  value: { value: x.fullName },
+                                  value: x.fullName,
                                 }))}
                                 onSelect={(e) => {
-                                  console.log(e);
+                                  values.patientId = e.id
                                 }}
-                              /> */}
+                              />
                             </div>
                           </div>
 
@@ -150,11 +147,16 @@ const AddAppointmentSlideIn: React.FC<{
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <Field
-                                type='text'
-                                name='doctorId'
-                                id='doctorId'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                              <DropdownSearch1
+                                placeholder='select patient'
+                                selected={values.doctorId}
+                                items={doctors.map((x) => ({
+                                  id: x.id,
+                                  value: x.fullName,
+                                }))}
+                                onSelect={(e) => {
+                                  values.doctorId = e.id
+                                }}
                               />
                             </div>
                           </div>
@@ -183,7 +185,7 @@ const AddAppointmentSlideIn: React.FC<{
                           <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
                             <div>
                               <label
-                                htmlFor='diagnosis'
+                                htmlFor='issue'
                                 className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
                                 Diagnosis
                               </label>
@@ -192,8 +194,8 @@ const AddAppointmentSlideIn: React.FC<{
                               <Field
                                 as='textarea'
                                 type='textarea'
-                                id='address'
-                                name='address'
+                                id='issue'
+                                name='issue'
                                 rows={3}
                                 className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md'
                               />

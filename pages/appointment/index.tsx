@@ -63,19 +63,23 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
   }
 
   const addAppointment = async (appointment: AddAppointment) => {
-    return false
+    await ApiHelper.postItem<AddAppointment, number>(
+      `${constants.addAppointmentUrl}`,
+      appointment
+    )
   }
 
   const editAppointment = async (appointment: AddAppointment) => {
-    return false
+    await ApiHelper.postItem<AddAppointment, number>(
+      `${constants.updateAppointmentUrl}`,
+      appointment
+    )
   }
 
   const closeSlideIn = (isOpen: boolean) => {
     setOpen(isOpen)
     setSelectedAppointment(undefined)
   }
-
-  const { patients, doctors } = useGlobalState()
 
   return (
     <div className='flex flex-col gap-2'>
@@ -102,7 +106,6 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
                   doctorId: selectedAppointment?.doctorId,
                   id: selectedAppointment.id,
                   appointmentDate: selectedAppointment.appointmentDate,
-                  appointmentTime: selectedAppointment.appointmentDate,
                 }
               : undefined
           }
