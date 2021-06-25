@@ -1,128 +1,71 @@
-import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, SearchIcon } from '@heroicons/react/outline'
-import clsx from 'clsx'
-import React, { Fragment, PropsWithChildren, useRef, useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 
-type DropdownItemType<T extends { value: string }> = {
-  id: number | string
-  value: T
-}
-
-interface SearchProps<T extends { value: string }> {
-  items: DropdownItemType<T>[]
+interface SearchProps<T extends { id: string | number; value: string }> {
+  items: T[]
   onSelect: (value: T) => void
   onClear?: () => void
+  allowFreeText?: boolean
   placeholder: string
-  selected: number | string
+  selected?: number | string
 }
 
 // const DropdownSearch: React.FC<SearchProps<A, DropdownItemType<A>>> = (props) => {
 
-function DropdownSearch<T extends { value: string }>(
+function DropdownSearch<T extends { id: string | number; value: string }>(
   props: PropsWithChildren<SearchProps<T>>
 ) {
-  const [selected, setSelected] = useState<number | string>(props.selected)
-  const [query, setQuery] = useState('')
-  const tes = useRef<HTMLButtonElement>(null)
+  const { items } = props
+
+  const [selected, setSelected] = useState<number | string | undefined>(
+    props.selected
+  )
+  const [show, setShow] = useState(false)
+  const selectedItem = props.items.filter((x) => x.id == props.selected)
+  const selectedItemName = selectedItem.length > 0 ? selectedItem[0].value : ''
+  const [query, setQuery] = useState(selectedItemName)
 
   return (
-    <div className='w-72'>
-      {query}
-      <Listbox
-        value={selected}
-        onChange={(b) => {
-          console.log(b)
-          if (b) {
-            setSelected(b)
-            let item = props.items.filter((x) => x.id == b)
-            item.length > 0 && setQuery(item[0].value.value)
+    <div className='relative'>
+      <input
+        type='text'
+        value={query}
+        onFocus={() => {
+          setShow(true)
+        }}
+        onBlur={(e) => {
+          if (props.allowFreeText) {
+            props.onSelect({ id: -1, value: query } as T)
           }
-        }}>
-        {({ open }) => (
-          <div className='relative mt-1'>
-            <>
-              <input
-                type='text'
-                name='age'
-                id='age'
-                value={query}
-                className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-gray-300 rounded-md'
-                placeholder={props.placeholder}
-                onChange={(e) => {
-                  setQuery(e.target.value)
-                }}
-              />
-              <div className='absolute inset-y-0 right-0 flex items-center'>
-                <button
-                  onClick={() => {
-                    tes && tes.current?.click()
-                  }}
-                  className='focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md'>
-                  <SearchIcon className='w-5 h-5' />
-                </button>
-              </div>
-            </>
-
-            <div className='w-full flex bg-red-300'>
-              <Listbox.Label as={'input'}></Listbox.Label>
-              <Listbox.Button ref={tes}></Listbox.Button>
-            </div>
-            <Transition
-              as={Fragment}
-              leave='transition ease-in duration-100'
-              leaveFrom='opacity-100'
-              leaveTo='opacity-0'>
-              <Listbox.Options
-                static
-                className='absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
-                {props.items
-                  .filter(
-                    (x) =>
-                      query == '' ||
-                      x.value.value.toLowerCase().match(query.toLowerCase())
-                  )
-                  .map((person, personIdx) => (
-                    <Listbox.Option
-                      key={personIdx}
-                      className={({ active }) =>
-                        clsx(
-                          active
-                            ? 'text-amber-900 bg-amber-100'
-                            : 'text-gray-900',
-                          'cursor-default select-none relative py-2 pl-10 pr-4'
-                        )
-                      }
-                      value={person.id}>
-                      {({ selected, active }) => (
-                        <>
-                          <span
-                            className={clsx(
-                              selected ? 'font-medium' : 'font-normal',
-                              'block truncate'
-                            )}>
-                            {person.value.value}
-                          </span>
-                          {selected ? (
-                            <span
-                              className={clsx(
-                                active ? 'text-amber-600' : 'text-amber-600',
-                                'absolute inset-y-0 left-0 flex items-center pl-3'
-                              )}>
-                              <CheckIcon
-                                className='w-5 h-5'
-                                aria-hidden='true'
-                              />
-                            </span>
-                          ) : null}
-                        </>
-                      )}
-                    </Listbox.Option>
-                  ))}
-              </Listbox.Options>
-            </Transition>
+        }}
+        onChange={(e) => {
+          setShow(true)
+          setQuery(e.target.value)
+        }}
+        className='rounded-md focus:ring-2 w-full z-10'
+      />
+      {show &&
+        items.filter((x) => query == '' || x.value.match(query)).length > 0 && (
+          <div className='absolute z-50 py-1 top-12 w-full bg-white shadow-md rounded-md'>
+            <ul>
+              {items
+                .filter((x) => query == '' || x.value.match(query))
+                .slice(0, 5)
+                .map((x) => (
+                  <li
+                    key={x.id}
+                    className='flex justify-between w-full px-2 py-1 hover:bg-gray-200 text-bold cursor-pointer hover:underline'
+                    onClick={(e) => {
+                      setQuery(e.currentTarget.textContent ?? '')
+                      setSelected(x.id)
+                      setShow(false)
+                      props.onSelect(x)
+                    }}>
+                    <span>{x.value}</span>
+                  </li>
+                ))}
+            </ul>
           </div>
         )}
-      </Listbox>
     </div>
   )
 }

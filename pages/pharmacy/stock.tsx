@@ -60,7 +60,6 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
   }
 
   const search = async (a: string) => {
-    console.log(a.length, (a?.length ?? 0) == 0)
     if ((a?.length ?? 0) == 0) {
       setFilteredStocks([...stocks])
     } else {
@@ -72,14 +71,9 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
     }
   }
   useEffect(() => {
-    console.log('useEffect')
-
     if (isExpiringStock) {
-      console.log('expiring')
       fetchExpiringStock()
     } else {
-      console.log('not expiring')
-
       setFilteredStocks([...stocks])
     }
   }, [isExpiringStock])
@@ -115,8 +109,6 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
                 name='expiringStock'
                 checked={isExpiringStock}
                 onChange={(e) => {
-                  console.log('useEffect outside')
-
                   setIsExpiringStock((val) => {
                     return !val
                   })

@@ -1,21 +1,21 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
-import { Field, FieldInputProps, Form, Formik, useField } from 'formik'
+import { Field, Form, Formik } from 'formik'
 
 import { AddAppointment } from '../models/Appointment'
-import { dateUtils } from '../helpers/JSUtils'
 import { useGlobalState } from '../store/GlobalStore'
-import DropdownSearch1 from './DropdownSearch1'
 import DateTimePicker from './DateTimePicker'
+import DropdownSearch from './DropdownSearch'
+import clsx from 'clsx'
 
 const AddAppointmentSlideIn: React.FC<{
   appointment?: AddAppointment
   open: boolean
   setOpen: (isOpen: boolean) => void
   onClose: () => void
-  onSubmit: (appointment: AddAppointment) => void
-  onUpdate: (appointment: AddAppointment) => void
+  onSubmit: (appointment: AddAppointment) => Promise<void>
+  onUpdate: (appointment: AddAppointment) => Promise<void>
 }> = (props) => {
   const { appointment, open, setOpen } = props
   const [loading, setLoading] = useState(false)
@@ -74,29 +74,32 @@ const AddAppointmentSlideIn: React.FC<{
                   initialValues={initialAppointmentData}
                   onSubmit={async (values, actions) => {
                     setError(false)
+                    console.log('serise', 'submit-begin')
+
+                    setError(false)
                     setLoading(true)
                     actions.setSubmitting(false)
                     try {
                       setLoading(true)
-                      values.appointmentDate = new Date(
-                        values.appointmentDate.toISOString()
-                      )
 
-                      values.appointmentDate.toISOString()
                       if (values.doctorId && values.patientId) {
                         isEdit
                           ? await props.onUpdate(values)
                           : await props.onSubmit(values)
-                      }
+                        setLoading(false)
+                        console.log('serise', 'submit-end')
 
-                      setOpen(false)
+                        setOpen(false)
+                      } else {
+                        setError(true)
+                      }
                     } catch (error) {
                       setError(true)
                     }
 
                     setLoading(false)
-                  }}
-                  render={({ values }) => (
+                  }}>
+                  {({ values }) => (
                     <Form className='h-full flex flex-col bg-white shadow-xl overflow-y-scroll'>
                       <div className='flex-1'>
                         <Field
@@ -136,7 +139,7 @@ const AddAppointmentSlideIn: React.FC<{
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <DropdownSearch1
+                              <DropdownSearch
                                 placeholder='select patient'
                                 selected={values.patientId}
                                 items={patients.map((x) => ({
@@ -159,7 +162,7 @@ const AddAppointmentSlideIn: React.FC<{
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <DropdownSearch1
+                              <DropdownSearch
                                 placeholder='select patient'
                                 selected={values.doctorId}
                                 items={doctors.map((x) => ({
@@ -185,7 +188,6 @@ const AddAppointmentSlideIn: React.FC<{
                               <DateTimePicker
                                 value={values.appointmentDate}
                                 onSelect={(date) => {
-                                  console.log('change', date)
                                   values.appointmentDate = date
                                 }}
                               />
@@ -215,43 +217,53 @@ const AddAppointmentSlideIn: React.FC<{
                       </div>
 
                       <div className='flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6'>
-                        <div className='space-x-3 flex justify-end'>
-                          <button
-                            type='button'
-                            className='bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                            onClick={() => setOpen(false)}>
-                            Cancel
-                          </button>
-                          <button
-                            type='submit'
-                            disabled={loading}
-                            className='text-center inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                            {loading && (
-                              <svg
-                                className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
-                                xmlns='http://www.w3.org/2000/svg'
-                                fill='none'
-                                viewBox='0 0 24 24'>
-                                <circle
-                                  className='opacity-25'
-                                  cx='12'
-                                  cy='12'
-                                  r='10'
-                                  stroke='currentColor'
-                                  stroke-width='4'></circle>
-                                <path
-                                  className='opacity-75'
-                                  fill='currentColor'
-                                  d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
-                              </svg>
-                            )}
-                            {isEdit ? 'Update' : 'Create'}
-                          </button>
+                        <div className='items-center space-x-3 flex justify-between'>
+                          <span
+                            className={clsx(
+                              'text-red-700 opacity-0',
+                              error && 'opacity-100'
+                            )}>
+                            Error! Please fix the errors and try again.
+                          </span>
+
+                          <div className='flex gap-2'>
+                            <button
+                              type='button'
+                              className='bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                              onClick={() => setOpen(false)}>
+                              Cancel
+                            </button>
+                            <button
+                              type='submit'
+                              disabled={loading}
+                              className='text-center inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                              {loading && (
+                                <svg
+                                  className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  fill='none'
+                                  viewBox='0 0 24 24'>
+                                  <circle
+                                    className='opacity-25'
+                                    cx='12'
+                                    cy='12'
+                                    r='10'
+                                    stroke='currentColor'
+                                    stroke-width='4'></circle>
+                                  <path
+                                    className='opacity-75'
+                                    fill='currentColor'
+                                    d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                                </svg>
+                              )}
+                              {isEdit ? 'Update' : 'Create'}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </Form>
                   )}
-                />
+                </Formik>
               </div>
             </Transition.Child>
           </div>

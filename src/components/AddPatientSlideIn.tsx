@@ -19,12 +19,12 @@ const AddPatientSlideIn: React.FC<{
   patient?: Patient
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  onClose: () => void
-  onSubmit: (patient: Patient) => void
+  onClose: () => Promise<void>
+  onSubmit: (patient: Patient) => Promise<void>
 }> = (props) => {
   const { patient, open, setOpen } = props
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(true)
+  const [error, setError] = useState(false)
   const [ageType, setAgeType] = useState(
     patient?.age ?? patient?.ageInMonths ?? 0
   )
@@ -100,11 +100,13 @@ const AddPatientSlideIn: React.FC<{
                       setOpen(false)
                     } catch (error) {
                       setError(true)
+                      setLoading(false)
                     }
 
                     setLoading(false)
-                  }}
-                  render={({ values }) => (
+                    setError(false)
+                  }}>
+                  {({ values }) => (
                     <Form className='h-full flex flex-col bg-white shadow-xl overflow-y-scroll'>
                       <div className='flex-1'>
                         <Field
@@ -369,43 +371,53 @@ const AddPatientSlideIn: React.FC<{
                       </div>
 
                       <div className='flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6'>
-                        <div className='space-x-3 flex justify-end'>
-                          <button
-                            type='button'
-                            className='bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                            onClick={() => setOpen(false)}>
-                            Cancel
-                          </button>
-                          <button
-                            type='submit'
-                            disabled={loading}
-                            className='text-center inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                            {loading && (
-                              <svg
-                                className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
-                                xmlns='http://www.w3.org/2000/svg'
-                                fill='none'
-                                viewBox='0 0 24 24'>
-                                <circle
-                                  className='opacity-25'
-                                  cx='12'
-                                  cy='12'
-                                  r='10'
-                                  stroke='currentColor'
-                                  stroke-width='4'></circle>
-                                <path
-                                  className='opacity-75'
-                                  fill='currentColor'
-                                  d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
-                              </svg>
-                            )}
-                            {isEdit ? 'Update' : 'Create'}
-                          </button>
+                        <div className='items-center space-x-3 flex justify-between'>
+                          <span
+                            className={clsx(
+                              'text-red-700 opacity-0',
+                              error && 'opacity-100'
+                            )}>
+                            Error! Please fix the errors and try again.
+                          </span>
+
+                          <div className='flex gap-2'>
+                            <button
+                              type='button'
+                              className='bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                              onClick={() => setOpen(false)}>
+                              Cancel
+                            </button>
+                            <button
+                              type='submit'
+                              disabled={loading}
+                              className='text-center inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                              {loading && (
+                                <svg
+                                  className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  fill='none'
+                                  viewBox='0 0 24 24'>
+                                  <circle
+                                    className='opacity-25'
+                                    cx='12'
+                                    cy='12'
+                                    r='10'
+                                    stroke='currentColor'
+                                    stroke-width='4'></circle>
+                                  <path
+                                    className='opacity-75'
+                                    fill='currentColor'
+                                    d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                                </svg>
+                              )}
+                              {isEdit ? 'Update' : 'Create'}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </Form>
                   )}
-                />
+                </Formik>
               </div>
             </Transition.Child>
           </div>

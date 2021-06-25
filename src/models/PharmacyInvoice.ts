@@ -7,7 +7,7 @@ export interface PharmacyInvoice {
     roundedOffAmount: number;
     paymentMode: number;
     paymentReference?: string;
-    id: number;
+    id?: number;
     createdOn: Date;
     updatedOn?: Date
 }

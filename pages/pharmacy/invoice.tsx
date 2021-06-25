@@ -8,6 +8,7 @@ import { GetStaticProps } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import React, { useEffect, useState } from 'react'
 import ApiHelper from '../../src/ApiHelper'
+import GenerateInvoiceModal from '../../src/components/GenerateInvoiceModal'
 import SearchBox from '../../src/components/SearchBox'
 import constants from '../../src/const'
 import { PharmacyInvoice } from '../../src/models/PharmacyInvoice'
@@ -67,7 +68,6 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
   }
 
   const search = async (a: string) => {
-    console.log(a.length, (a?.length ?? 0) == 0)
     if ((a?.length ?? 0) == 0) {
       setFilteredPharmacyInvoices([...pharmacyInvoices])
     } else {
@@ -102,6 +102,8 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
           open={open || selectedPharmacyInvoice != undefined}
           setOpen={closeSlideIn}
         /> */}
+
+        <GenerateInvoiceModal />
 
         <button
           type='button'

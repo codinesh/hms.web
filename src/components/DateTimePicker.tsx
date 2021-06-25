@@ -15,7 +15,6 @@ const DateTimePicker: React.FC<{
       dateVal.setHours(parseInt(time.split(':')[0]))
       dateVal.setMinutes(parseInt(time.split(':')[1]))
       props.onSelect(dateVal)
-      console.log('useeffect')
     }
   }, [touched])
   return (
@@ -24,7 +23,6 @@ const DateTimePicker: React.FC<{
         type='date'
         value={date}
         onChange={(e) => {
-          console.log('date', e.target.value)
           setDate(e.target.value)
           setTouched({ ...touched, date: true })
         }}
@@ -34,8 +32,6 @@ const DateTimePicker: React.FC<{
         type='time'
         value={time}
         onChange={(e) => {
-          console.log('time', e.target.value)
-
           setTouched({ ...touched, time: true })
           setTime(e.target.value)
         }}

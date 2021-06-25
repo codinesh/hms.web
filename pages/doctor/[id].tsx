@@ -11,9 +11,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
       notFound: true,
     }
   }
-
-  console.log(`Building slug: ${context.params?.id}`)
-
   const res = await fetch(
     `${constants.baseApiUrl}${constants.doctorByIdUrl}${context.params.id}`
   )
@@ -33,8 +30,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
 }
 
 export async function getStaticPaths() {
-  console.log(`${constants.baseApiUrl}${constants.doctorUrl}`)
-
   try {
     const res = await fetch(`${constants.baseApiUrl}${constants.doctorUrl}`)
     const doctors: any[] = await res.json()

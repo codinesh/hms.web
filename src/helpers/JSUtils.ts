@@ -8,12 +8,6 @@ const getIsoDateTimeString = (date: Date | string) => {
     dateval = new Date(date)
   } else dateval = date
 
-  // // let regeex = /[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}T([0-9]{1,2}:*){2}/g;
-  // // let str= dateval.toISOString()
-  // let match = str.match(regeex)
-  console.log(
-    `${dateval.getFullYear()}-${dateval.getMonth()}-${dateval.getDate()}T${dateval.getHours()}-${dateval.getMinutes()}`
-  )
   return `${dateval.getFullYear()}-${dateval.getMonth()}-${dateval.getDate()}T${dateval.getHours()}-${dateval.getMinutes()}`
 }
 

@@ -15,11 +15,8 @@ const Layout: React.FC = (props) => {
   const [loaded, setloaded] = useState(false)
 
   useEffect(() => {
-    console.log('layout')
     if (!loaded)
       (async () => {
-        console.log('async layout')
-
         const doctorsT = ApiHelper.getItem<Doctor[]>(constants.doctorUrl)
         const patientsT = ApiHelper.getItem<Patient[]>(constants.patientUrl)
 

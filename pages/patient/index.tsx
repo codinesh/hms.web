@@ -4,63 +4,62 @@ import {
   PencilIcon,
   TrashIcon,
   UserAddIcon,
-} from '@heroicons/react/outline';
-import { ArrowUpIcon } from '@heroicons/react/solid';
-import clsx from 'clsx';
+} from '@heroicons/react/outline'
+import { ArrowUpIcon } from '@heroicons/react/solid'
+import clsx from 'clsx'
 
-import { GetStaticProps } from 'next';
-import { useRouter } from 'next/dist/client/router';
-import React, { useState } from 'react';
-import ApiHelper from '../../src/ApiHelper';
-import AddPatientSlideIn from '../../src/components/AddPatientSlideIn';
-import SearchBox from '../../src/components/SearchBox';
-import constants from '../../src/const';
-import Gender from '../../src/models/Gender';
-import Patient from '../../src/models/Patient';
-import { PageProps } from '../../src/types/PageProps';
+import { GetStaticProps } from 'next'
+import { useRouter } from 'next/dist/client/router'
+import React, { useState } from 'react'
+import ApiHelper from '../../src/ApiHelper'
+import AddPatientSlideIn from '../../src/components/AddPatientSlideIn'
+import SearchBox from '../../src/components/SearchBox'
+import constants from '../../src/const'
+import Gender from '../../src/models/Gender'
+import Patient from '../../src/models/Patient'
+import { PageProps } from '../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const patients = await ApiHelper.getItem<Patient[]>(constants.patientUrl);
+  const patients = await ApiHelper.getItem<Patient[]>(constants.patientUrl)
   if (!patients) {
     return {
       notFound: true,
-    };
+    }
   }
 
   let pageProps: PageProps<Patient[]> = {
     pageContent: patients,
-  };
+  }
 
   return {
     props: { ...pageProps },
-  };
-};
+  }
+}
 
 const PatientPage: React.FC<PageProps<Patient[]>> = (props) => {
-  const { pageContent: patients } = props;
-  const [filteredPatients, setFilteredPatients] = useState([...patients]);
-  const router = useRouter();
-  const [loading, setloading] = useState(false);
-  const [open, setOpen] = useState(false);
+  const { pageContent: patients } = props
+  const [filteredPatients, setFilteredPatients] = useState([...patients])
+  const router = useRouter()
+  const [loading, setloading] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const addPatient = async (patient: Patient) => {
-    console.log(patient);
-    await ApiHelper.postItem<Patient, number>(constants.addPatientUrl, patient);
+    await ApiHelper.postItem<Patient, number>(constants.addPatientUrl, patient)
 
-    refreshData();
-  };
+    refreshData()
+  }
 
   const refreshData = () => {
-    router.replace(router.asPath);
-  };
+    router.replace(router.asPath)
+  }
 
   const search = async (a: string) => {
     let results = await ApiHelper.getItem<Patient[]>(
       `${constants.patientSearchUrl}${a}`
-    );
+    )
 
-    setFilteredPatients(results);
-  };
+    setFilteredPatients(results)
+  }
 
   return (
     <div className='flex flex-col gap-2'>
@@ -82,7 +81,7 @@ const PatientPage: React.FC<PageProps<Patient[]>> = (props) => {
         <button
           type='button'
           onClick={() => {
-            setOpen(true);
+            setOpen(true)
           }}
           className='flex-shrink  inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:ml-3 sm:w-auto sm:text-sm'>
           <UserAddIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
@@ -142,8 +141,8 @@ const PatientPage: React.FC<PageProps<Patient[]>> = (props) => {
                     )}
                     key={patient.id}
                     onDoubleClick={(e) => {
-                      setloading(true);
-                      router.push(`/patient/${patient.id}`);
+                      setloading(true)
+                      router.push(`/patient/${patient.id}`)
                     }}>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
                       {patient.id}
@@ -171,7 +170,7 @@ const PatientPage: React.FC<PageProps<Patient[]>> = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PatientPage;
+export default PatientPage
