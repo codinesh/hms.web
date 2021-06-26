@@ -59,12 +59,10 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
   }
 
   const addAppointment = async (appointment: AddAppointment) => {
-    console.log('serise', 'addappointment-begin')
     await ApiHelper.postItem<AddAppointment, number>(
       `${constants.addAppointmentUrl}`,
       appointment
     )
-    console.log('serise', 'addappointment-emd')
   }
 
   const editAppointment = async (appointment: AddAppointment) => {
@@ -95,9 +93,7 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
         </div>
         <AddAppointmentSlideIn
           onSubmit={async (a) => {
-            console.log('serise', 'onSubmit-begin')
             await addAppointment(a)
-            console.log('serise', 'onSubmit-end')
           }}
           onUpdate={editAppointment}
           onClose={() => {}}

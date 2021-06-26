@@ -30,8 +30,7 @@ const navigation: INavigationItem[] = [
   {
     name: 'Lab',
     icon: NewspaperIcon,
-    path: '/lab',
-    children: [{ name: 'Invoice', icon: UsersIcon, path: '/labinvoice' }],
+    children: [{ name: 'Invoice', icon: UsersIcon, path: '/lab/invoice' }],
   },
   {
     name: 'Doctors',

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
 
 interface SearchProps<T extends { id: string | number; value: string }> {
   items: T[]
@@ -9,11 +9,9 @@ interface SearchProps<T extends { id: string | number; value: string }> {
   selected?: number | string
 }
 
-// const DropdownSearch: React.FC<SearchProps<A, DropdownItemType<A>>> = (props) => {
-
-function DropdownSearch<T extends { id: string | number; value: string }>(
-  props: PropsWithChildren<SearchProps<T>>
-) {
+function DropdownSearch<
+  T extends { id: string | number; value: string; secondaryText?: string }
+>(props: PropsWithChildren<SearchProps<T>>) {
   const { items } = props
 
   const [selected, setSelected] = useState<number | string | undefined>(
@@ -23,6 +21,15 @@ function DropdownSearch<T extends { id: string | number; value: string }>(
   const selectedItem = props.items.filter((x) => x.id == props.selected)
   const selectedItemName = selectedItem.length > 0 ? selectedItem[0].value : ''
   const [query, setQuery] = useState(selectedItemName)
+
+  useEffect(() => {
+    setSelected(props.selected)
+    const selectedItem = props.items.filter((x) => x.id == props.selected)
+    const selectedItemName =
+      selectedItem.length > 0 ? selectedItem[0].value : ''
+
+    setQuery(selectedItemName)
+  }, [props.selected])
 
   return (
     <div className='relative'>
@@ -46,21 +53,30 @@ function DropdownSearch<T extends { id: string | number; value: string }>(
       {show &&
         items.filter((x) => query == '' || x.value.match(query)).length > 0 && (
           <div className='absolute z-50 py-1 top-12 w-full bg-white shadow-md rounded-md'>
-            <ul>
+            <ul className='divide-y divide-opacity-40 rounded-md divide-gray-400'>
               {items
-                .filter((x) => query == '' || x.value.match(query))
+                .filter(
+                  (x) =>
+                    query == '' ||
+                    x.value.toLowerCase().match(query.toLowerCase())
+                )
                 .slice(0, 5)
                 .map((x) => (
                   <li
                     key={x.id}
-                    className='flex justify-between w-full px-2 py-1 hover:bg-gray-200 text-bold cursor-pointer hover:underline'
+                    className='flex justify-between w-full px-2 py-2 rounded-md hover:bg-gray-200 text-bold cursor-pointer'
                     onClick={(e) => {
-                      setQuery(e.currentTarget.textContent ?? '')
+                      setQuery(x.value ?? '')
                       setSelected(x.id)
                       setShow(false)
                       props.onSelect(x)
                     }}>
-                    <span>{x.value}</span>
+                    <div className='flex flex-col'>
+                      <span>{x.value}</span>
+                      {x.secondaryText && (
+                        <span className='font-thin'>{x.secondaryText}</span>
+                      )}
+                    </div>
                   </li>
                 ))}
             </ul>

@@ -74,7 +74,6 @@ const AddAppointmentSlideIn: React.FC<{
                   initialValues={initialAppointmentData}
                   onSubmit={async (values, actions) => {
                     setError(false)
-                    console.log('serise', 'submit-begin')
 
                     setError(false)
                     setLoading(true)
@@ -87,7 +86,6 @@ const AddAppointmentSlideIn: React.FC<{
                           ? await props.onUpdate(values)
                           : await props.onSubmit(values)
                         setLoading(false)
-                        console.log('serise', 'submit-end')
 
                         setOpen(false)
                       } else {

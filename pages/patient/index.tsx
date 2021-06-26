@@ -73,7 +73,7 @@ const PatientPage: React.FC<PageProps<Patient[]>> = (props) => {
 
         <AddPatientSlideIn
           onSubmit={addPatient}
-          onClose={() => {}}
+          onClose={async () => {}}
           open={open}
           setOpen={setOpen}
         />
