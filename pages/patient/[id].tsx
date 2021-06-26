@@ -1,46 +1,46 @@
-import React, { useState } from 'react';
-import Patient from '../../src/models/Patient';
-import { PaperClipIcon, PencilIcon, UserAddIcon } from '@heroicons/react/solid';
-import { GetStaticProps } from 'next';
-import constants from '../../src/const';
-import ApiHelper from '../../src/ApiHelper';
-import AddPatientSlideIn from '../../src/components/AddPatientSlideIn';
-import HealthCondition from '../../src/models/HealthCondition';
-import { useRouter } from 'next/dist/client/router';
+import React, { useState } from 'react'
+import Patient from '../../src/models/Patient'
+import { PaperClipIcon, PencilIcon, UserAddIcon } from '@heroicons/react/solid'
+import { GetStaticProps } from 'next'
+import constants from '../../src/const'
+import ApiHelper from '../../src/ApiHelper'
+import AddPatientSlideIn from '../../src/components/AddPatientSlideIn'
+import HealthCondition from '../../src/models/HealthCondition'
+import { useRouter } from 'next/dist/client/router'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   if (!context.params?.id) {
     return {
       notFound: true,
-    };
+    }
   }
 
   const res = await fetch(
     `${constants.baseApiUrl}${constants.patientByIdUrl}${context.params.id}`
-  );
+  )
 
-  const patient: Patient = await res.json();
+  const patient: Patient = await res.json()
 
   if (!patient) {
     return {
       notFound: true,
-    };
+    }
   }
 
   return {
     props: { patient },
     revalidate: 1,
-  };
-};
+  }
+}
 
 export async function getStaticPaths() {
-  const res = await fetch(`${constants.baseApiUrl}${constants.patientUrl}`);
-  const patients: Patient[] = await res.json();
+  const res = await fetch(`${constants.baseApiUrl}${constants.patientUrl}`)
+  const patients: Patient[] = await res.json()
 
   if (!patients) {
     return {
       notFound: true,
-    };
+    }
   }
 
   return {
@@ -50,23 +50,23 @@ export async function getStaticPaths() {
       },
     })),
     fallback: true,
-  };
+  }
 }
 
 const PatientDetail: React.FC<{ patient: Patient }> = (props) => {
-  const { patient } = props;
-  const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const { patient } = props
+  const [open, setOpen] = useState(false)
+  const router = useRouter()
 
   const editPatientUrl = async (patientToEdit: Patient) => {
     var response = await ApiHelper.postItem<Patient, number>(
       constants.editPatientUrl,
       patientToEdit
-    );
-  };
+    )
+  }
 
   if (router.isFallback) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   return (
@@ -74,7 +74,7 @@ const PatientDetail: React.FC<{ patient: Patient }> = (props) => {
       <button
         type='button'
         onClick={() => {
-          setOpen(true);
+          setOpen(true)
         }}
         className='mb-3 flex-shrink inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
         focus:ring-indigo-500
@@ -202,12 +202,12 @@ const PatientDetail: React.FC<{ patient: Patient }> = (props) => {
       <AddPatientSlideIn
         onSubmit={editPatientUrl}
         patient={patient}
-        onClose={() => {}}
+        onClose={async () => {}}
         open={open}
         setOpen={setOpen}
       />
     </div>
-  );
-};
+  )
+}
 
-export default PatientDetail;
+export default PatientDetail

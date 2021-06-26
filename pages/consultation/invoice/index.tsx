@@ -8,17 +8,17 @@ import { GetStaticProps } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import React, { useEffect, useState } from 'react'
 import ApiHelper from '../../../src/ApiHelper'
-import GenerateInvoiceModal from '../../../src/components/GenerateInvoiceModal'
+import GenerateConsultationInvoiceModal from '../../../src/components/GenerateConsultationInvoiceModal'
 import PrintInvoice from '../../../src/components/PrintInvoice'
 import SearchBox from '../../../src/components/SearchBox'
 import constants from '../../../src/const'
 import { dateUtils } from '../../../src/helpers/JSUtils'
+import { ConsultationInvoice } from '../../../src/models/ConsultationInvoice'
 import { PaymentMode } from '../../../src/models/PaymentMode'
-import { PharmacyInvoice } from '../../../src/models/PharmacyInvoice'
 import { PageProps } from '../../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const invoices = await ApiHelper.getItem<PharmacyInvoice[]>(
+  const invoices = await ApiHelper.getItem<ConsultationInvoice[]>(
     constants.allinvoices
   )
   if (!invoices) {
@@ -27,7 +27,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
   }
 
-  let pageProps: PageProps<PharmacyInvoice[]> = {
+  let pageProps: PageProps<ConsultationInvoice[]> = {
     pageContent: invoices,
   }
 
@@ -37,21 +37,24 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 }
 
-const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
-  const { pageContent: pharmacyInvoices } = props
-  const [filteredPharmacyInvoices, setFilteredPharmacyInvoices] = useState([
-    ...pharmacyInvoices,
-  ])
+const ConsultationInvoicePage: React.FC<PageProps<ConsultationInvoice[]>> = (
+  props
+) => {
+  const { pageContent: consultationInvoices } = props
+  const [filteredConsultationInvoices, setFilteredConsultationInvoices] =
+    useState([...consultationInvoices])
   const router = useRouter()
   const [loading, setloading] = useState(false)
   const [open, setOpen] = useState(false)
-  const [selectedPharmacyInvoice, setSelectedPharmacyInvoice] =
-    useState<PharmacyInvoice>()
+  const [selectedConsultationInvoice, setSelectedConsultationInvoice] =
+    useState<ConsultationInvoice>()
 
-  const addPharmacyInvoice = async (pharmacyInvoice: PharmacyInvoice) => {
-    await ApiHelper.postItem<PharmacyInvoice, number>(
+  const addConsultationInvoice = async (
+    consultationInvoice: ConsultationInvoice
+  ) => {
+    await ApiHelper.postItem<ConsultationInvoice, number>(
       constants.addInvoice,
-      pharmacyInvoice
+      consultationInvoice
     )
 
     refreshData()
@@ -63,19 +66,19 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
 
   const search = async (a: string) => {
     if ((a?.length ?? 0) == 0) {
-      setFilteredPharmacyInvoices([...pharmacyInvoices])
+      setFilteredConsultationInvoices([...consultationInvoices])
     } else {
-      let results = await ApiHelper.getItem<PharmacyInvoice[]>(
+      let results = await ApiHelper.getItem<ConsultationInvoice[]>(
         `${constants.searchInvoice}name=${a}`
       )
 
-      setFilteredPharmacyInvoices(results)
+      setFilteredConsultationInvoices(results)
     }
   }
 
   const closeSlideIn = (isOpen: boolean) => {
     setOpen(isOpen)
-    setSelectedPharmacyInvoice(undefined)
+    setSelectedConsultationInvoice(undefined)
   }
 
   return (
@@ -91,12 +94,12 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
             onClear={() => {}}
           />
 
-          <GenerateInvoiceModal
+          <GenerateConsultationInvoiceModal
             open={open}
             setOpen={(open) => setOpen(open)}
             onSubmit={async (invoice) => {
               try {
-                await addPharmacyInvoice(invoice)
+                await addConsultationInvoice(invoice)
               } catch (error) {
                 throw error
               }
@@ -112,7 +115,7 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
             }}
             className='flex-shrink  inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:ml-3 sm:w-auto sm:text-sm'>
             <UserAddIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
-            Add pharmacyInvoice
+            Add consultationInvoice
           </button>
         </div>
         <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
@@ -166,37 +169,37 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
                   </tr>
                 </thead>
                 <tbody className='bg-white divide-y divide-gray-200'>
-                  {filteredPharmacyInvoices.map((pharmacyInvoice) => (
+                  {filteredConsultationInvoices.map((consultationInvoice) => (
                     <tr
                       onDoubleClick={() => {
-                        setSelectedPharmacyInvoice(pharmacyInvoice)
-                        router.push(`/pharmacy/invoice/${pharmacyInvoice.id}`)
+                        setSelectedConsultationInvoice(consultationInvoice)
+                        router.push(
+                          `/consultation/invoice/${consultationInvoice.id}`
+                        )
                       }}
                       className={clsx(
                         'hover:bg-gray-100 cursor-pointer select-none'
                       )}
-                      key={pharmacyInvoice.id}>
+                      key={consultationInvoice.id}>
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                        {pharmacyInvoice.id}
+                        {consultationInvoice.id}
                       </td>
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                        {pharmacyInvoice.patientId}
+                        {consultationInvoice.patientId}
+                      </td>
+
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                        {consultationInvoice.refDoctor}
                       </td>
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                        {pharmacyInvoice.patientName}
+                        {consultationInvoice.totalAmount}
                       </td>
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                        {pharmacyInvoice.refDoctor}
-                      </td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                        {pharmacyInvoice.totalAmount}
-                      </td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                        {PaymentMode[pharmacyInvoice.paymentMode]}
+                        {PaymentMode[consultationInvoice.paymentMode]}
                       </td>
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                         {dateUtils.geLocalDateTimeString(
-                          pharmacyInvoice.createdOn
+                          consultationInvoice.createdOn
                         )}
                       </td>
                     </tr>
