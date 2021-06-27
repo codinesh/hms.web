@@ -5,6 +5,8 @@ const DateTimePicker: React.FC<{
   value: Date
   showTime?: boolean
   onSelect: (date: Date) => void
+  min?: Date
+  max?: Date
 }> = (props) => {
   const [touched, setTouched] = useState({
     date: false,
@@ -31,6 +33,7 @@ const DateTimePicker: React.FC<{
       <input
         type='date'
         value={date}
+        min={props.min && dateUtils.getIsoDateString(props.min)}
         onChange={(e) => {
           setDate(e.target.value)
           setTouched({ ...touched, date: true })

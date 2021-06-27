@@ -2,33 +2,28 @@ import React, { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { Field, Form, Formik } from 'formik'
-
-import { AddAppointment } from '../models/Appointment'
-import { useGlobalState } from '../store/GlobalStore'
+import { Appointment } from '../models/Appointment'
 import DateTimePicker from './DateTimePicker'
-import DropdownSearch from './DropdownSearch'
 import clsx from 'clsx'
+import { ConsultationInvoice } from '../models/ConsultationInvoice'
+import { PaymentMode } from '../models/PaymentMode'
+import enumKeys from '../helpers/enumUtils'
 
-const AddAppointmentSlideIn: React.FC<{
-  appointment?: AddAppointment
+const GenerateConsultationInvoiceSlideIn: React.FC<{
+  appointment: Appointment
   open: boolean
   setOpen: (isOpen: boolean) => void
-  onClose: () => void
-  onSubmit: (appointment: AddAppointment) => Promise<void>
-  onUpdate: (appointment: AddAppointment) => Promise<void>
+  onSubmit: (appointment: ConsultationInvoice) => Promise<void>
 }> = (props) => {
   const { appointment, open, setOpen } = props
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(true)
-  const { patients, doctors } = useGlobalState()
-  let isEdit = appointment != null ?? false
-
-  const initialAppointmentData: AddAppointment = appointment ?? {
-    id: 0,
-    doctorId: 0,
-    patientId: 0,
-    appointmentDate: new Date(Date.now()),
-    issue: '',
+  let consultationInvoice: ConsultationInvoice = {
+    appointmentId: appointment.id,
+    invoiceDate: appointment.appointmentDate,
+    discountAmount: 0,
+    paymentMode: 0,
+    price: 0,
   }
 
   return (
@@ -64,22 +59,15 @@ const AddAppointmentSlideIn: React.FC<{
               leaveTo='translate-x-full'>
               <div className='w-screen max-w-2xl'>
                 <Formik
-                  initialValues={initialAppointmentData}
+                  initialValues={consultationInvoice}
                   onSubmit={async (values, actions) => {
                     setError(false)
-
-                    setError(false)
                     setLoading(true)
-                    actions.setSubmitting(false)
                     try {
                       setLoading(true)
 
-                      if (values.doctorId && values.patientId) {
-                        isEdit
-                          ? await props.onUpdate(values)
-                          : await props.onSubmit(values)
-                        setLoading(false)
-
+                      if (values.price > 0) {
+                        await props.onSubmit(values)
                         setOpen(false)
                       } else {
                         setError(true)
@@ -103,9 +91,7 @@ const AddAppointmentSlideIn: React.FC<{
                           <div className='flex items-start justify-between space-x-3'>
                             <div className='space-y-1'>
                               <Dialog.Title className='text-lg font-medium text-gray-900'>
-                                {isEdit
-                                  ? 'Edit appointment'
-                                  : 'Add appointment'}
+                                Generate invoice
                               </Dialog.Title>
                             </div>
                             <div className='h-7 flex items-center'>
@@ -120,89 +106,104 @@ const AddAppointmentSlideIn: React.FC<{
                           </div>
                         </div>
                         <div className='py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200'>
-                          {/* Project name */}
                           <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
                             <div>
                               <label
-                                htmlFor='patientId'
+                                htmlFor='invoiceDate'
                                 className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Patient
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <DropdownSearch
-                                placeholder='select patient'
-                                selected={values.patientId}
-                                items={patients.map((x) => ({
-                                  id: x.id,
-                                  value: x.fullName,
-                                }))}
-                                onSelect={(e) => {
-                                  values.patientId = e.id
-                                }}
-                              />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='doctorId'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Doctor
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <DropdownSearch
-                                placeholder='select patient'
-                                selected={values.doctorId}
-                                items={doctors.map((x) => ({
-                                  id: x.id,
-                                  value: x.fullName,
-                                }))}
-                                onSelect={(e) => {
-                                  values.doctorId = e.id
-                                }}
-                              />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='appointmentDate'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Appointment time
+                                Invoice date
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
                               <DateTimePicker
+                                value={values.invoiceDate}
                                 min={new Date()}
-                                value={values.appointmentDate}
                                 onSelect={(date) => {
-                                  values.appointmentDate = date
+                                  values.invoiceDate = date
                                 }}
                               />
                             </div>
                           </div>
 
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='issue'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Diagnosis
-                              </label>
+                          <div>
+                            <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                              <div>
+                                <label
+                                  htmlFor='issue'
+                                  className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                  Price
+                                </label>
+                              </div>
+                              <div className='sm:col-span-2'>
+                                <Field
+                                  as='input'
+                                  type='number'
+                                  id='price'
+                                  name='price'
+                                  className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md'
+                                />
+                              </div>
                             </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                as='textarea'
-                                type='textarea'
-                                id='issue'
-                                name='issue'
-                                rows={3}
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md'
-                              />
+
+                            <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                              <div>
+                                <label
+                                  htmlFor='issue'
+                                  className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                  Discount
+                                </label>
+                              </div>
+                              <div className='sm:col-span-2'>
+                                <Field
+                                  as='input'
+                                  type='number'
+                                  id='discountAmount'
+                                  name='discountAmount'
+                                  className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md'
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                              <div>
+                                <label
+                                  htmlFor='gender'
+                                  className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                  Payment Mode
+                                </label>
+                              </div>
+                              <div className='sm:col-span-2'>
+                                <Field
+                                  as='select'
+                                  id='paymentMode'
+                                  name='paymentMode'
+                                  className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'>
+                                  {enumKeys(PaymentMode).map((a) => (
+                                    <option value={PaymentMode[a]}>{a}</option>
+                                  ))}
+                                </Field>
+                              </div>
+                            </div>
+
+                            <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                              <div>
+                                <label
+                                  htmlFor='issue'
+                                  className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                  Payment reference
+                                </label>
+                              </div>
+                              <div className='sm:col-span-2'>
+                                <Field
+                                  as='input'
+                                  type='text'
+                                  id='paymentReference'
+                                  name='paymentReference'
+                                  className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md'
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -248,7 +249,7 @@ const AddAppointmentSlideIn: React.FC<{
                                     d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
                                 </svg>
                               )}
-                              {isEdit ? 'Update' : 'Create'}
+                              Generate invoice
                             </button>
                           </div>
                         </div>
@@ -265,4 +266,4 @@ const AddAppointmentSlideIn: React.FC<{
   )
 }
 
-export default AddAppointmentSlideIn
+export default GenerateConsultationInvoiceSlideIn

@@ -8,13 +8,19 @@ import { GetStaticProps } from 'next'
 import React, { useState } from 'react'
 import ApiHelper from '../../src/ApiHelper'
 import AddAppointmentSlideIn from '../../src/components/AddAppointmentSlideIn'
+import GenerateConsultationInvoiceSlideIn from '../../src/components/GenerateConsultationinvoiceSlideIn'
 import SearchBox from '../../src/components/SearchBox'
 import constants from '../../src/const'
 import { dateUtils } from '../../src/helpers/JSUtils'
 import { AddAppointment, Appointment } from '../../src/models/Appointment'
+import { ConsultationInvoice } from '../../src/models/ConsultationInvoice'
 import Gender from '../../src/models/Gender'
 import HealthCondition from '../../src/models/HealthCondition'
 import { PageProps } from '../../src/types/PageProps'
+import { useRouter } from 'next/dist/client/router'
+import Link from 'next/link'
+import PrintConsultationInvoice from '../../src/components/PrintConsultationInvoice'
+import FullScreenModal from '../../src/components/FullScreenModal'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const appointments = await ApiHelper.getItem<Appointment[]>(
@@ -38,6 +44,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 }
 
 const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
+  const router = useRouter()
   const { pageContent: appointments } = props
   const [filteredAppointment, setFilteredAppointments] = useState([
     ...appointments,
@@ -45,6 +52,8 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment>()
   const [loading, setloading] = useState(false)
   const [open, setOpen] = useState(false)
+  const [openConsultation, setOpenConsultation] = useState(false)
+  const [openPrintPage, setOpenPrintPage] = useState(false)
 
   const search = async (a: string) => {
     if ((a?.length ?? 0) == 0) {
@@ -72,6 +81,15 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
     )
   }
 
+  const addConsultationInvoice = async (
+    consultationInvoice: ConsultationInvoice
+  ) => {
+    await ApiHelper.postItem<ConsultationInvoice, number>(
+      constants.createConsultationInvoice,
+      consultationInvoice
+    )
+  }
+
   const closeSlideIn = (isOpen: boolean) => {
     setOpen(isOpen)
     setSelectedAppointment(undefined)
@@ -91,6 +109,7 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
             onClear={() => {}}
           />
         </div>
+
         <AddAppointmentSlideIn
           onSubmit={async (a) => {
             await addAppointment(a)
@@ -107,9 +126,38 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
                 }
               : undefined
           }
-          open={open || selectedAppointment != undefined}
+          open={open}
           setOpen={closeSlideIn}
         />
+
+        {selectedAppointment && (
+          <GenerateConsultationInvoiceSlideIn
+            open={openConsultation}
+            appointment={selectedAppointment}
+            setOpen={(open) => setOpenConsultation(open)}
+            onSubmit={async (invoice) => {
+              try {
+                await addConsultationInvoice(invoice)
+              } catch (error) {
+                throw error
+              }
+
+              setOpen(false)
+            }}
+          />
+        )}
+
+        <FullScreenModal
+          onClose={() => {
+            setOpenPrintPage(false)
+          }}
+          open={openPrintPage}>
+          {selectedAppointment?.invoice && (
+            <PrintConsultationInvoice
+              {...selectedAppointment}></PrintConsultationInvoice>
+          )}
+        </FullScreenModal>
+
         <button
           type='button'
           onClick={() => {
@@ -168,6 +216,9 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Health conditions
                   </th>
+                  <th scope='col' className='relative px-6 py-3'>
+                    <span className='sr-only'>Edit</span>
+                  </th>
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
@@ -175,6 +226,7 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
                   <tr
                     onDoubleClick={() => {
                       setSelectedAppointment(appointment)
+                      setOpen(true)
                     }}
                     className={clsx(
                       'hover:bg-gray-100 cursor-pointer select-none'
@@ -210,6 +262,30 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
                             {HealthCondition[x]}
                           </span>
                         ))}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                      {appointment.invoice ? (
+                        <button
+                          type='button'
+                          onClick={() => {
+                            setSelectedAppointment(appointment)
+                            setOpenPrintPage(true)
+                          }}
+                          className='text-center inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                          Print invoice
+                        </button>
+                      ) : (
+                        <button
+                          type='button'
+                          onClick={() => {
+                            setSelectedAppointment(appointment)
+
+                            setOpenConsultation(!openConsultation)
+                          }}
+                          className='text-center inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                          Generate invoice
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

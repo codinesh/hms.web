@@ -32,7 +32,7 @@ const Layout: React.FC = (props) => {
       <Sidebar setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen} />
       <div className='flex flex-col flex-1 overflow-hidden'>
         <button
-          className='px-4 py-4 text-gray-500 border-r border-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden'
+          className='print:hidden px-4 py-4 text-gray-500 border-r border-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden'
           onClick={() => setSidebarOpen(true)}>
           <span className='sr-only'>Open sidebar</span>
           <MenuAlt2Icon className='w-6 h-6' aria-hidden='true' />

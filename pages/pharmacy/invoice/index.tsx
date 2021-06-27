@@ -1,6 +1,7 @@
 import {
   ArrowDownIcon,
   ArrowUpIcon,
+  PrinterIcon,
   UserAddIcon,
 } from '@heroicons/react/outline'
 import clsx from 'clsx'
@@ -8,6 +9,7 @@ import { GetStaticProps } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import React, { useEffect, useState } from 'react'
 import ApiHelper from '../../../src/ApiHelper'
+import FullScreenModal from '../../../src/components/FullScreenModal'
 import GenerateInvoiceModal from '../../../src/components/GenerateInvoiceModal'
 import PrintInvoice from '../../../src/components/PrintInvoice'
 import SearchBox from '../../../src/components/SearchBox'
@@ -45,6 +47,7 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
   const router = useRouter()
   const [loading, setloading] = useState(false)
   const [open, setOpen] = useState(false)
+  const [openPrintPage, setOpenPrintPage] = useState(false)
   const [selectedPharmacyInvoice, setSelectedPharmacyInvoice] =
     useState<PharmacyInvoice>()
 
@@ -80,8 +83,6 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
 
   return (
     <>
-      {!open && <PrintInvoice />}
-
       <div className='print:hidden flex flex-col gap-2'>
         <div className='flex justify-between items-center'>
           <SearchBox
@@ -104,6 +105,16 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
               setOpen(false)
             }}
           />
+
+          <FullScreenModal
+            onClose={() => {
+              setOpenPrintPage(false)
+            }}
+            open={openPrintPage}>
+            {selectedPharmacyInvoice && (
+              <PrintInvoice {...selectedPharmacyInvoice}></PrintInvoice>
+            )}
+          </FullScreenModal>
 
           <button
             type='button'
@@ -198,6 +209,17 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
                         {dateUtils.geLocalDateTimeString(
                           pharmacyInvoice.createdOn
                         )}
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                        <button
+                          type='button'
+                          onClick={() => {
+                            setSelectedPharmacyInvoice(pharmacyInvoice)
+                            setOpenPrintPage(true)
+                          }}
+                          className='text-center w-5 h-5'>
+                          <PrinterIcon className='' />
+                        </button>
                       </td>
                     </tr>
                   ))}

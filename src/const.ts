@@ -24,12 +24,15 @@
     appointmentUrl = "appointment/all"
     addAppointmentUrl = "appointment/add"
     updateAppointmentUrl = "appointment/edit"
-
+    createConsultationInvoice = "appointment/generateinvoice"
+    consultationInvoices = "appointment/invoices"
+    
     //pharmacy invoice
     allinvoices = "pharmacy/invoice/all"
     invoiceById = "pharmacy/invoice?invoiceId="
     searchInvoice= "pharmacy/searchinvoice?"
     addInvoice = "pharmacy/prepareinvoice"
+
 }
 
 const constants = new Constants()

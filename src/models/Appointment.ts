@@ -1,3 +1,5 @@
+import { ConsultationInvoice1 } from './ConsultationInvoice'
+
 export interface Appointment {
     id: number;
     createdOn: Date;
@@ -17,6 +19,7 @@ export interface Appointment {
     contactNumber: string;
     age: number;
     ageInMonths: number;
+    invoice: ConsultationInvoice1
 }
 
 

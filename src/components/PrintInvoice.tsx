@@ -1,112 +1,125 @@
 import React from 'react'
+import { dateUtils } from '../helpers/JSUtils'
+import Gender from '../models/Gender'
+import { PaymentMode } from '../models/PaymentMode'
+import { PharmacyInvoice } from '../models/PharmacyInvoice'
+import PrintLayout from './PrintLayout'
 
-const PrintInvoice = () => {
+const PrintInvoice: React.FC<PharmacyInvoice> = (props) => {
   return (
-    <div>
-      {/* print only */}
-      <div className='hidden bg-white print:flex w-full flex-col px-4'>
-        <header className=' print:flex items-center'>
-          {/* <Image
-                className='fixed left-0 '
-                width={140}
-                height={140}
-                src='/logo.png'
-                alt='logo'
-              /> */}
-          <div className='mx-auto'>
-            <h2 className='text-3xl font-medium'>Pragathi Hospital</h2>
-            <span className='text-sm'>Tirupati, addressline1</span>
-            <span className='text-sm'>Tirupati, addressline2</span>
-            <div className='mt-6'>
-              <span className='text-md'>GSTIN: 123456789</span>
-              <span className='text-md'>CIN No: 789456123145679846312132</span>
+    <>
+      <PrintLayout>
+        <>
+          <div className='print:overflow-hidden flex flex-col'>
+            <div className='align-middle inline-block w-full '>
+              <div className='overflow-hidden border border-gray-200 sm:rounded-lg'>
+                <table className='print:overflow-hidden print:bg-white  divide-y divide-gray-200'>
+                  <thead className=''>
+                    <tr className='divide-x divide-gray-300'>
+                      <th
+                        scope='col'
+                        className='px-1 w-6  py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                        Medicine
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-1 w-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                        Unit
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-1 w-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                        HSN
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-1 w-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                        Sch
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-1 w-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                        Batch
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-1 w-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                        Exp
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-1 w-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                        Mfg.
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-1 w-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                        QTY
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-1 w-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                        MRP
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-1 w-4  py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                        Amount
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {props?.pharmacyInvoiceMedicines &&
+                      props.pharmacyInvoiceMedicines.map((medicine, idx) => (
+                        <tr
+                          key={medicine.itemName}
+                          className='divide-x divide-gray-300'
+                          onDoubleClick={() => {}}>
+                          <td className='px-1  w-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
+                            {medicine.itemName}
+                          </td>
+                          <td className='px-1 w-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
+                            {medicine.measuringUnit}
+                          </td>
+                          <td className='px-1 w-3  py-4 whitespace-nowrap text-sm text-gray-500'>
+                            {medicine.hsnCode}
+                          </td>
+                          <td className='px-1 w-3 py-4 whitespace-nowrap text-sm text-gray-500'>
+                            {medicine.schedule}
+                          </td>
+                          <td className='px-1 w-4 py-4 whitespace-nowrap text-sm text-gray-500'>
+                            {medicine.batchNo}
+                          </td>
+                          <td className='px-1 w-4 py-4 whitespace-nowrap text-sm text-gray-500'>
+                            {dateUtils.geLocalDateString(medicine.expiryDate)}
+                          </td>
+                          <td className='px-1 w-4 py-4 whitespace-nowrap text-sm text-gray-500'>
+                            {medicine.manufacturer}
+                          </td>
+                          <td className='px-1 w-3 py-4 whitespace-nowrap text-sm text-gray-500'>
+                            {medicine.quantity}
+                          </td>
+                          <td className='px-1 w-4 py-4 whitespace-nowrap text-sm text-gray-500'>
+                            {medicine.mrp}
+                          </td>
+                          <td className='px-1 w-4 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                            {medicine.amount}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+              <section className='flex flex-col justify-end items-end px-4 py-4'>
+                <div>Discount: {props.discountAmount}</div>
+                <div className='font-bold'>Total: {props.roundedOffAmount}</div>
+              </section>
             </div>
-            <h1 className='text-3xl font-medium mt-4'>Tax Invoice</h1>
           </div>
-        </header>
-        <main className='mt-6 flex flex-col'>
-          <div className='flex border-t-2 justify-between border-b-2 py-2 border-black'>
-            <div>
-              <span className='text-md font-bold'>Invoice Number: </span>
-              <span>OPH12353249</span>
-            </div>
-            <div>
-              <span className='text-md font-bold'>Invoice Date: </span>
-              <span>2021-01-17 16:54</span>
-            </div>
-            <div>
-              <span className='text-md font-bold'>Patient Id: </span>
-              <span>Random Id</span>
-            </div>
-          </div>
-          <div className='flex '>
-            <div className='flex py-4 justify-center  flex-col border-b-2 border-r-2 border-black pb-4'>
-              <span className='font-bold'>Sold to: </span>
-              <span>Name & Address: Name of Patient </span>
-              <span>Contact Number: 123456789</span>
-              <span>State Name & Code: AndhraPradesh & 123 </span>
-              <span>GST Number: </span>
-              <span>PAN: </span>
-              <span>Aadhaar :</span>
-            </div>
-            <div className='flex-grow border-b-2 border-black '></div>
-          </div>
-        </main>
-      </div>
-    </div>
+        </>
+      </PrintLayout>
+    </>
   )
 }
 
 export default PrintInvoice
-{
-  /* print only */
-}
-;<div className='hidden print:flex w-full flex-col px-4 py-4'>
-  <header className=' print:flex items-center'>
-    {/* <Image
-                className='fixed left-0 '
-                width={140}
-                height={140}
-                src='/logo.png'
-                alt='logo'
-              /> */}
-    <div className='mx-auto'>
-      <h2 className='text-3xl font-medium'>Pragathi Hospital</h2>
-      <span className='text-sm'>Tirupati, addressline1</span>
-      <span className='text-sm'>Tirupati, addressline2</span>
-      <div className='mt-6'>
-        <span className='text-md'>GSTIN: 123456789</span>
-        <span className='text-md'>CIN No: 789456123145679846312132</span>
-      </div>
-      <h1 className='text-3xl font-medium mt-4'>Tax Invoice</h1>
-    </div>
-  </header>
-  <main className='mt-6 flex flex-col'>
-    <div className='flex border-t-2 justify-between border-b-2 py-2 border-black'>
-      <div>
-        <span className='text-md font-bold'>Invoice Number: </span>
-        <span>OPH12353249</span>
-      </div>
-      <div>
-        <span className='text-md font-bold'>Invoice Date: </span>
-        <span>2021-01-17 16:54</span>
-      </div>
-      <div>
-        <span className='text-md font-bold'>Patient Id: </span>
-        <span>Random Id</span>
-      </div>
-    </div>
-    <div className='flex '>
-      <div className='flex py-4 justify-center  flex-col border-b-2 border-r-2 border-black pb-4'>
-        <span className='font-bold'>Sold to: </span>
-        <span>Name & Address: Name of Patient </span>
-        <span>Contact Number: 123456789</span>
-        <span>State Name & Code: AndhraPradesh & 123 </span>
-        <span>GST Number: </span>
-        <span>PAN: </span>
-        <span>Aadhaar :</span>
-      </div>
-      <div className='flex-grow border-b-2 border-black '></div>
-    </div>
-  </main>
-</div>
