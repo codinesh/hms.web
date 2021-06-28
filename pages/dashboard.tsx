@@ -1,13 +1,8 @@
-import React, { Fragment, useRef, useState } from 'react'
-import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import DropdownSearch from '../src/components/DropdownSearch'
+import React, { useState } from 'react'
 import { useGlobalState } from '../src/store/GlobalStore'
-import { dateUtils } from '../src/helpers/JSUtils'
 import DateTimePicker from '../src/components/DateTimePicker'
 import FullScreenModal from '../src/components/FullScreenModal'
 import PrintInvoice from '../src/components/PrintInvoice'
-import PrintConsultationInvoice from './appointment/invoice/[id]'
 
 export default function Example() {
   const { patients, doctors } = useGlobalState()
@@ -18,8 +13,6 @@ export default function Example() {
 
   return (
     <div className='w-full flex flex-col'>
-      <PrintInvoice />
-
       <button
         className='print:hidden w-24 bg-red-600'
         onClick={() => {
@@ -35,8 +28,6 @@ export default function Example() {
           setOpen(false)
         }}>
         <>
-          <PrintInvoice />
-
           <div className='print:hidden flex '>
             <div className=' '>
               {date.toLocaleString()}
