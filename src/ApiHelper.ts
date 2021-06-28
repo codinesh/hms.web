@@ -5,7 +5,36 @@ async function getItem<T>(url: string, headers?: string): Promise<T> {
     try {
       let response = await fetch([constants.baseApiUrl, url].join(''))
       if (response.ok) {
+        if(response.status == 204)
+        {
+         resolve({} as T)
+        }
+
         let item: T = await response.json()
+        if (item) resolve(item)
+        else reject('data not available')
+      } else {
+        reject('data not available')
+      }
+    } catch (err) {
+      reject(err)
+    }
+  })
+
+  return promise
+}
+
+async function getItems<T>(url: string, headers?: string): Promise<T[]> {
+  let promise = new Promise<T[]>(async (resolve, reject) => {
+    try {
+      let response = await fetch([constants.baseApiUrl, url].join(''))
+      if (response.ok) {
+        if(response.status == 204)
+        {
+           resolve([])
+        }
+
+        let item: T[] = await response.json()
         if (item) resolve(item)
         else reject('data not available')
       } else {
@@ -59,5 +88,5 @@ async function postItem<T, R>(
   return promise
 }
 
-const ApiHelper = { getItem, postItem }
+const ApiHelper = { getItem, getItems, postItem }
 export default ApiHelper

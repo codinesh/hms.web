@@ -23,7 +23,7 @@ import PrintConsultationInvoice from '../../src/components/PrintConsultationInvo
 import FullScreenModal from '../../src/components/FullScreenModal'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const appointments = await ApiHelper.getItem<Appointment[]>(
+  const appointments = await ApiHelper.getItems<Appointment>(
     constants.appointmentUrl
   )
 
