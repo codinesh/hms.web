@@ -1,5 +1,7 @@
 import React from 'react'
 
-export const Lab = () => {
+const Lab = () => {
   return <div>Lab Home</div>
 }
+
+export default Lab
