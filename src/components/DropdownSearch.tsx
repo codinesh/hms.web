@@ -40,18 +40,21 @@ function DropdownSearch<
           setShow(true)
         }}
         onBlur={(e) => {
-          if (props.allowFreeText) {
+          if (props.allowFreeText && query.length > 0 && !selected) {
             props.onSelect({ id: -1, value: query } as T)
           }
         }}
         onChange={(e) => {
+          setSelected(undefined)
           setShow(true)
           setQuery(e.target.value)
         }}
         className='rounded-md focus:ring-2 w-full z-10'
       />
       {show &&
-        items.filter((x) => query == '' || x.value.match(query)).length > 0 && (
+        items.filter(
+          (x) => query == '' || x.value.toLowerCase().match(query.toLowerCase())
+        ).length > 0 && (
           <div className='absolute z-50 py-1 top-12 w-full bg-white shadow-md rounded-md'>
             <ul className='divide-y divide-opacity-40 rounded-md divide-gray-400'>
               {items

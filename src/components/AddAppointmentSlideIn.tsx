@@ -70,7 +70,6 @@ const AddAppointmentSlideIn: React.FC<{
 
                     setError(false)
                     setLoading(true)
-                    actions.setSubmitting(false)
                     try {
                       setLoading(true)
 

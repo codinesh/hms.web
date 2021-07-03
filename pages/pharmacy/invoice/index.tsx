@@ -123,7 +123,7 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
             }}
             className='flex-shrink  inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:ml-3 sm:w-auto sm:text-sm'>
             <UserAddIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
-            Add pharmacyInvoice
+            Add Pharmacy Invoice
           </button>
         </div>
         <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
