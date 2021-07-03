@@ -1,14 +1,14 @@
-import { Dialog, Transition } from '@headlessui/react';
-import { UserCircleIcon, XIcon } from '@heroicons/react/outline';
-import React, { Dispatch, Fragment, SetStateAction } from 'react';
-import { data } from '../data';
-import SidebarItem from './SideBarItem';
+import { Dialog, Transition } from '@headlessui/react'
+import { UserCircleIcon, XIcon } from '@heroicons/react/outline'
+import React, { Dispatch, Fragment, SetStateAction } from 'react'
+import { data } from '../data'
+import SidebarItem from './SideBarItem'
 
 const Sidebar: React.FC<{
-  sidebarOpen: boolean;
-  setSidebarOpen: Dispatch<SetStateAction<boolean>>;
+  sidebarOpen: boolean
+  setSidebarOpen: Dispatch<SetStateAction<boolean>>
 }> = (props) => {
-  const { sidebarOpen, setSidebarOpen } = props;
+  const { sidebarOpen, setSidebarOpen } = props
   return (
     <>
       <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -54,12 +54,10 @@ const Sidebar: React.FC<{
                   </button>
                 </div>
               </Transition.Child>
-              <div className='flex items-center flex-shrink-0 px-4'>
-                <img
-                  className='w-auto h-8'
-                  src='https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg'
-                  alt='Workflow'
-                />
+              <div className='flex items-center flex-shrink-0 h-16 px-4 bg-gray-800'>
+                <span className='text-2xl text-gray-300'>
+                  Pragathi Hospital
+                </span>
               </div>
               <div className='flex flex-col flex-1 h-0 mt-5 overflow-y-auto'>
                 <nav className='px-2 space-y-1'>
@@ -139,7 +137,7 @@ const Sidebar: React.FC<{
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar

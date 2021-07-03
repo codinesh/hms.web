@@ -97,18 +97,25 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
 
   return (
     <div className='flex flex-col gap-2'>
-      <div className='flex justify-between items-center'>
-        <div className='flex gap-2 items-center'>
-          <SearchBox
-            className='pb-4'
-            placeholderText='search appointments'
-            onSearch={(a: string) => {
-              search(a)
-              return { id: a }
-            }}
-            onClear={() => {}}
-          />
-        </div>
+      <div className='flex  justify-between items-center'>
+        <SearchBox
+          className=''
+          placeholderText='search appointments'
+          onSearch={(a: string) => {
+            search(a)
+            return { id: a }
+          }}
+          onClear={() => {}}
+        />
+        <button
+          type='button'
+          onClick={() => {
+            setOpen(true)
+          }}
+          className='flex-shrink inline-flex  justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:w-auto sm:text-sm'>
+          <UserAddIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
+          Appointment
+        </button>
 
         <AddAppointmentSlideIn
           onSubmit={async (a) => {
@@ -157,16 +164,6 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
               {...selectedAppointment}></PrintConsultationInvoice>
           )}
         </FullScreenModal>
-
-        <button
-          type='button'
-          onClick={() => {
-            setOpen(true)
-          }}
-          className='flex-shrink  inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:ml-3 sm:w-auto sm:text-sm'>
-          <UserAddIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
-          Appointment
-        </button>
       </div>
       <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
         <div className=' py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>

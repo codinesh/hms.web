@@ -2,68 +2,71 @@ import React, { useEffect } from 'react'
 import Image from 'next/image'
 import { PrinterIcon } from '@heroicons/react/solid'
 
-const PrintLayout: React.FC = (props) => {
+interface PrintDetails {
+  patientName: string
+  address: string
+  doctorName: string
+  invoiceDate: Date
+  patientId: string
+  discount: number
+  total: number
+  amount: number
+}
+
+const PrintLayout: React.FC<PrintDetails> = (props) => {
   useEffect(() => {
     // setTimeout(() => {
     //   window.print()
     // }, 5000)
   })
   return (
-    <div className='px-4 bg-white w-full h-full flex justify-between flex-col'>
-      <header className='flex text-center justify-center items-center'>
-        <Image
-          className='fixed left-0 '
-          width={140}
-          height={140}
-          src='/logo.png'
-          alt='logo'
-        />
-
-        <div className='mx-auto'>
-          <h2 className='text-3xl font-medium'>Pragathi Hospital</h2>
+    <div className='border my-2 mx-2 px-1 border-black  bg-white w-full h-full flex justify-between items-stretch flex-col'>
+      <header className='flex justify-between'>
+        <div className=''>
+          <h2 className='text-xl font-medium'>Pragathi Hospital</h2>
           <span className='text-sm block'>
             Near Gopal Reddy Statue, Ravi Nagar, Kota,
           </span>
           <span className='text-sm block'>
             Nellore Dt., Andhra Pradesh - 524411
           </span>
-
-          <div className='mt-6'>
-            <span className='text-md'>GSTIN: 123456789</span>
-            <span className='text-md'>CIN No: 789456123145679846312132</span>
-          </div>
-          <h1 className='text-3xl font-medium mt-4'>Tax Invoice</h1>
+          <span className='text-sm block'>Phone: 8795462134</span>
+        </div>
+        <div className=''>
+          <h2 className='text-lg font-medium'>
+            Patient Name: {props.patientName} Age:32Y
+          </h2>
+          <span className='text-sm block'>
+            Patient Address: {props.address}
+          </span>
+          <span className='text-sm block'>UID:</span>
+          <span className='text-sm block'>Dr Name: {props.doctorName}</span>
         </div>
       </header>
-      <main className='mt-6 flex-grow flex flex-col'>
-        <div className='flex border-t-2 justify-between border-b-2 py-2 border-black'>
-          <div>
-            <span className='text-md font-bold'>Invoice Number: </span>
-            <span>OPH12353249</span>
+      <main className='mt-2 flex-grow flex flex-col'>
+        <div className='flex items-center border-t justify-between border-b border-black'>
+          <div className='text-xs '>
+            <span className='text-md block'>GSTIN: 123456789</span>
+            <span className='text-md block'>
+              CIN No: 789456123145679846312132
+            </span>
           </div>
           <div>
-            <span className='text-md font-bold'>Invoice Date: </span>
-            <span>2021-01-17 16:54</span>
+            <span className='text-lg font-bold '>GST INVOICE</span>
           </div>
           <div>
-            <span className='text-md font-bold'>Patient Id: </span>
-            <span>Random Id</span>
+            <div>
+              <span className='text-xs'>Invoice Date: </span>
+              <span>2021-01-17 16:54</span>
+            </div>
+            <div>
+              <span className='text-xs'>Patient Id: </span>
+              <span>Random Id</span>
+            </div>
           </div>
-        </div>
-        <div className='flex '>
-          <div className='flex py-4 text-left   flex-col border-b-2 border-r-2 border-black pb-4'>
-            <span className='font-bold'>Sold to: </span>
-            <span>Name & Address: Name of Patient </span>
-            <span>Contact Number: 123456789</span>
-            <span>State Name & Code: AndhraPradesh & 123 </span>
-            <span>GST Number: </span>
-            <span>PAN: </span>
-            <span>Aadhaar :</span>
-          </div>
-          <div className='flex-grow border-b-2 border-black'></div>
         </div>
 
-        <div className='mt-4'>{props.children}</div>
+        <div className=''>{props.children}</div>
         <div className='block absolute top-0 right-10 pt-4 pr-4'>
           <button
             type='button'
@@ -74,7 +77,31 @@ const PrintLayout: React.FC = (props) => {
           </button>
         </div>
       </main>
-      <footer className='mt-8 border-t-2 border-dashed'></footer>
+      <footer className='text-xs font-thin flex border justify-between'>
+        <div className='flex flex-col flex-grow border-r'>
+          <span className='underline'>Terms & Conditions</span>
+          <span className=''>
+            Goods once sold will not be taken back or exchanged
+          </span>
+          <span className=''>
+            Bills not paid due date will attract 24% interest
+          </span>
+          <span className=''>All disputes subject to Jurisdiction only</span>
+          <span className=''>
+            Presbribed Sales Tax declaration will be given
+          </span>
+          <span className=''>Remark:</span>
+        </div>
+        <div className=' flex flex-col justify-between items-center'>
+          <div>
+            <span className='block'>Sub Total: {props.amount}</span>
+            <span>Discount: {props.discount}</span>
+          </div>
+          <span className='p-2 text-md border-t'>
+            Grand Total: {props.total}
+          </span>
+        </div>
+      </footer>
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { useGlobalState } from '../src/store/GlobalStore'
 import DateTimePicker from '../src/components/DateTimePicker'
 import FullScreenModal from '../src/components/FullScreenModal'
 import PrintInvoice from '../src/components/PrintInvoice'
+import { CartesianGrid, Line, LineChart, Tooltip, XAxis } from 'recharts'
 
 export default function Example() {
   const { patients, doctors } = useGlobalState()
@@ -12,7 +13,18 @@ export default function Example() {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className='w-full flex flex-col'>
+    <div className='w-full flex flex-col hidden'>
+      <LineChart
+        width={400}
+        height={400}
+        data={[1, 2, 3, 94, 5, 6, 7]}
+        margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+        <XAxis dataKey='name' />
+        <Tooltip />
+        <CartesianGrid stroke='#f5f5f5' />
+        <Line type='monotone' dataKey='uv' stroke='#ff7300' yAxisId={0} />
+        <Line type='monotone' dataKey='pv' stroke='#387908' yAxisId={1} />
+      </LineChart>
       <button
         className='print:hidden w-24 bg-red-600'
         onClick={() => {

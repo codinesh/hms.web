@@ -153,16 +153,17 @@ const GenerateLabInvoiceModal: React.FC<{
                                 value: x.fullName,
                               }))}
                               onSelect={(e) => {
-                                if (e.id != -1) {
-                                  setDoctorId(e.id)
+                                if (e.id == -1) {
+                                  setDoctorId(-1)
                                   setInvoice({
                                     ...invoice,
                                     doctorId: undefined,
                                   })
                                 } else {
+                                  setDoctorId(e.id)
                                   setInvoice({
                                     ...invoice,
-                                    doctorId: undefined,
+                                    doctorId: e.id,
                                     refDoctor: e.value,
                                   })
                                 }
@@ -411,6 +412,30 @@ const GenerateLabInvoiceModal: React.FC<{
                                         </td>
                                       </tr>
                                     ))}
+                                    {invoice.labTestIdCollection.length ==
+                                      0 && (
+                                      <tr className=''>
+                                        <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-opacity-0'>
+                                          1
+                                        </td>
+                                        <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'></td>
+                                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'></td>
+                                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'></td>
+                                      </tr>
+                                    )}
+                                    <tr className='border-t-2 border-dashed'>
+                                      <td className=' px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
+                                        Total
+                                      </td>
+                                      <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'></td>
+                                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'></td>
+                                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                                        {invoiceTests.reduce<number>(
+                                          (a, b) => a + b.price,
+                                          0
+                                        )}
+                                      </td>
+                                    </tr>
                                   </tbody>
                                 </table>
                               </div>

@@ -42,7 +42,7 @@ const FullScreenModal: React.FC<{
             leaveFrom='opacity-100 translate-y-0 sm:scale-100'
             leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'>
             <div className='inline-block h-screen w-screen transform transition-all  '>
-              <div className='flex flex-col items-center'>
+              <div className='flex flex-col '>
                 <div>
                   <div className='hidden sm:block absolute top-0 right-0 pt-4 pr-4'>
                     <button

@@ -5,7 +5,15 @@ import PrintLayout from './PrintLayout'
 
 const PrintLabInvoice: React.FC<LabInvoice> = (props) => {
   return (
-    <PrintLayout>
+    <PrintLayout
+      address={'TPTY'}
+      amount={props.amount}
+      discount={props.discount}
+      doctorName={props.refDoctor}
+      invoiceDate={props.invoiceDate}
+      patientId={props.patientId?.toString() ?? ''}
+      total={props.invoiceDetail.reduce((a, b) => a + b.price, 0)}
+      patientName={props.patientName}>
       <div className=' py-2 align-middle inline-block min-w-full '>
         <div className=' overflow-hidden border-b  border-gray-200 sm:rounded-lg'>
           <table className=' min-w-full divide-y divide-gray-200'>
@@ -50,7 +58,7 @@ const PrintLabInvoice: React.FC<LabInvoice> = (props) => {
                     {invoicedetail.id}
                   </td>
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                    {'Doctor LabInvoice'}
+                    {invoicedetail.testName}
                   </td>
                   <td className='px-6 py-4 whitespace-n owrap text-sm text-gray-500'>
                     {invoicedetail.price}
