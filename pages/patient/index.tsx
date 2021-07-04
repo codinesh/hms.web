@@ -33,6 +33,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   return {
     props: { ...pageProps },
+    revalidate: 1,
   }
 }
 
