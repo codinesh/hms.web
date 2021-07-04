@@ -21,29 +21,29 @@ const PrintConsultationInvoice: React.FC<Appointment> = (props) => {
               <tr>
                 <th
                   scope='col'
-                  className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  className='px-6 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   <div className='flex'>
                     <span className='inline'>S.No</span>
                   </div>
                 </th>
                 <th
                   scope='col'
-                  className='  px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  className='  px-6 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Item
                 </th>
                 <th
                   scope='col'
-                  className=' px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  className=' px-6 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Price
                 </th>
                 <th
                   scope='col'
-                  className=' px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  className=' px-6 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Discount
                 </th>
                 <th
                   scope='col'
-                  className=' px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  className=' px-6 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Total
                 </th>
               </tr>
@@ -53,20 +53,20 @@ const PrintConsultationInvoice: React.FC<Appointment> = (props) => {
                 className={clsx(
                   'hover:bg-gray-100 cursor-pointer select-none'
                 )}>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                <td className='px-6 py-4 print:py-1 whitespace-nowrap text-sm text-gray-900'>
                   {props.id}
                 </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                <td className='px-6 py-4 print:py-1 whitespace-nowrap text-sm text-gray-500'>
                   {'Doctor Consultation'}
                 </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                <td className='px-6 py-4 print:py-1 whitespace-nowrap text-sm text-gray-500'>
                   {props.invoice.price}
                 </td>
 
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                <td className='px-6 py-4 print:py-1 whitespace-nowrap text-sm text-gray-500'>
                   {props.invoice.discount}
                 </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                <td className='px-6 py-4 print:py-1 whitespace-nowrap text-sm text-gray-500'>
                   {props.invoice.amount}
                 </td>
               </tr>
