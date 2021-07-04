@@ -83,6 +83,29 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
 
   return (
     <>
+      <FullScreenModal
+        onClose={() => {
+          setOpenPrintPage(false)
+        }}
+        open={openPrintPage}>
+        {selectedPharmacyInvoice && (
+          <PrintInvoice {...selectedPharmacyInvoice}></PrintInvoice>
+        )}
+      </FullScreenModal>
+      <GenerateInvoiceModal
+        open={open}
+        setOpen={(open) => setOpen(open)}
+        onSubmit={async (invoice) => {
+          try {
+            await addPharmacyInvoice(invoice)
+          } catch (error) {
+            throw error
+          }
+
+          setOpen(false)
+        }}
+      />
+
       <div className='print:hidden flex flex-col gap-2'>
         <div className='flex justify-between items-center'>
           <SearchBox
@@ -91,30 +114,6 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
             onSearch={search}
             onClear={() => {}}
           />
-
-          <GenerateInvoiceModal
-            open={open}
-            setOpen={(open) => setOpen(open)}
-            onSubmit={async (invoice) => {
-              try {
-                await addPharmacyInvoice(invoice)
-              } catch (error) {
-                throw error
-              }
-
-              setOpen(false)
-            }}
-          />
-
-          <FullScreenModal
-            onClose={() => {
-              setOpenPrintPage(false)
-            }}
-            open={openPrintPage}>
-            {selectedPharmacyInvoice && (
-              <PrintInvoice {...selectedPharmacyInvoice}></PrintInvoice>
-            )}
-          </FullScreenModal>
 
           <button
             type='button'

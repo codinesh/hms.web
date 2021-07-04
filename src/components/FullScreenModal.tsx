@@ -15,7 +15,7 @@ const FullScreenModal: React.FC<{
         className='fixed z-10 inset-0 overflow-y-auto'
         open={props.open}
         onClose={props.onClose}>
-        <div className='flex  '>
+        <div className='flex w-full'>
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-300'
@@ -42,7 +42,7 @@ const FullScreenModal: React.FC<{
             leaveFrom='opacity-100 translate-y-0 sm:scale-100'
             leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'>
             <div className='inline-block h-screen w-screen transform transition-all  '>
-              <div className='flex flex-col '>
+              <div className='flex flex-col'>
                 <div>
                   <div className='hidden sm:block absolute top-0 right-0 pt-4 pr-4'>
                     <button
@@ -63,7 +63,9 @@ const FullScreenModal: React.FC<{
                     </div>
                   )}
                 </div>
-                <div className=''>{props.children}</div>
+                <div className=' my-10 mx-4 print:mx-0 print:my-0'>
+                  {props.children}
+                </div>
               </div>
             </div>
           </Transition.Child>

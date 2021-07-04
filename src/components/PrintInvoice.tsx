@@ -15,7 +15,7 @@ const PrintInvoice: React.FC<PharmacyInvoice> = (props) => {
         amount={props.roundedOffAmount}
         patientId={props.patientId?.toString() ?? ''}
         total={props.totalAmount}>
-        <div className=' print:overflow-hidden flex flex-col'>
+        <div className='print:overflow-hidden flex flex-col'>
           <div className='overflow-hidden border border-gray-200'>
             <table className='print:overflow-hidden print:bg-white  divide-y divide-gray-200'>
               <thead className=''>

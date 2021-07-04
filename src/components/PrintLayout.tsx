@@ -20,7 +20,7 @@ const PrintLayout: React.FC<PrintDetails> = (props) => {
     // }, 5000)
   })
   return (
-    <div className='border my-2 mx-2 px-1 border-black  bg-white w-full h-full flex justify-between items-stretch flex-col'>
+    <div className='border border-black  bg-white w-full h-full flex justify-between items-stretch flex-col'>
       <header className='flex justify-between'>
         <div className=''>
           <h2 className='text-xl font-medium'>Pragathi Hospital</h2>

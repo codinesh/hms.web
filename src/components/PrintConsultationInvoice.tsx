@@ -14,7 +14,7 @@ const PrintConsultationInvoice: React.FC<Appointment> = (props) => {
       total={props.invoice.invoiceDetail.reduce((a, b) => a + b.price, 0)}
       patientId={props.patientId?.toString() ?? ''}
       patientName={props.patientName}>
-      <div className=' py-2 align-middle inline-block min-w-full'>
+      <div className='align-middle inline-block min-w-full'>
         <div className=' overflow-hidden border-b  border-gray-200 sm:rounded-lg'>
           <table className=' min-w-full divide-y divide-gray-200'>
             <thead className='bg-gray-50'>
