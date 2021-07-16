@@ -171,11 +171,13 @@ const AddAppointmentSlideIn: React.FC<{
                               <label
                                 htmlFor='appointmentDate'
                                 className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Appointment time
+                                Appointment time{' '}
+                                {values.appointmentDate.toString()}
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
                               <DateTimePicker
+                                showTime={true}
                                 min={new Date()}
                                 value={values.appointmentDate}
                                 onSelect={(date) => {

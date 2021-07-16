@@ -45,8 +45,8 @@ const DateTimePicker: React.FC<{
           type='time'
           value={time}
           onChange={(e) => {
-            setTouched({ ...touched, time: true })
             setTime(e.target.value)
+            setTouched({ ...touched, time: true })
           }}
           className='rounded-md'
           step={300}

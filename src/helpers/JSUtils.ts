@@ -18,7 +18,7 @@ const getIsoDateString = (date: Date | string) => {
   } else dateval = date
 
   const datev = dateval.getDate()
-  const month = dateval.getUTCMonth()
+  const month = dateval.getUTCMonth() + 1
   const year = dateval.getFullYear()
 
   const dateString = datev > 9 ? datev : `0${datev}`

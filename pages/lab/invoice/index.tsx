@@ -57,7 +57,7 @@ const LabInvoicePage: React.FC<PageProps<LabInvoice[]>> = (props) => {
 
   useEffect(() => {
     ;(async () => {
-      const tests = await ApiHelper.getItem<LabTest[]>(constants.labTests)
+      const tests = await ApiHelper.getItems<LabTest>(constants.labTests)
       setTests(tests)
     })()
   }, [])
@@ -66,7 +66,7 @@ const LabInvoicePage: React.FC<PageProps<LabInvoice[]>> = (props) => {
     if ((a?.length ?? 0) == 0) {
       setFilteredLabInvoices([...labInvoices])
     } else {
-      let results = await ApiHelper.getItem<LabInvoice[]>(
+      let results = await ApiHelper.getItems<LabInvoice>(
         `${constants.labInvoiceById}${a}`
       )
 

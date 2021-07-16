@@ -17,7 +17,7 @@ import Gender from '../../src/models/Gender'
 import { PageProps } from '../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const doctors = await ApiHelper.getItem<Doctor[]>(constants.doctorUrl)
+  const doctors = await ApiHelper.getItems<Doctor>(constants.doctorUrl)
 
   if (!doctors) {
     return {

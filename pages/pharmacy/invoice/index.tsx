@@ -20,7 +20,7 @@ import { PharmacyInvoice } from '../../../src/models/PharmacyInvoice'
 import { PageProps } from '../../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const invoices = await ApiHelper.getItem<PharmacyInvoice[]>(
+  const invoices = await ApiHelper.getItems<PharmacyInvoice>(
     constants.allinvoices
   )
   if (!invoices) {
@@ -68,7 +68,7 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
     if ((a?.length ?? 0) == 0) {
       setFilteredPharmacyInvoices([...pharmacyInvoices])
     } else {
-      let results = await ApiHelper.getItem<PharmacyInvoice[]>(
+      let results = await ApiHelper.getItems<PharmacyInvoice>(
         `${constants.searchInvoice}name=${a}`
       )
 

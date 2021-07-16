@@ -20,7 +20,7 @@ import Patient from '../../src/models/Patient'
 import { PageProps } from '../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const patients = await ApiHelper.getItem<Patient[]>(constants.patientUrl)
+  const patients = await ApiHelper.getItems<Patient>(constants.patientUrl)
   if (!patients) {
     return {
       notFound: true,
@@ -55,7 +55,7 @@ const PatientPage: React.FC<PageProps<Patient[]>> = (props) => {
   }
 
   const search = async (a: string) => {
-    let results = await ApiHelper.getItem<Patient[]>(
+    let results = await ApiHelper.getItems<Patient>(
       `${constants.patientSearchUrl}${a}`
     )
 

@@ -22,6 +22,7 @@ class Constants {
 
   //appointment endpoints
   appointmentUrl = 'appointment/all'
+  appointmentsByPatientUrl = 'appointment/bypatient?nameOrId='
   addAppointmentUrl = 'appointment/add'
   updateAppointmentUrl = 'appointment/edit'
   createConsultationInvoice = 'appointment/generateinvoice'
@@ -35,6 +36,8 @@ class Constants {
 
   // lab invoice
   allLabinvoices = 'lab/invoices'
+  updateLabReports = 'lab/invoice'
+  updateLabTestResult = 'lab/updateTestResult'
   labTests = 'lab/tests'
   labInvoiceById = 'lab/testResult?invoiceId='
   labSearchInvoice = 'lab/searchinvoice?'

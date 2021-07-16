@@ -36,7 +36,7 @@ interface IInvoiceDetail {
   deleted: boolean
 }
 
-interface ILabTestRecord {
+export interface ILabTestRecord {
   labTestId: number
   refDoctor: string
   receivedOn: string
@@ -50,8 +50,9 @@ interface ILabTestRecord {
   deleted: boolean
 }
 
-interface LabTestResult {
+export interface LabTestResult {
   labTestRecordId: number
+  id:number
   test: string
   unit: string
   result: string

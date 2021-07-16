@@ -17,7 +17,7 @@ import { Stock } from '../../src/models/Stock'
 import { PageProps } from '../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const stocks = await ApiHelper.getItem<Stock[]>(constants.stockUrl)
+  const stocks = await ApiHelper.getItems<Stock>(constants.stockUrl)
   if (!stocks) {
     return {
       notFound: true,
@@ -63,7 +63,7 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
     if ((a?.length ?? 0) == 0) {
       setFilteredStocks([...stocks])
     } else {
-      let results = await ApiHelper.getItem<Stock[]>(
+      let results = await ApiHelper.getItems<Stock>(
         `${constants.stockSearchUrl}${a}`
       )
 
@@ -79,7 +79,7 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
   }, [isExpiringStock])
 
   const fetchExpiringStock = async () => {
-    let results = await ApiHelper.getItem<Stock[]>(
+    let results = await ApiHelper.getItems<Stock>(
       `${constants.expiringStockUrl}`
     )
 

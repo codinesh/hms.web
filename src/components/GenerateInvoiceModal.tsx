@@ -46,7 +46,7 @@ const GenerateInvoiceModal: React.FC<{
 
   useEffect(() => {
     ;(async () => {
-      const stocks = await ApiHelper.getItem<Stock[]>(constants.stockUrl)
+      const stocks = await ApiHelper.getItems<Stock>(constants.stockUrl)
       setMedicines(stocks)
     })()
   }, [])

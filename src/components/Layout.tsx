@@ -17,8 +17,8 @@ const Layout: React.FC = (props) => {
   useEffect(() => {
     if (!loaded)
       (async () => {
-        const doctorsT = ApiHelper.getItem<Doctor[]>(constants.doctorUrl)
-        const patientsT = ApiHelper.getItem<Patient[]>(constants.patientUrl)
+        const doctorsT = ApiHelper.getItems<Doctor>(constants.doctorUrl)
+        const patientsT = ApiHelper.getItems<Patient>(constants.patientUrl)
 
         let res = await Promise.all<Doctor[], Patient[]>([doctorsT, patientsT])
         setloaded(true)
