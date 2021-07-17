@@ -100,7 +100,7 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
       labTestRecordId,
       labTestResults,
     })
-    dispatch({ type: LoadingStateAction.Busy })
+    dispatch({ type: LoadingStateAction.Idle })
   }
 
   if (router.isFallback) {
