@@ -10,6 +10,10 @@ import {
 import ApiHelper from '../../../src/ApiHelper'
 import Gender from '../../../src/models/Gender'
 import constants from '../../../src/const'
+import {
+  LoadingStateAction,
+  useLoadingDispatch,
+} from '../../../src/store/LoadingStore'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   if (!context.params?.id) {
@@ -82,11 +86,13 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
       })
   const [testResultsState, setTestResultsState] = useState(laResultsMap)
   const router = useRouter()
+  const dispatch = useLoadingDispatch()
 
   const updateTestResult = async (
     labTestRecordId: string,
     labTestResults: any[]
   ) => {
+    dispatch({ type: LoadingStateAction.Busy })
     await ApiHelper.postItem<
       { labTestResults: TestUpdateModel[]; labTestRecordId: string },
       any
@@ -94,13 +100,7 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
       labTestRecordId,
       labTestResults,
     })
-  }
-
-  const editLabInvoiceUrl = async (labInvoiceToEdit: LabInvoice) => {
-    var response = await ApiHelper.postItem<LabInvoice, number>(
-      constants.updateLabReports,
-      labInvoiceToEdit
-    )
+    dispatch({ type: LoadingStateAction.Busy })
   }
 
   if (router.isFallback) {
@@ -109,17 +109,6 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
 
   return (
     <div>
-      <button
-        type='button'
-        onClick={() => {
-          setOpen(true)
-        }}
-        className='mb-3 flex-shrink inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
-        focus:ring-indigo-500
-        sm:ml-3 sm:w-auto sm:text-sm'>
-        <PencilIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
-        Edit
-      </button>
       <div className='mb-3 bg-white shadow overflow-hidden sm:rounded-lg'>
         <div className='px-4 py-5 sm:px-6'>
           <h3 className='text-lg leading-6 font-medium text-gray-900'>

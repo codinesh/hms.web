@@ -20,6 +20,10 @@ import {
   LabTest,
 } from '../../../src/models/LabInvoice'
 import GenerateLabInvoiceModal from '../../../src/components/GeneralteLabInvoiceModal'
+import {
+  LoadingStateAction,
+  useLoadingDispatch,
+} from '../../../src/store/LoadingStore'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const labInvoices = await ApiHelper.getItems<LabInvoice>(
@@ -54,10 +58,13 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
   const [loading, setloading] = useState(false)
   const [open, setOpen] = useState(false)
   const [openPrintPage, setOpenPrintPage] = useState(false)
+  const dispatch = useLoadingDispatch()
 
   useEffect(() => {
     ;(async () => {
+      dispatch({ type: LoadingStateAction.Busy })
       const tests = await ApiHelper.getItems<LabTest>(constants.labTests)
+      dispatch({ type: LoadingStateAction.Idle })
       setTests(tests)
     })()
   }, [])
@@ -66,9 +73,11 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
     if ((a?.length ?? 0) == 0) {
       setFilteredLabInvoices([...labInvoices])
     } else {
+      dispatch({ type: LoadingStateAction.Busy })
       let results = await ApiHelper.getItems<LabInvoice>(
         `${constants.labInvoiceById}${a}`
       )
+      dispatch({ type: LoadingStateAction.Idle })
 
       setFilteredLabInvoices(results)
     }
@@ -76,10 +85,12 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
 
   const addLabInvoice = async (labAddInvoice: AddLabInvoice) => {
     try {
+      dispatch({ type: LoadingStateAction.Busy })
       let labInvoice = await ApiHelper.postItem<AddLabInvoice, LabInvoice>(
         `${constants.labAddInvoice}`,
         labAddInvoice
       )
+      dispatch({ type: LoadingStateAction.Idle })
 
       setFilteredLabInvoices([...labInvoices, labInvoice])
     } catch (error) {}

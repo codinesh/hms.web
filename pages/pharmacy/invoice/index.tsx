@@ -17,6 +17,10 @@ import constants from '../../../src/const'
 import { dateUtils } from '../../../src/helpers/JSUtils'
 import { PaymentMode } from '../../../src/models/PaymentMode'
 import { PharmacyInvoice } from '../../../src/models/PharmacyInvoice'
+import {
+  LoadingStateAction,
+  useLoadingDispatch,
+} from '../../../src/store/LoadingStore'
 import { PageProps } from '../../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
@@ -50,12 +54,15 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
   const [openPrintPage, setOpenPrintPage] = useState(false)
   const [selectedPharmacyInvoice, setSelectedPharmacyInvoice] =
     useState<PharmacyInvoice>()
+  const dispatch = useLoadingDispatch()
 
   const addPharmacyInvoice = async (pharmacyInvoice: PharmacyInvoice) => {
+    dispatch({ type: LoadingStateAction.Busy })
     await ApiHelper.postItem<PharmacyInvoice, number>(
       constants.addInvoice,
       pharmacyInvoice
     )
+    dispatch({ type: LoadingStateAction.Idle })
 
     refreshData()
   }
@@ -68,9 +75,11 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
     if ((a?.length ?? 0) == 0) {
       setFilteredPharmacyInvoices([...pharmacyInvoices])
     } else {
+      dispatch({ type: LoadingStateAction.Busy })
       let results = await ApiHelper.getItems<PharmacyInvoice>(
         `${constants.searchInvoice}name=${a}`
       )
+      dispatch({ type: LoadingStateAction.Idle })
 
       setFilteredPharmacyInvoices(results)
     }

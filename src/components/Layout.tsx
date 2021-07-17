@@ -8,19 +8,29 @@ import ApiHelper from '../ApiHelper'
 import Doctor from '../models/Doctor'
 import Patient from '../models/Patient'
 import constants from '../const'
+import {
+  LoadingStateAction,
+  useLoadingDispatch,
+  useLoadingState,
+} from '../store/LoadingStore'
+import LoadingIndicator from './LoadingIndicator'
 
 const Layout: React.FC = (props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const globalDispatch = useGlobalDispatch()
   const [loaded, setloaded] = useState(false)
+  const loadingState = useLoadingState()
+  const dispatch = useLoadingDispatch()
 
   useEffect(() => {
     if (!loaded)
       (async () => {
+        dispatch({ type: LoadingStateAction.Busy })
         const doctorsT = ApiHelper.getItems<Doctor>(constants.doctorUrl)
         const patientsT = ApiHelper.getItems<Patient>(constants.patientUrl)
 
         let res = await Promise.all<Doctor[], Patient[]>([doctorsT, patientsT])
+        dispatch({ type: LoadingStateAction.Idle })
         setloaded(true)
         globalDispatch({ type: GlobalStateAction.Doctors, doctors: res[0] })
         globalDispatch({ type: GlobalStateAction.Patients, patients: res[1] })
@@ -28,23 +38,26 @@ const Layout: React.FC = (props) => {
   }, [])
 
   return (
-    <div className='flex h-screen overflow-hidden bg-gray-100'>
-      <Sidebar setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen} />
-      <div className='flex flex-col flex-1 overflow-hidden'>
-        <button
-          className='print:hidden px-4 py-4 text-gray-500 border-r border-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden'
-          onClick={() => setSidebarOpen(true)}>
-          <span className='sr-only'>Open sidebar</span>
-          <MenuAlt2Icon className='w-6 h-6' aria-hidden='true' />
-        </button>
+    <>
+      <LoadingIndicator open={loadingState.inProgress} />
+      <div className='flex h-screen overflow-hidden bg-gray-100'>
+        <Sidebar setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen} />
+        <div className='flex flex-col flex-1 overflow-hidden'>
+          <button
+            className='print:hidden px-4 py-4 text-gray-500 border-r border-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden'
+            onClick={() => setSidebarOpen(true)}>
+            <span className='sr-only'>Open sidebar</span>
+            <MenuAlt2Icon className='w-6 h-6' aria-hidden='true' />
+          </button>
 
-        <main className='relative flex-1 overflow-y-auto focus:outline-none'>
-          <div className='py-6'>
-            <Page>{props.children}</Page>
-          </div>
-        </main>
+          <main className='relative flex-1 overflow-y-auto focus:outline-none'>
+            <div className='py-6'>
+              <Page>{props.children}</Page>
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

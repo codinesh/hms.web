@@ -17,6 +17,11 @@ import SearchBox from '../../src/components/SearchBox'
 import constants from '../../src/const'
 import Gender from '../../src/models/Gender'
 import Patient from '../../src/models/Patient'
+import {
+  LoadingStateAction,
+  useLoadingDispatch,
+  useLoadingState,
+} from '../../src/store/LoadingStore'
 import { PageProps } from '../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
@@ -43,9 +48,12 @@ const PatientPage: React.FC<PageProps<Patient[]>> = (props) => {
   const router = useRouter()
   const [loading, setloading] = useState(false)
   const [open, setOpen] = useState(false)
+  const dispatch = useLoadingDispatch()
 
   const addPatient = async (patient: Patient) => {
+    dispatch({ type: LoadingStateAction.Busy })
     await ApiHelper.postItem<Patient, number>(constants.addPatientUrl, patient)
+    dispatch({ type: LoadingStateAction.Idle })
 
     refreshData()
   }
@@ -55,9 +63,11 @@ const PatientPage: React.FC<PageProps<Patient[]>> = (props) => {
   }
 
   const search = async (a: string) => {
+    dispatch({ type: LoadingStateAction.Busy })
     let results = await ApiHelper.getItems<Patient>(
       `${constants.patientSearchUrl}${a}`
     )
+    dispatch({ type: LoadingStateAction.Idle })
 
     setFilteredPatients(results)
   }

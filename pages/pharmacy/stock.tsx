@@ -14,6 +14,10 @@ import SearchBox from '../../src/components/SearchBox'
 import constants from '../../src/const'
 import { dateUtils } from '../../src/helpers/JSUtils'
 import { Stock } from '../../src/models/Stock'
+import {
+  LoadingStateAction,
+  useLoadingDispatch,
+} from '../../src/store/LoadingStore'
 import { PageProps } from '../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
@@ -42,9 +46,12 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
   const [isExpiringStock, setIsExpiringStock] = useState(false)
   const [open, setOpen] = useState(false)
   const [selectedStock, setSelectedStock] = useState<Stock>()
+  const dispatch = useLoadingDispatch()
 
   const addStock = async (stock: Stock) => {
+    dispatch({ type: LoadingStateAction.Busy })
     await ApiHelper.postItem<Stock, number>(constants.addStockUrl, stock)
+    dispatch({ type: LoadingStateAction.Idle })
 
     // refreshData();
   }
@@ -54,7 +61,9 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
   }
 
   const updateStock = async (stock: Stock) => {
+    dispatch({ type: LoadingStateAction.Busy })
     await ApiHelper.postItem<Stock, number>(constants.addStockUrl, stock)
+    dispatch({ type: LoadingStateAction.Idle })
 
     // refreshData();
   }
@@ -63,9 +72,11 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
     if ((a?.length ?? 0) == 0) {
       setFilteredStocks([...stocks])
     } else {
+      dispatch({ type: LoadingStateAction.Busy })
       let results = await ApiHelper.getItems<Stock>(
         `${constants.stockSearchUrl}${a}`
       )
+      dispatch({ type: LoadingStateAction.Idle })
 
       setFilteredStocks(results)
     }
@@ -79,9 +90,11 @@ const StockList: React.FC<PageProps<Stock[]>> = (props) => {
   }, [isExpiringStock])
 
   const fetchExpiringStock = async () => {
+    dispatch({ type: LoadingStateAction.Busy })
     let results = await ApiHelper.getItems<Stock>(
       `${constants.expiringStockUrl}`
     )
+    dispatch({ type: LoadingStateAction.Idle })
 
     setFilteredStocks(results)
   }

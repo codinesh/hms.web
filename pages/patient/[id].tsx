@@ -7,6 +7,10 @@ import ApiHelper from '../../src/ApiHelper'
 import AddPatientSlideIn from '../../src/components/AddPatientSlideIn'
 import HealthCondition from '../../src/models/HealthCondition'
 import { useRouter } from 'next/dist/client/router'
+import {
+  LoadingStateAction,
+  useLoadingDispatch,
+} from '../../src/store/LoadingStore'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   if (!context.params?.id) {
@@ -57,12 +61,15 @@ const PatientDetail: React.FC<{ patient: Patient }> = (props) => {
   const { patient } = props
   const [open, setOpen] = useState(false)
   const router = useRouter()
+  const dispatch = useLoadingDispatch()
 
   const editPatientUrl = async (patientToEdit: Patient) => {
+    dispatch({ type: LoadingStateAction.Busy })
     var response = await ApiHelper.postItem<Patient, number>(
       constants.editPatientUrl,
       patientToEdit
     )
+    dispatch({ type: LoadingStateAction.Idle })
   }
 
   if (router.isFallback) {

@@ -18,11 +18,15 @@ import Gender from '../../src/models/Gender'
 import HealthCondition from '../../src/models/HealthCondition'
 import { PageProps } from '../../src/types/PageProps'
 import { useRouter } from 'next/dist/client/router'
-import Link from 'next/link'
 import PrintConsultationInvoice from '../../src/components/PrintConsultationInvoice'
 import FullScreenModal from '../../src/components/FullScreenModal'
+import {
+  LoadingStateAction,
+  useLoadingDispatch,
+  useLoadingState,
+} from '../../src/store/LoadingStore'
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async () => {
   const appointments = await ApiHelper.getItems<Appointment>(
     constants.appointmentUrl
   )
@@ -44,50 +48,60 @@ export const getStaticProps: GetStaticProps = async (context) => {
 }
 
 const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
-  const router = useRouter()
   const { pageContent: appointments } = props
   const [filteredAppointment, setFilteredAppointments] = useState([
     ...appointments,
   ])
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment>()
-  const [loading, setloading] = useState(false)
   const [open, setOpen] = useState(false)
   const [openConsultation, setOpenConsultation] = useState(false)
   const [openPrintPage, setOpenPrintPage] = useState(false)
+
+  const dispatch = useLoadingDispatch()
 
   const search = async (a: string) => {
     if ((a?.length ?? 0) == 0) {
       setFilteredAppointments([...appointments])
     } else {
+      dispatch({ type: LoadingStateAction.Busy })
       let results = await ApiHelper.getItems<Appointment>(
         `${constants.appointmentsByPatientUrl}${a}`
       )
+      dispatch({ type: LoadingStateAction.Idle })
 
       setFilteredAppointments(results)
     }
   }
 
   const addAppointment = async (appointment: AddAppointment) => {
+    dispatch({ type: LoadingStateAction.Busy })
     await ApiHelper.postItem<AddAppointment, number>(
       `${constants.addAppointmentUrl}`,
       appointment
     )
+    dispatch({ type: LoadingStateAction.Idle })
   }
 
   const editAppointment = async (appointment: AddAppointment) => {
+    dispatch({ type: LoadingStateAction.Busy })
+
     await ApiHelper.postItem<AddAppointment, number>(
       `${constants.updateAppointmentUrl}`,
       appointment
     )
+    dispatch({ type: LoadingStateAction.Idle })
   }
 
   const addConsultationInvoice = async (
     consultationInvoice: ConsultationInvoice
   ) => {
+    dispatch({ type: LoadingStateAction.Busy })
+
     await ApiHelper.postItem<ConsultationInvoice, number>(
       constants.createConsultationInvoice,
       consultationInvoice
     )
+    dispatch({ type: LoadingStateAction.Idle })
   }
 
   const closeSlideIn = (isOpen: boolean) => {
@@ -176,11 +190,7 @@ const AppointmentPage: React.FC<PageProps<Appointment[]>> = (props) => {
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     <div className='flex'>
                       <span className='inline'>Id</span>
-                      {loading ? (
-                        <ArrowUpIcon className='inline' width='16' />
-                      ) : (
-                        <ArrowDownIcon className='inline' width='16' />
-                      )}
+                      <ArrowUpIcon className='inline' width='16' />
                     </div>
                   </th>
                   <th

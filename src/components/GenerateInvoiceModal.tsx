@@ -12,6 +12,7 @@ import { Stock } from '../models/Stock'
 import ApiHelper from '../ApiHelper'
 import constants from '../const'
 import { dateUtils } from '../helpers/JSUtils'
+import { LoadingStateAction, useLoadingDispatch } from '../store/LoadingStore'
 
 type invoiceMedicineType = Stock & { quantity: number }
 
@@ -31,7 +32,7 @@ const GenerateInvoiceModal: React.FC<{
 
   const [curMedicine, setCurMedicines] = useState<invoiceMedicineType>()
   const cancelButtonRef = useRef(null)
-
+  const dispatch = useLoadingDispatch()
   const [doctorId, setDoctorId] = useState<number>(0)
   const [invoice, setInvoice] = useState<PharmacyInvoice>({
     patientId: 0,
@@ -46,7 +47,9 @@ const GenerateInvoiceModal: React.FC<{
 
   useEffect(() => {
     ;(async () => {
+      dispatch({ type: LoadingStateAction.Busy })
       const stocks = await ApiHelper.getItems<Stock>(constants.stockUrl)
+      dispatch({ type: LoadingStateAction.Idle })
       setMedicines(stocks)
     })()
   }, [])
