@@ -66,17 +66,20 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
   const [open, setOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   let laResultsMap: Map<string, object> = new Map()
-  labInvoice.invoiceDetail
-    .flatMap((x) => x.labTestRecord)
-    .map((x) => ({ id: x.id, result: x.labTestResult }))
-    .forEach((m) => {
-      let obj: any = {}
-      m.result.forEach((mx) => {
-        obj[mx.id.toString()] = mx.result
-      })
 
-      laResultsMap.set(m.id.toString(), obj)
-    })
+  labInvoice &&
+    labInvoice.invoiceDetail &&
+    labInvoice.invoiceDetail
+      .flatMap((x) => x.labTestRecord)
+      .map((x) => ({ id: x.id, result: x.labTestResult }))
+      .forEach((m) => {
+        let obj: any = {}
+        m.result.forEach((mx) => {
+          obj[mx.id.toString()] = mx.result
+        })
+
+        laResultsMap.set(m.id.toString(), obj)
+      })
   const [testResultsState, setTestResultsState] = useState(laResultsMap)
   const router = useRouter()
 
