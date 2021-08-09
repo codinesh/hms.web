@@ -24,6 +24,7 @@ import {
   LoadingStateAction,
   useLoadingDispatch,
 } from '../../../src/store/LoadingStore'
+import { dateUtils } from '../../../src/helpers/JSUtils'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const labInvoices = await ApiHelper.getItems<LabInvoice>(
@@ -167,6 +168,11 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
                   <th
                     scope='col'
                     className=' hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    Patient id
+                  </th>
+                  <th
+                    scope='col'
+                    className=' hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Patient name
                   </th>
                   <th
@@ -182,17 +188,7 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Contact number
-                  </th>
-                  <th
-                    scope='col'
-                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    LabInvoice time
-                  </th>
-                  <th
-                    scope='col'
-                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Health conditions
+                    Invoice time
                   </th>
                   <th scope='col' className='relative px-6 py-3'>
                     <span className='sr-only'>Edit</span>
@@ -215,6 +211,9 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
                       {labInvoice.id}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                      {labInvoice.patientId}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {labInvoice.patientName}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
@@ -225,22 +224,7 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
                       {Gender[labInvoice.patientGender]}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {/* {labInvoice.contactNumber} */}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {/* {dateUtils.geLocalDateTimeString(
-                        labInvoice.labInvoiceDate
-                      )} */}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {/* {labInvoice.healthConditions &&
-                        labInvoice.healthConditions.map((x) => (
-                          <span
-                            key={x}
-                            className=' inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 text-opacity-75'>
-                            {HealthCondition[x]}
-                          </span>
-                        ))} */}
+                      {dateUtils.geLocalDateTimeString(labInvoice.invoiceDate)}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {labInvoice ? (

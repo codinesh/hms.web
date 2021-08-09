@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import Image from 'next/image'
 import { PrinterIcon } from '@heroicons/react/solid'
+import { dateUtils } from '../helpers/JSUtils'
 
 interface PrintDetails {
   patientName: string
@@ -30,7 +31,7 @@ const PrintLayout: React.FC<PrintDetails> = (props) => {
           <span className='text-sm block'>
             Nellore Dt., Andhra Pradesh - 524411
           </span>
-          <span className='text-sm block'>Phone: 8795462134</span>
+          <span className='text-sm block text-red-400'>Phone: 8795462134</span>
         </div>
         <div className=''>
           <h2 className='text-lg font-medium'>
@@ -39,15 +40,17 @@ const PrintLayout: React.FC<PrintDetails> = (props) => {
           <span className='text-sm block'>
             Patient Address: {props.address}
           </span>
-          <span className='text-sm block'>UID:</span>
+          <span className='text-sm block text-red-400'>
+            UID: (What should go here?)
+          </span>
           <span className='text-sm block'>Dr Name: {props.doctorName}</span>
         </div>
       </header>
       <main className='mt-2 flex-grow flex flex-col'>
         <div className='flex items-center border-t justify-between border-b border-black'>
           <div className='text-xs '>
-            <span className='text-md block'>GSTIN: 123456789</span>
-            <span className='text-md block'>
+            <span className='text-md block text-red-400'>GSTIN: 123456789</span>
+            <span className='text-md block text-red-400'>
               CIN No: 789456123145679846312132
             </span>
           </div>
@@ -57,11 +60,11 @@ const PrintLayout: React.FC<PrintDetails> = (props) => {
           <div>
             <div>
               <span className='text-xs'>Invoice Date: </span>
-              <span>2021-01-17 16:54</span>
+              <span>{dateUtils.geLocalDateTimeString(props.invoiceDate)}</span>
             </div>
             <div>
               <span className='text-xs'>Patient Id: </span>
-              <span>Random Id</span>
+              <span>{props.patientId}</span>
             </div>
           </div>
         </div>

@@ -75,7 +75,7 @@ const LabInvoicePage: React.FC<PageProps<LabInvoice[]>> = (props) => {
     } else {
       dispatch({ type: LoadingStateAction.Busy })
       let results = await ApiHelper.getItems<LabInvoice>(
-        `${constants.labInvoiceById}${a}`
+        `${constants.labSearchInvoice}${a}`
       )
       dispatch({ type: LoadingStateAction.Idle })
 
@@ -172,6 +172,11 @@ const LabInvoicePage: React.FC<PageProps<LabInvoice[]>> = (props) => {
                   </th>
                   <th
                     scope='col'
+                    className=' hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    Patient Id
+                  </th>
+                  <th
+                    scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Doctor name
                   </th>
@@ -215,6 +220,9 @@ const LabInvoicePage: React.FC<PageProps<LabInvoice[]>> = (props) => {
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {labInvoice.patientName}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                      {labInvoice.patientId}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {labInvoice.refDoctor}

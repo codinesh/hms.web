@@ -77,7 +77,7 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
     } else {
       dispatch({ type: LoadingStateAction.Busy })
       let results = await ApiHelper.getItems<PharmacyInvoice>(
-        `${constants.searchInvoice}name=${a}`
+        `${constants.searchInvoice}nameOrId=${a}`
       )
       dispatch({ type: LoadingStateAction.Idle })
 

@@ -40,7 +40,7 @@ class Constants {
   updateLabTestResult = 'lab/updateTestResult'
   labTests = 'lab/tests'
   labInvoiceById = 'lab/testResult?invoiceId='
-  labSearchInvoice = 'lab/searchinvoice?'
+  labSearchInvoice = 'lab/searchinvoice?nameOrId='
   labAddInvoice = 'lab/addinvoice'
 }
 

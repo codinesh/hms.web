@@ -14,7 +14,8 @@ export default function Example() {
 
   return (
     <div className='w-full flex flex-col'>
-      <span>{date.toString()}</span>
+      <h1 className='animate-pulse'>Under construction...</h1>
+      {/* <span>{date.toString()}</span>
 
       <DateTimePicker
         value={date}
@@ -63,7 +64,7 @@ export default function Example() {
             </div>
           </div>
         </>
-      </FullScreenModal>
+      </FullScreenModal> */}
     </div>
   )
 }
