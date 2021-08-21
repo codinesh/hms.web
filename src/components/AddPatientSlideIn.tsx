@@ -14,6 +14,7 @@ import Gender from '../models/Gender'
 import clsx from 'clsx'
 import enumKeys from '../helpers/enumUtils'
 import HealthConditions from '../models/HealthCondition'
+import AgeInput from './AgeInput'
 
 const AddPatientSlideIn: React.FC<{
   patient?: Patient
@@ -25,15 +26,9 @@ const AddPatientSlideIn: React.FC<{
   const { patient, open, setOpen } = props
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  const [ageType, setAgeType] = useState(
-    patient?.age ?? patient?.ageInMonths ?? 0
-  )
   let isEdit = patient != null ?? false
-
   const initialPatientData: Patient = patient ?? {
     address: '',
-    age: 0,
-    ageInMonths: 0,
     contactNumber: '',
     createdOn: new Date(),
     diagnoses: [],
@@ -48,6 +43,11 @@ const AddPatientSlideIn: React.FC<{
     role: 0,
     updatedOn: new Date(),
   }
+
+  const [age, setAge] = useState({
+    years: patient?.age,
+    months: patient?.ageInMonths,
+  })
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -89,14 +89,12 @@ const AddPatientSlideIn: React.FC<{
                     actions.setSubmitting(false)
                     try {
                       setLoading(true)
-                      if (ageType == 1) {
-                        values.ageInMonths = values.age
-                        values.age = 0
-                      }
 
                       values.gender = parseInt(values.gender.toString())
-
+                      values.age = age.years
+                      values.ageInMonths = age.months
                       await props.onSubmit(values)
+
                       setOpen(false)
                     } catch (error) {
                       setError(true)
@@ -220,30 +218,13 @@ const AddPatientSlideIn: React.FC<{
                             </div>
                             <div className='sm:col-span-2'>
                               <div className='relative rounded-md shadow-sm'>
-                                <Field
-                                  type='text'
-                                  name='age'
-                                  id='age'
-                                  className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-gray-300 rounded-md'
-                                  placeholder='age'
+                                <AgeInput
+                                  years={props.patient?.age}
+                                  months={props.patient?.ageInMonths}
+                                  onSelect={(years: number, months: number) => {
+                                    setAge({ years, months })
+                                  }}
                                 />
-                                <div className='absolute inset-y-0 right-0 flex items-center'>
-                                  <label
-                                    htmlFor='insuranceId'
-                                    className='sr-only'>
-                                    AgeType
-                                  </label>
-                                  <Field
-                                    as='select'
-                                    onChange={(e: any) => {
-                                      setAgeType(e.target.value)
-                                    }}
-                                    value={ageType}
-                                    className='focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md'>
-                                    <option value={0}>Years</option>
-                                    <option value={1}>Months</option>
-                                  </Field>
-                                </div>
                               </div>
                             </div>
                           </div>

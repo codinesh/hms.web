@@ -4,6 +4,7 @@ class Constants {
 
   // patient endpoints
   patientUrl = 'patient/all'
+  configUrl = 'general/configuration'
   patientSearchUrl = 'patient?searchFilter='
   addPatientUrl = 'patient/add'
   editPatientUrl = 'patient/edit'

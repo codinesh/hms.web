@@ -53,7 +53,10 @@ function DropdownSearch<
       />
       {show &&
         items.filter(
-          (x) => query == '' || x.value.toLowerCase().match(query.toLowerCase())
+          (x) =>
+            query == '' ||
+            x.value.toLowerCase().match(query.toLowerCase()) ||
+            x.id.toLocaleString().match(query.toLowerCase())
         ).length > 0 && (
           <div className='absolute z-50 py-1 top-12 w-full bg-white shadow-md rounded-md'>
             <ul className='divide-y divide-opacity-40 rounded-md divide-gray-400'>
@@ -61,7 +64,8 @@ function DropdownSearch<
                 .filter(
                   (x) =>
                     query == '' ||
-                    x.value.toLowerCase().match(query.toLowerCase())
+                    x.value.toLowerCase().match(query.toLowerCase()) ||
+                    x.id.toLocaleString().match(query.toLowerCase())
                 )
                 .slice(0, 5)
                 .map((x) => (

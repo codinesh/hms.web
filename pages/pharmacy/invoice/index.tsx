@@ -189,7 +189,7 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
                     <tr
                       onDoubleClick={() => {
                         setSelectedPharmacyInvoice(pharmacyInvoice)
-                        router.push(`/pharmacy/invoice/${pharmacyInvoice.id}`)
+                        // router.push(`/pharmacy/invoice/${pharmacyInvoice.id}`)
                       }}
                       className={clsx(
                         'hover:bg-gray-100 cursor-pointer select-none'
@@ -208,7 +208,7 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
                         {pharmacyInvoice.refDoctor}
                       </td>
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                        {pharmacyInvoice.totalAmount}
+                        {pharmacyInvoice.roundedOffAmount}
                       </td>
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                         {PaymentMode[pharmacyInvoice.paymentMode]}

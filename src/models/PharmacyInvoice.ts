@@ -5,9 +5,11 @@ export interface PharmacyItem {
 
 export interface PharmacyInvoice {
   patientId: number
-  patientAge?: number
+  age?: number
+  ageInMonths?: number
   patientGender?: number
   patientName?: string
+  contactNumber?: string
   refDoctor: string
   totalAmount: number
   discountAmount: number

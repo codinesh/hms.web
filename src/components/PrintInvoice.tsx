@@ -12,9 +12,9 @@ const PrintInvoice: React.FC<PharmacyInvoice> = (props) => {
         doctorName={props.refDoctor}
         patientName={props.patientName ?? ''}
         invoiceDate={new Date()}
-        amount={props.roundedOffAmount}
+        amount={props.discountAmount + props.roundedOffAmount}
         patientId={props.patientId?.toString() ?? ''}
-        total={props.totalAmount}>
+        total={props.roundedOffAmount}>
         <div className='print:overflow-hidden flex flex-col'>
           <div className='overflow-hidden border border-gray-200'>
             <table className='print:overflow-hidden print:bg-white min-w-full divide-y divide-gray-200'>

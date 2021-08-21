@@ -1,6 +1,6 @@
-import Doctor from '../models/Doctor';
-import Patient from '../models/Patient';
-import IUser from "./IUser"
+import Doctor, { AppConfig } from '../models/Doctor'
+import Patient from '../models/Patient'
+import IUser from './IUser'
 
 export interface IGlobalState {
   user?: IUser
@@ -9,6 +9,7 @@ export interface IGlobalState {
   errorMessage?: string
   pageTitle: string
   searchQuery?: string
-  doctors:Doctor[]
-  patients:Patient[]
+  doctors: Doctor[]
+  patients: Patient[]
+  appConfig: AppConfig
 }

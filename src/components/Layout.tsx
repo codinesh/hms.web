@@ -5,7 +5,7 @@ import Page from './Page'
 import Image from 'next/image'
 import { GlobalStateAction, useGlobalDispatch } from '../store/GlobalStore'
 import ApiHelper from '../ApiHelper'
-import Doctor from '../models/Doctor'
+import Doctor, { AppConfig } from '../models/Doctor'
 import Patient from '../models/Patient'
 import constants from '../const'
 import {
@@ -28,12 +28,18 @@ const Layout: React.FC = (props) => {
         dispatch({ type: LoadingStateAction.Busy })
         const doctorsT = ApiHelper.getItems<Doctor>(constants.doctorUrl)
         const patientsT = ApiHelper.getItems<Patient>(constants.patientUrl)
+        const configT = ApiHelper.getItem<AppConfig>(constants.configUrl)
 
-        let res = await Promise.all<Doctor[], Patient[]>([doctorsT, patientsT])
+        let res = await Promise.all<Doctor[], Patient[], AppConfig>([
+          doctorsT,
+          patientsT,
+          configT,
+        ])
         dispatch({ type: LoadingStateAction.Idle })
         setloaded(true)
         globalDispatch({ type: GlobalStateAction.Doctors, doctors: res[0] })
         globalDispatch({ type: GlobalStateAction.Patients, patients: res[1] })
+        globalDispatch({ type: GlobalStateAction.AppConfig, config: res[2] })
       })()
   }, [])
 

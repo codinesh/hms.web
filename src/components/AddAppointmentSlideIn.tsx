@@ -19,7 +19,7 @@ const AddAppointmentSlideIn: React.FC<{
 }> = (props) => {
   const { appointment, open, setOpen } = props
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(true)
+  const [error, setError] = useState(false)
   const { patients, doctors } = useGlobalState()
   let isEdit = appointment != null ?? false
 
@@ -171,8 +171,7 @@ const AddAppointmentSlideIn: React.FC<{
                               <label
                                 htmlFor='appointmentDate'
                                 className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Appointment time{' '}
-                                {values.appointmentDate.toString()}
+                                Appointment time
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
@@ -186,26 +185,6 @@ const AddAppointmentSlideIn: React.FC<{
                               />
                             </div>
                           </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='issue'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Diagnosis
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                as='textarea'
-                                type='textarea'
-                                id='issue'
-                                name='issue'
-                                rows={3}
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md'
-                              />
-                            </div>
-                          </div>
                         </div>
                       </div>
 
@@ -216,7 +195,8 @@ const AddAppointmentSlideIn: React.FC<{
                               'text-red-700 opacity-0',
                               error && 'opacity-100'
                             )}>
-                            Error! Please fix the errors and try again.
+                            {error &&
+                              'Error! Please fix the errors and try again.'}
                           </span>
 
                           <div className='flex gap-2'>

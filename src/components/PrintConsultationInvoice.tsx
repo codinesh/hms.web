@@ -6,6 +6,7 @@ import PrintLayout from './PrintLayout'
 const PrintConsultationInvoice: React.FC<Appointment> = (props) => {
   return (
     <PrintLayout
+      id={props.invoice.id}
       address={props.address}
       amount={props.invoice.amount}
       doctorName={props.doctorName}

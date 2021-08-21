@@ -2,8 +2,10 @@ import React, { useEffect } from 'react'
 import Image from 'next/image'
 import { PrinterIcon } from '@heroicons/react/solid'
 import { dateUtils } from '../helpers/JSUtils'
+import { useGlobalState } from '../store/GlobalStore'
 
 interface PrintDetails {
+  id?: number
   patientName: string
   address: string
   doctorName: string
@@ -15,11 +17,8 @@ interface PrintDetails {
 }
 
 const PrintLayout: React.FC<PrintDetails> = (props) => {
-  useEffect(() => {
-    // setTimeout(() => {
-    //   window.print()
-    // }, 5000)
-  })
+  const { appConfig } = useGlobalState()
+
   return (
     <div className='border border-black  bg-white w-full h-full flex justify-between items-stretch flex-col'>
       <header className='flex justify-between'>
@@ -31,28 +30,26 @@ const PrintLayout: React.FC<PrintDetails> = (props) => {
           <span className='text-sm block'>
             Nellore Dt., Andhra Pradesh - 524411
           </span>
-          <span className='text-sm block text-red-400'>Phone: 8795462134</span>
+          <span className='text-sm block'>
+            Phone: {appConfig.contactNumber}
+          </span>
         </div>
         <div className=''>
           <h2 className='text-lg font-medium'>
-            Patient Name: {props.patientName} Age:32Y
+            Patient Name: {props.patientName}
           </h2>
           <span className='text-sm block'>
             Patient Address: {props.address}
           </span>
-          <span className='text-sm block text-red-400'>
-            UID: (What should go here?)
-          </span>
+          <span className='text-sm block'>Bill No.: {props.id}</span>
           <span className='text-sm block'>Dr Name: {props.doctorName}</span>
         </div>
       </header>
       <main className='mt-2 flex-grow flex flex-col'>
         <div className='flex items-center border-t justify-between border-b border-black'>
           <div className='text-xs '>
-            <span className='text-md block text-red-400'>GSTIN: 123456789</span>
-            <span className='text-md block text-red-400'>
-              CIN No: 789456123145679846312132
-            </span>
+            <span className='text-md block'>GSTIN: {appConfig.gstin}</span>
+            <span className='text-md block'>CIN No: {appConfig.cin}</span>
           </div>
           <div>
             <span className='text-lg font-bold '>GST INVOICE</span>

@@ -13,6 +13,7 @@ import ApiHelper from '../ApiHelper'
 import constants from '../const'
 import { dateUtils } from '../helpers/JSUtils'
 import { LoadingStateAction, useLoadingDispatch } from '../store/LoadingStore'
+import AgeInput from './AgeInput'
 
 type invoiceMedicineType = Stock & { quantity: number }
 
@@ -28,13 +29,12 @@ const GenerateInvoiceModal: React.FC<{
   >([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  const [invoiceGenerated, setInvoiceGenerated] = useState(false)
 
   const [curMedicine, setCurMedicines] = useState<invoiceMedicineType>()
   const cancelButtonRef = useRef(null)
   const dispatch = useLoadingDispatch()
   const [doctorId, setDoctorId] = useState<number>(0)
-  const [invoice, setInvoice] = useState<PharmacyInvoice>({
+  const initialInvoice = {
     patientId: 0,
     refDoctor: '',
     totalAmount: 0,
@@ -43,7 +43,8 @@ const GenerateInvoiceModal: React.FC<{
     paymentMode: 0,
     createdOn: new Date(),
     PharmacyItems: [],
-  })
+  }
+  const [invoice, setInvoice] = useState<PharmacyInvoice>({ ...initialInvoice })
 
   useEffect(() => {
     ;(async () => {
@@ -54,6 +55,10 @@ const GenerateInvoiceModal: React.FC<{
     })()
   }, [])
 
+  const reset = () => {
+    setInvoice({ ...initialInvoice })
+  }
+
   return (
     <Transition.Root show={props.open} as={Fragment}>
       <Dialog
@@ -62,7 +67,10 @@ const GenerateInvoiceModal: React.FC<{
         className='fixed z-10 inset-0 overflow-y-auto'
         initialFocus={cancelButtonRef}
         open={props.open}
-        onClose={props.setOpen}>
+        onClose={() => {
+          reset()
+          props.setOpen(false)
+        }}>
         <div className='flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
           <Transition.Child
             as={Fragment}
@@ -74,13 +82,13 @@ const GenerateInvoiceModal: React.FC<{
             leaveTo='opacity-0'>
             <Dialog.Overlay className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
           </Transition.Child>
-
           {/* This element is to trick the browser into centering the modal contents. */}
           <span
             className='hidden sm:inline-block sm:align-middle sm:h-screen'
             aria-hidden='true'>
             &#8203;
           </span>
+
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-300'
@@ -98,7 +106,6 @@ const GenerateInvoiceModal: React.FC<{
                   try {
                     setLoading(true)
                     await props.onSubmit(invoice)
-                    setInvoiceGenerated(true)
                   } catch (error) {
                     setError(true)
                   }
@@ -130,15 +137,26 @@ const GenerateInvoiceModal: React.FC<{
                                 value: x.fullName,
                               }))}
                               onSelect={(e) => {
-                                let patient = patients.find((x) => x.id == e.id)
-                                if (patient) {
+                                if (e.id == -1) {
                                   setInvoice({
                                     ...invoice,
-                                    patientAge: patient.age,
-                                    patientGender: patient.gender,
                                     patientName: e.value,
                                     patientId: e.id,
                                   })
+                                } else {
+                                  let patient = patients.find(
+                                    (x) => x.id == e.id
+                                  )
+                                  if (patient) {
+                                    setInvoice({
+                                      ...invoice,
+                                      age: patient.age,
+                                      ageInMonths: patient.ageInMonths,
+                                      patientGender: patient.gender,
+                                      patientName: e.value,
+                                      patientId: e.id,
+                                    })
+                                  }
                                 }
                               }}
                             />
@@ -172,19 +190,19 @@ const GenerateInvoiceModal: React.FC<{
                             className='block text-sm font-medium text-gray-700'>
                             Patient age
                           </label>
-                          <div className='mt-1 flex rounded-md '>
-                            <input
-                              name='patientAge'
-                              type='number'
-                              className='shadow-md rounded-md'
-                              placeholder='patient age'
-                              value={invoice.patientAge}
-                              onChange={(e) =>
+                          <div className='mt-1 flex rounded-md w-9/12'>
+                            <AgeInput
+                              readonly={invoice.patientId > 0}
+                              years={invoice.age}
+                              months={invoice.ageInMonths}
+                              showMonths={true}
+                              onSelect={(years: number, months: number) => {
                                 setInvoice({
                                   ...invoice,
-                                  patientAge: parseInt(e.target.value),
+                                  age: years,
+                                  ageInMonths: months,
                                 })
-                              }
+                              }}
                             />
                           </div>
                         </div>
@@ -198,6 +216,7 @@ const GenerateInvoiceModal: React.FC<{
                             <select
                               id='patientGender'
                               name='patientGender'
+                              disabled={invoice.patientId > 0}
                               value={invoice.patientGender}
                               onChange={(e) =>
                                 setInvoice({
@@ -262,7 +281,29 @@ const GenerateInvoiceModal: React.FC<{
                         </div>
                         <div className=''>
                           <label
-                            htmlFor='discountAmount'
+                            htmlFor='contactNumber'
+                            className='block text-sm font-medium text-gray-700'>
+                            Contact number
+                          </label>
+                          <div className='mt-1 flex rounded-md '>
+                            <input
+                              type='text'
+                              name='contactNumber'
+                              className='shadow-md rounded-md'
+                              placeholder='contact number'
+                              value={invoice.contactNumber}
+                              onChange={(e) =>
+                                setInvoice({
+                                  ...invoice,
+                                  contactNumber: e.target.value,
+                                })
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div className=''>
+                          <label
+                            htmlFor='paymentReference'
                             className='block text-sm font-medium text-gray-700'>
                             Payment reference
                           </label>
@@ -324,7 +365,10 @@ const GenerateInvoiceModal: React.FC<{
                                     (x) => x.id == m.id
                                   )[0]
 
-                                  setCurMedicines({ ...medicine, quantity: 1 })
+                                  setCurMedicines({
+                                    ...medicine,
+                                    quantity: 1,
+                                  })
                                 }}
                                 selected={curMedicine?.id ?? undefined}
                               />

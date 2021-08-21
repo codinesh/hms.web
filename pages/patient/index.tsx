@@ -168,7 +168,10 @@ const PatientPage: React.FC<PageProps<Patient[]>> = (props) => {
                       {patient.email}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {patient.age}
+                      {patient.age} years
+                      {patient.ageInMonths &&
+                        patient.ageInMonths > 0 &&
+                        `${patient.ageInMonths} months`}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {Gender[patient.gender]}
