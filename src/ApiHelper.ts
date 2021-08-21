@@ -5,9 +5,8 @@ async function getItem<T>(url: string, headers?: string): Promise<T> {
     try {
       let response = await fetch([constants.baseApiUrl, url].join(''))
       if (response.ok) {
-        if(response.status == 204)
-        {
-         resolve({} as T)
+        if (response.status == 204) {
+          resolve({} as T)
         }
 
         let item: T = await response.json()
@@ -29,9 +28,8 @@ async function getItems<T>(url: string, headers?: string): Promise<T[]> {
     try {
       let response = await fetch([constants.baseApiUrl, url].join(''))
       if (response.ok) {
-        if(response.status == 204)
-        {
-           resolve([])
+        if (response.status == 204) {
+          resolve([])
         }
 
         let item: T[] = await response.json()
@@ -55,16 +53,6 @@ async function postItem<T, R>(
 ): Promise<R> {
   let promise = new Promise<R>(async (resolve, reject) => {
     try {
-      let req = {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      }
-
       let response = await fetch([constants.baseApiUrl, url].join(''), {
         method: 'POST',
         mode: 'cors',

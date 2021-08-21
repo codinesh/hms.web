@@ -1,12 +1,8 @@
 import React, { useState } from 'react'
-import { PaperClipIcon, PencilIcon, UploadIcon } from '@heroicons/react/solid'
+import { UploadIcon } from '@heroicons/react/solid'
 import { GetStaticProps } from 'next'
 import { useRouter } from 'next/dist/client/router'
-import {
-  ILabTestRecord,
-  LabInvoice,
-  LabTestResult,
-} from '../../../src/models/LabInvoice'
+import { LabInvoice } from '../../../src/models/LabInvoice'
 import ApiHelper from '../../../src/ApiHelper'
 import Gender from '../../../src/models/Gender'
 import constants from '../../../src/const'
@@ -67,8 +63,6 @@ type TestUpdateModel = {
 
 const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
   const { labInvoice } = props
-  const [open, setOpen] = useState(false)
-  const [saving, setSaving] = useState(false)
   let laResultsMap: Map<string, object> = new Map()
 
   labInvoice &&
@@ -157,7 +151,8 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
                   ))}
               </dd>
             </div>
-            <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
+            {/* Attachments */}
+            {/* <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500'>Attachments</dt>
               <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
                 <ul className='border border-gray-200 rounded-md divide-y divide-gray-200'>
@@ -199,7 +194,7 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
                   </li>
                 </ul>
               </dd>
-            </div>
+            </div>*/}
           </dl>
         </div>
       </div>
@@ -254,7 +249,6 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
                                     setTestResultsState(
                                       new Map(testResultsState)
                                     )
-                                    console.log(testResultsState, res)
                                   }}
                                 />
                               </dd>
@@ -266,8 +260,7 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
                   </div>
                   <button
                     type='button'
-                    onClick={async () => {
-                      setSaving(true)
+                    onClick={() => {
                       let results = testResultsState.get(
                         test.labTestRecord.id.toString()
                       )
@@ -276,11 +269,7 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
                         result: a[1],
                       }))
 
-                      await updateTestResult(
-                        test.labTestRecord.id.toString(),
-                        c
-                      )
-                      setSaving(false)
+                      updateTestResult(test.labTestRecord.id.toString(), c)
                     }}
                     className=' flex-shrink inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:ml-3 sm:w-auto sm:text-sm'>
                     <UploadIcon

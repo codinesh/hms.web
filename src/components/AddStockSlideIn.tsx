@@ -5,6 +5,9 @@ import { Field, Form, Formik } from 'formik'
 import { Stock } from '../models/Stock'
 import { dateUtils } from '../helpers/JSUtils'
 import clsx from 'clsx'
+import DropdownSearch from './DropdownSearch'
+import ApiHelper from '../ApiHelper'
+import constants from '../const'
 
 const AddStockSlideIn: React.FC<{
   stock?: Stock
@@ -46,6 +49,8 @@ const AddStockSlideIn: React.FC<{
     ratePerUnit: 0,
     totalQuantityProcured: 0,
   }
+
+  let filteredStock: Stock[]
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -102,7 +107,7 @@ const AddStockSlideIn: React.FC<{
                     setLoading(false)
                     setError(false)
                   }}>
-                  {({ values }) => (
+                  {({ values, setFieldValue }) => (
                     <Form className='h-full flex flex-col bg-white shadow-xl overflow-y-scroll'>
                       <div className='flex-1'>
                         <Field
@@ -141,11 +146,100 @@ const AddStockSlideIn: React.FC<{
                                   </label>
                                 </div>
                                 <div className='sm:col-span-2'>
-                                  <Field
-                                    type='text'
-                                    name='itemName'
-                                    id='itemName'
-                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                                  <DropdownSearch
+                                    allowFreeText={true}
+                                    placeholder='select patient'
+                                    selected={values.itemName}
+                                    onSearch={async (query) => {
+                                      return new Promise<
+                                        {
+                                          id: number
+                                          value: string
+                                        }[]
+                                      >(async (resolve, _) => {
+                                        filteredStock =
+                                          await ApiHelper.getItems<Stock>(
+                                            `${constants.stockSearchUrl}${query}`
+                                          )
+
+                                        var filterItems = filteredStock.map(
+                                          (x) => ({
+                                            id: x.id,
+                                            value: x.itemName,
+                                          })
+                                        )
+                                        resolve(filterItems)
+                                      })
+                                    }}
+                                    onSelect={(e) => {
+                                      if (e.id == -1) {
+                                        setFieldValue('itemName', e.value)
+                                      } else {
+                                        let stock = filteredStock.filter(
+                                          (x) => x.id == e.id
+                                        )
+                                        if (stock) {
+                                          setFieldValue(
+                                            'itemName',
+                                            stock[0].itemName
+                                          )
+
+                                          setFieldValue(
+                                            'drugName',
+                                            stock[0].drugName
+                                          )
+
+                                          setFieldValue(
+                                            'manufacturer',
+                                            stock[0].manufacturer
+                                          )
+
+                                          setFieldValue(
+                                            'schedule',
+                                            stock[0].schedule
+                                          )
+
+                                          setFieldValue(
+                                            'hsnCode',
+                                            stock[0].hsnCode
+                                          )
+
+                                          setFieldValue(
+                                            'quantityPerStrip',
+                                            stock[0].quantityPerStrip
+                                          )
+
+                                          setFieldValue(
+                                            'ratePerStrip',
+                                            stock[0].ratePerStrip
+                                          )
+
+                                          setFieldValue(
+                                            'mrpPerStrip',
+                                            stock[0].mrpPerStrip
+                                          )
+
+                                          setFieldValue(
+                                            'mrpPerStrip',
+                                            stock[0].mrpPerStrip
+                                          )
+
+                                          setFieldValue(
+                                            'ratePerUnit',
+                                            stock[0].ratePerUnit
+                                          )
+
+                                          setFieldValue(
+                                            'sgstPercent',
+                                            stock[0].sgstPercent
+                                          )
+                                          setFieldValue(
+                                            'cgstPercent',
+                                            stock[0].cgstPercent
+                                          )
+                                        }
+                                      }
+                                    }}
                                   />
                                 </div>
                               </div>
@@ -207,7 +301,7 @@ const AddStockSlideIn: React.FC<{
                               <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
                                 <div>
                                   <label
-                                    htmlFor='gender'
+                                    htmlFor='schedule'
                                     className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
                                     Schedule
                                   </label>
@@ -326,6 +420,12 @@ const AddStockSlideIn: React.FC<{
                                       type='text'
                                       name='mrpPerUnit'
                                       id='mrpPerUnit'
+                                      value={
+                                        values.quantityPerStrip > 0
+                                          ? values.mrpPerStrip /
+                                            values.quantityPerStrip
+                                          : undefined
+                                      }
                                       className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
                                     />
                                     <div className='absolute inset-y-0 right-0 flex items-center'>
@@ -365,6 +465,12 @@ const AddStockSlideIn: React.FC<{
                                     <Field
                                       type='text'
                                       name='ratePerUnit'
+                                      value={
+                                        values.quantityPerStrip > 0
+                                          ? values.ratePerStrip /
+                                            values.quantityPerStrip
+                                          : undefined
+                                      }
                                       id='ratePerUnit'
                                       className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
                                     />
