@@ -12,7 +12,10 @@ interface PrintDetails {
   invoiceDate: Date
   patientId: string
   discount: number
-  total: number
+  hideFooter?: boolean
+  title?: string
+  total?: number
+  nongstinvoice?: boolean
   amount: number
 }
 
@@ -41,22 +44,32 @@ const PrintLayout: React.FC<PrintDetails> = (props) => {
           <span className='text-sm block'>
             Patient Address: {props.address}
           </span>
-          <span className='text-sm block'>Bill No.: {props.id}</span>
+          {!props.nongstinvoice && (
+            <span className='text-sm block'>Bill No.: {props.id}</span>
+          )}
           <span className='text-sm block'>Dr Name: {props.doctorName}</span>
         </div>
       </header>
       <main className='mt-2 flex-grow flex flex-col'>
         <div className='flex items-center border-t justify-between border-b border-black'>
           <div className='text-xs '>
-            <span className='text-md block'>GSTIN: {appConfig.gstin}</span>
-            <span className='text-md block'>CIN No: {appConfig.cin}</span>
+            {!props.nongstinvoice && (
+              <>
+                <span className='text-md block'>GSTIN: {appConfig.gstin}</span>
+                <span className='text-md block'>CIN No: {appConfig.cin}</span>
+              </>
+            )}
           </div>
           <div>
-            <span className='text-lg font-bold '>GST INVOICE</span>
+            <span className='text-lg font-bold '>
+              {props.title ?? 'GST INVOICE'}
+            </span>
           </div>
           <div>
             <div>
-              <span className='text-xs'>Invoice Date: </span>
+              <span className='text-xs'>
+                {!props.nongstinvoice ? `Invoice date:` : 'Report date'}
+              </span>
               <span>{dateUtils.geLocalDateTimeString(props.invoiceDate)}</span>
             </div>
             <div>
@@ -77,31 +90,33 @@ const PrintLayout: React.FC<PrintDetails> = (props) => {
           </button>
         </div>
       </main>
-      <footer className='text-xs font-thin flex border justify-between'>
-        <div className='flex flex-col flex-grow border-r'>
-          <span className='underline'>Terms & Conditions</span>
-          <span className=''>
-            Goods once sold will not be taken back or exchanged
-          </span>
-          <span className=''>
-            Bills not paid due date will attract 24% interest
-          </span>
-          <span className=''>All disputes subject to Jurisdiction only</span>
-          <span className=''>
-            Presbribed Sales Tax declaration will be given
-          </span>
-          <span className=''>Remark:</span>
-        </div>
-        <div className=' flex flex-col justify-between items-center'>
-          <div>
-            <span className='block'>Sub Total: {props.amount}</span>
-            <span>Discount: {props.discount}</span>
+      {!props.hideFooter && (
+        <footer className='text-xs font-thin flex border justify-between'>
+          <div className='flex flex-col flex-grow border-r'>
+            <span className='underline'>Terms & Conditions</span>
+            <span className=''>
+              Goods once sold will not be taken back or exchanged
+            </span>
+            <span className=''>
+              Bills not paid due date will attract 24% interest
+            </span>
+            <span className=''>All disputes subject to Jurisdiction only</span>
+            <span className=''>
+              Presbribed Sales Tax declaration will be given
+            </span>
+            <span className=''>Remark:</span>
           </div>
-          <span className='p-2 text-md border-t'>
-            Grand Total: {props.total}
-          </span>
-        </div>
-      </footer>
+          <div className=' flex flex-col justify-between items-center'>
+            <div>
+              <span className='block'>Sub Total: {props.amount}</span>
+              <span>Discount: {props.discount}</span>
+            </div>
+            <span className='p-2 text-md border-t'>
+              Grand Total: {props.total}
+            </span>
+          </div>
+        </footer>
+      )}
     </div>
   )
 }

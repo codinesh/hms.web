@@ -49,13 +49,13 @@ const PrintLabInvoice: React.FC<LabInvoice> = (props) => {
               </tr>
             </thead>
             <tbody className='bg-white divide-y divide-gray-200'>
-              {props.invoiceDetail.map((invoicedetail) => (
+              {props.invoiceDetail.map((invoicedetail, index) => (
                 <tr
                   className={clsx(
                     'hover:bg-gray-100 cursor-pointer select-none'
                   )}>
                   <td className='px-6 py-4  print:py-1 whitespace-nowrap text-sm text-gray-900'>
-                    {invoicedetail.id}
+                    {index}
                   </td>
                   <td className='px-6 py-4  print:py-1 whitespace-nowrap text-sm text-gray-500'>
                     {invoicedetail.testName}

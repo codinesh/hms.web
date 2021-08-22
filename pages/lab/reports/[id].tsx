@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { UploadIcon } from '@heroicons/react/solid'
 import { GetStaticProps } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import { LabInvoice } from '../../../src/models/LabInvoice'
@@ -10,6 +9,9 @@ import {
   LoadingStateAction,
   useLoadingDispatch,
 } from '../../../src/store/LoadingStore'
+import FullScreenModal from '../../../src/components/FullScreenModal'
+import PrintLabReport from '../../../src/components/PrintLabReport'
+import { PrinterIcon, UploadIcon } from '@heroicons/react/outline'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   if (!context.params?.id) {
@@ -81,6 +83,7 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
   const [testResultsState, setTestResultsState] = useState(laResultsMap)
   const router = useRouter()
   const dispatch = useLoadingDispatch()
+  const [openPrintPage, setOpenPrintPage] = useState(false)
 
   const updateTestResult = async (
     labTestRecordId: string,
@@ -103,6 +106,13 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
 
   return (
     <div>
+      <FullScreenModal
+        onClose={() => {
+          setOpenPrintPage(false)
+        }}
+        open={openPrintPage}>
+        {labInvoice && <PrintLabReport {...labInvoice}></PrintLabReport>}
+      </FullScreenModal>
       <div className='mb-3 bg-white shadow overflow-hidden sm:rounded-lg'>
         <div className='px-4 py-5 sm:px-6'>
           <h3 className='text-lg leading-6 font-medium text-gray-900'>
@@ -149,6 +159,16 @@ const LabInvoiceDetail: React.FC<{ labInvoice: LabInvoice }> = (props) => {
                       {x.testName}
                     </span>
                   ))}
+              </dd>
+              <dd>
+                <button
+                  type='button'
+                  onClick={() => {
+                    setOpenPrintPage(true)
+                  }}
+                  className='text-center w-5 h-5'>
+                  <PrinterIcon />
+                </button>
               </dd>
             </div>
             {/* Attachments */}

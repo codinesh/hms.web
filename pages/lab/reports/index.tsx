@@ -1,6 +1,7 @@
 import {
   ArrowDownIcon,
   ArrowUpIcon,
+  PrinterIcon,
   UserAddIcon,
 } from '@heroicons/react/outline'
 import clsx from 'clsx'
@@ -25,6 +26,7 @@ import {
   useLoadingDispatch,
 } from '../../../src/store/LoadingStore'
 import { dateUtils } from '../../../src/helpers/JSUtils'
+import PrintLabReport from '../../../src/components/PrintLabReport'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const labInvoices = await ApiHelper.getItems<LabInvoice>(
@@ -133,7 +135,7 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
           }}
           open={openPrintPage}>
           {selectedLabInvoice && (
-            <PrintLabInvoice {...selectedLabInvoice}></PrintLabInvoice>
+            <PrintLabReport {...selectedLabInvoice}></PrintLabReport>
           )}
         </FullScreenModal>
 
@@ -230,14 +232,14 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
                       {labInvoice ? (
                         <button
                           type='button'
+                          className='text-center w-5 h-5'
                           onClick={() => {
                             setSelectedLabInvoice((prev) => labInvoice)
                             setTimeout(() => {
                               setOpenPrintPage(true)
                             }, 1)
-                          }}
-                          className='text-center inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                          Print invoice
+                          }}>
+                          <PrinterIcon className='' />
                         </button>
                       ) : (
                         <button
