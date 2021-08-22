@@ -30,7 +30,7 @@ function DropdownSearch<
     setSelected(props.selected)
     const selectedItem = searchItems.filter((x) => x.id == props.selected)
     const selectedItemName =
-      selectedItem.length > 0 ? selectedItem[0].value : ''
+      selectedItem.length > 0 ? selectedItem[0].value : query
 
     setQuery(selectedItemName)
   }, [props.selected])
@@ -44,7 +44,9 @@ function DropdownSearch<
           setShow(true)
         }}
         onBlur={() => {
-          setTimeout(() => setShow(false), 3000)
+          if (!selected && props.allowFreeText) {
+            props.onSelect({ id: -1, value: query } as T)
+          }
         }}
         onChange={async (e) => {
           setSelected(undefined)
@@ -67,10 +69,6 @@ function DropdownSearch<
               let searchedItems = await props.onSearch(e.target.value)
               setSearchItems(searchedItems)
             }
-          }
-
-          if (props.allowFreeText && query.length > 0 && !selected) {
-            props.onSelect({ id: -1, value: query } as T)
           }
         }}
         className='rounded-md focus:ring-2 w-full z-10'

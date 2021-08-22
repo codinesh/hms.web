@@ -1,3 +1,4 @@
+import { validateYupSchema } from 'formik'
 import React, { useState } from 'react'
 import ApiHelper from '../src/ApiHelper'
 import DropdownSearch from '../src/components/DropdownSearch'
@@ -11,7 +12,7 @@ export default function Example() {
     { id: 3, value: 'three' },
   ])
 
-  const [id, setid] = useState<number>(-1)
+  const [id, setid] = useState<number>(2)
   const [text, settext] = useState('')
 
   return (
@@ -20,6 +21,7 @@ export default function Example() {
       {text}
       {id}
       <DropdownSearch
+        selected={id}
         onSelect={(value) => {
           setid(value.id)
           settext(value.value)
