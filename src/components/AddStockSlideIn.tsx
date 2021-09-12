@@ -31,7 +31,6 @@ const AddStockSlideIn: React.FC<{
     measuringUnit: '',
     drugName: '',
     hsnCode: 0,
-    schedule: '',
     manufacturer: '',
     batchNo: '',
     expiryDate: defaultExpiry,
@@ -195,11 +194,6 @@ const AddStockSlideIn: React.FC<{
                                           )
 
                                           setFieldValue(
-                                            'schedule',
-                                            stock[0].schedule
-                                          )
-
-                                          setFieldValue(
                                             'hsnCode',
                                             stock[0].hsnCode
                                           )
@@ -293,24 +287,6 @@ const AddStockSlideIn: React.FC<{
                                     type='text'
                                     name='batchNo'
                                     id='batchNo'
-                                    className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                                  />
-                                </div>
-                              </div>
-
-                              <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                                <div>
-                                  <label
-                                    htmlFor='schedule'
-                                    className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                    Schedule
-                                  </label>
-                                </div>
-                                <div className='sm:col-span-2'>
-                                  <Field
-                                    type='text'
-                                    name='schedule'
-                                    id='schedule'
                                     className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
                                   />
                                 </div>

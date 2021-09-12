@@ -48,6 +48,9 @@ const PrintLayout: React.FC<PrintDetails> = (props) => {
             <span className='text-sm block'>Bill No.: {props.id}</span>
           )}
           <span className='text-sm block'>Dr Name: {props.doctorName}</span>
+          {props.id && (
+            <span className='text-sm block'>Invoice Id: {props.id}</span>
+          )}
         </div>
       </header>
       <main className='mt-2 flex-grow flex flex-col'>

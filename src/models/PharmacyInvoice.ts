@@ -29,7 +29,6 @@ export interface PharmacyInvoiceMedicine {
   itemName: string
   measuringUnit: string
   hsnCode: number
-  schedule?: any
   manufacturer: string
   batchNo: string
   expiryDate: Date

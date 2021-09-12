@@ -37,11 +37,6 @@ const PrintInvoice: React.FC<PharmacyInvoice> = (props) => {
                   </th>
                   <th
                     scope='col'
-                    className='px-1 w-3 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Sch
-                  </th>
-                  <th
-                    scope='col'
                     className='px-1 w-4 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Batch
                   </th>
@@ -87,9 +82,6 @@ const PrintInvoice: React.FC<PharmacyInvoice> = (props) => {
                       </td>
                       <td className='px-1 w-3  py-4 print:py-1 whitespace-nowrap text-sm text-gray-500'>
                         {medicine.hsnCode}
-                      </td>
-                      <td className='px-1 w-3 py-4 print:py-1 whitespace-nowrap text-sm text-gray-500'>
-                        {medicine.schedule}
                       </td>
                       <td className='px-1 w-4 py-4 print:py-1 whitespace-nowrap text-sm text-gray-500'>
                         {medicine.batchNo}
