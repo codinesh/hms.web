@@ -8,6 +8,7 @@ import { useGlobalState } from '../store/GlobalStore'
 import DateTimePicker from './DateTimePicker'
 import DropdownSearch from './DropdownSearch'
 import clsx from 'clsx'
+import ApiHelper from '../ApiHelper'
 
 const AddAppointmentSlideIn: React.FC<{
   appointment?: AddAppointment
@@ -20,7 +21,7 @@ const AddAppointmentSlideIn: React.FC<{
   const { appointment, open, setOpen } = props
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  const { patients, doctors } = useGlobalState()
+  const { doctors } = useGlobalState()
   let isEdit = appointment != null ?? false
 
   const initialAppointmentData: AddAppointment = appointment ?? {
@@ -132,10 +133,7 @@ const AddAppointmentSlideIn: React.FC<{
                               <DropdownSearch
                                 placeholder='select patient'
                                 selected={values.patientId}
-                                items={patients.map((x) => ({
-                                  id: x.id,
-                                  value: x.fullName,
-                                }))}
+                                onSearch={ApiHelper.getPatientsFilter}
                                 onSelect={(e) => {
                                   values.patientId = e.id
                                 }}
@@ -153,11 +151,12 @@ const AddAppointmentSlideIn: React.FC<{
                             </div>
                             <div className='sm:col-span-2'>
                               <DropdownSearch
-                                placeholder='select patient'
+                                placeholder='select doctor'
                                 selected={values.doctorId}
                                 items={doctors.map((x) => ({
                                   id: x.id,
                                   value: x.fullName,
+                                  label: x.fullName,
                                 }))}
                                 onSelect={(e) => {
                                   values.doctorId = e.id

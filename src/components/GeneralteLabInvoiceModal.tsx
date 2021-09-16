@@ -112,9 +112,10 @@ const GenerateLabInvoiceModal: React.FC<{
                               items={patients.map((x) => ({
                                 id: x.id,
                                 value: x.fullName,
+                                label: x.fullName,
                               }))}
-                              onSelect={(e) => {
-                                if (e.id == -1) {
+                              onSelect={(e, isNew) => {
+                                if (isNew) {
                                   setInvoice({
                                     ...invoice,
                                     patientName: e.value,
@@ -151,9 +152,10 @@ const GenerateLabInvoiceModal: React.FC<{
                               items={doctors.map((x) => ({
                                 id: x.id,
                                 value: x.fullName,
+                                label: x.fullName,
                               }))}
-                              onSelect={(e) => {
-                                if (e.id == -1) {
+                              onSelect={(e, isNew) => {
+                                if (isNew) {
                                   setDoctorId(-1)
                                   setInvoice({
                                     ...invoice,
@@ -288,19 +290,20 @@ const GenerateLabInvoiceModal: React.FC<{
                         </div>
                       </section>
                       <section className='pt-4'>
-                        <div className=' flex gap-2  min-w-md mb-4'>
-                          <div className=''>
+                        <div className=' flex gap-2 items-center min-w-md mb-4'>
+                          <div className='flex-grow'>
                             <label
                               htmlFor='patientGender'
                               className='block text-sm font-medium text-gray-700'>
                               Test
                             </label>
-                            <div className='mt-1 flex rounded-md ='>
+                            <div className='mt-1 flex rounded-md'>
                               <DropdownSearch
-                                placeholder='search medicine'
+                                placeholder='search test'
                                 items={props.tests.map((x) => ({
                                   id: x.id,
                                   value: x.name,
+                                  label: x.name,
                                 }))}
                                 onSelect={(m) => {
                                   let medicine = props.tests.filter(
@@ -313,7 +316,7 @@ const GenerateLabInvoiceModal: React.FC<{
                               />
                             </div>
                           </div>
-                          <div className=''>
+                          <div className='flex-grow'>
                             <label
                               htmlFor='patientGender'
                               className='opacity-0 block text-sm font-medium text-gray-700'>

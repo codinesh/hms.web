@@ -1,101 +1,88 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react'
+import { OptionsType, ValueType } from 'react-select'
+import AsyncSelect from 'react-select/async'
+import AsyncCreatableSelect from 'react-select/async-creatable'
+import CreatableSelect from 'react-select/creatable'
+import Select from 'react-select'
+import { Option } from 'react-select/src/filters'
 
-interface SearchProps<T extends { id: number; value: string }> {
+interface SearchProps<T extends { id: number; value: string; label: string }> {
   items?: T[]
-  onSelect: (value: T) => void
+  onSelect: (value: T, isNew: boolean) => void
   onSearch?: (query: string) => Promise<T[]>
   onClear?: () => void
   allowFreeText?: boolean
   placeholder: string
+  disabled?: boolean
   selected?: number | string
 }
 
 function DropdownSearch<
-  T extends { id: number; value: string; secondaryText?: string }
+  T extends { id: number; label: string; value: string; secondaryText?: string }
 >(props: PropsWithChildren<SearchProps<T>>) {
-  const [searchItems, setSearchItems] = useState([...(props.items ?? [])])
-  const [selected, setSelected] = useState<number | string | undefined>(
-    props.selected
-  )
-  const [show, setShow] = useState(false)
-  const selectedItem = searchItems.filter((x) => x.id == props.selected)
-  const selectedItemName = selectedItem.length > 0 ? selectedItem[0].value : ''
-  const [query, setQuery] = useState(selectedItemName)
+  const promiseOptions = (inputValue: string) =>
+    new Promise<T[]>(async (resolve, err) => {
+      if (props.onSearch) {
+        var res = await props.onSearch(inputValue)
+        resolve(res)
+      } else err()
+    })
 
-  useEffect(() => {
-    setSearchItems([...(props.items ?? [])])
-  }, [props.items])
-
-  useEffect(() => {
-    setSelected(props.selected)
-    const selectedItem = searchItems.filter((x) => x.id == props.selected)
-    const selectedItemName =
-      selectedItem.length > 0 ? selectedItem[0].value : query
-
-    setQuery(selectedItemName)
-  }, [props.selected])
+  const ch = (value: T | OptionsType<T> | null) => {
+    if (value) {
+      let typ = value as T
+      let isNew = typ.label != null || typ.label != undefined
+      props.onSelect(typ, isNew)
+    }
+  }
 
   return (
-    <div className='relative'>
-      <input
-        type='text'
-        value={query}
-        onFocus={() => {
-          setShow(true)
-        }}
-        onBlur={() => {
-          if (!selected && props.allowFreeText) {
-            props.onSelect({ id: -1, value: query } as T)
-          }
-        }}
-        onChange={async (e) => {
-          setSelected(undefined)
-          setShow(true)
-          setQuery(e.target.value)
-          if (e.target.value == '') {
-            setSearchItems([])
-            return
-          } else {
-            if (props.items && props.items.length > 0) {
-              setSearchItems(
-                props.items.filter(
-                  (x) =>
-                    e.target.value == '' ||
-                    x.value.toLowerCase().match(e.target.value.toLowerCase()) ||
-                    x.id.toLocaleString().match(e.target.value.toLowerCase())
-                )
-              )
-            } else if (props.onSearch) {
-              let searchedItems = await props.onSearch(e.target.value)
-              setSearchItems(searchedItems)
+    <div className='w-full'>
+      {!props.onSearch ? (
+        props.allowFreeText ? (
+          <CreatableSelect
+            isDisabled={props.disabled}
+            placeholder={props.placeholder}
+            defaultValue={props.items?.filter((x) => x.id == props.selected)[0]}
+            options={props.items}
+            filterOption={(input: Option, raw: string) =>
+              input.label.indexOf(raw) >= 0 ||
+              input.data.id.toString().indexOf(raw) >= 0
             }
-          }
-        }}
-        className='rounded-md focus:ring-2 w-full z-10'
-      />
-      {show && searchItems.length > 0 && (
-        <div className='absolute z-50 py-1 top-12 w-full bg-white shadow-md rounded-md'>
-          <ul className='divide-y divide-opacity-40 rounded-md divide-gray-400'>
-            {searchItems.slice(0, 5).map((x) => (
-              <li
-                key={x.id}
-                className='flex justify-between w-full px-2 py-2 rounded-md hover:bg-gray-200 text-bold cursor-pointer'
-                onClick={(e) => {
-                  setQuery(x.value ?? '')
-                  setSelected(x.id)
-                  setShow(false)
-                  props.onSelect(x)
-                }}>
-                <div className='flex flex-col'>
-                  <span>{x.value}</span>
-                  {x.secondaryText && (
-                    <span className='font-thin'>{x.secondaryText}</span>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+            onChange={ch}
+          />
+        ) : (
+          <Select
+            className='shadow-md rounded-md border'
+            isDisabled={props.disabled}
+            placeholder={props.placeholder}
+            defaultValue={props.items?.filter((x) => x.id == props.selected)[0]}
+            options={props.items}
+            filterOption={(input: Option, raw: string) =>
+              input.label.indexOf(raw) >= 0 ||
+              input.data.id.toString().indexOf(raw) >= 0
+            }
+            onChange={ch}
+          />
+        )
+      ) : props.allowFreeText ? (
+        <AsyncCreatableSelect
+          isDisabled={props.disabled}
+          placeholder={props.placeholder}
+          defaultValue={props.items?.filter((x) => x.id == props.selected)[0]}
+          options={props.items}
+          onChange={ch}
+          loadOptions={promiseOptions}
+        />
+      ) : (
+        <AsyncSelect
+          isDisabled={props.disabled}
+          placeholder={props.placeholder}
+          defaultValue={props.items?.filter((x) => x.id == props.selected)[0]}
+          options={props.items}
+          onChange={ch}
+          loadOptions={promiseOptions}
+        />
       )}
     </div>
   )

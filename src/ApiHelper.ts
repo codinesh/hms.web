@@ -1,4 +1,5 @@
 import constants from './const'
+import Patient from './models/Patient'
 
 async function getItem<T>(url: string, headers?: string): Promise<T> {
   let promise = new Promise<T>(async (resolve, reject) => {
@@ -76,5 +77,20 @@ async function postItem<T, R>(
   return promise
 }
 
-const ApiHelper = { getItem, getItems, postItem }
+export const getPatientsFilter = (
+  query: string
+): Promise<{ id: number; value: string; label: string }[]> => {
+  return new Promise<{ id: number; value: string; label: string }[]>(
+    async (resolve, err) => {
+      var res = await ApiHelper.getItems<Patient>(
+        `${constants.patientSearchUrl}${query}`
+      )
+      resolve(
+        res.map((x) => ({ id: x.id, value: x.fullName, label: x.fullName }))
+      )
+    }
+  )
+}
+
+const ApiHelper = { getItem, getItems, postItem, getPatientsFilter }
 export default ApiHelper

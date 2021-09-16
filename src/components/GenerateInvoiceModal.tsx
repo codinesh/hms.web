@@ -121,7 +121,7 @@ const GenerateInvoiceModal: React.FC<{
                   <div className='mt-2'>
                     <div className='divide-y-2 space-y-8 divide-gray-200 divide-dashed divide-opacity-60'>
                       <section className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2'>
-                        <div className=''>
+                        <div className='w-9/12'>
                           <label
                             htmlFor='patientId'
                             className='block text-sm font-medium text-gray-700'>
@@ -135,9 +135,10 @@ const GenerateInvoiceModal: React.FC<{
                               items={patients.map((x) => ({
                                 id: x.id,
                                 value: x.fullName,
+                                label: x.fullName,
                               }))}
-                              onSelect={(e) => {
-                                if (e.id == -1) {
+                              onSelect={(e, isNew) => {
+                                if (isNew) {
                                   setInvoice({
                                     ...invoice,
                                     patientName: e.value,
@@ -162,13 +163,13 @@ const GenerateInvoiceModal: React.FC<{
                             />
                           </div>
                         </div>
-                        <div className=''>
+                        <div className='w-9/12'>
                           <label
                             htmlFor='doctorId'
                             className='block text-sm font-medium text-gray-700'>
                             Doctor
                           </label>
-                          <div className='mt-1 flex rounded-md ='>
+                          <div className='mt-1 flex rounded-md w-9/12'>
                             <DropdownSearch
                               allowFreeText={true}
                               placeholder='select doctor'
@@ -176,15 +177,16 @@ const GenerateInvoiceModal: React.FC<{
                               items={doctors.map((x) => ({
                                 id: x.id,
                                 value: x.fullName,
+                                label: x.fullName,
                               }))}
-                              onSelect={(e) => {
-                                setDoctorId(e.id)
+                              onSelect={(e, isNew) => {
+                                setDoctorId(isNew ? -1 : e.id)
                                 setInvoice({ ...invoice, refDoctor: e.value })
                               }}
                             />
                           </div>
                         </div>
-                        <div className=''>
+                        <div className='w-full'>
                           <label
                             htmlFor='patientAge'
                             className='block text-sm font-medium text-gray-700'>
@@ -343,18 +345,19 @@ const GenerateInvoiceModal: React.FC<{
                         </div>
                       </section>
                       <section className='pt-4'>
-                        <div className=' flex gap-2  min-w-md mb-4'>
-                          <div className=''>
+                        <div className=' flex gap-2 mb-4'>
+                          <div className='flex-grow'>
                             <label
                               htmlFor='patientGender'
                               className='block text-sm font-medium text-gray-700'>
                               Medicine
                             </label>
-                            <div className='mt-1 flex rounded-md ='>
+                            <div className='mt-1 flex rounded-md '>
                               <DropdownSearch
                                 placeholder='search medicine'
                                 items={medicines.map((x) => ({
                                   id: x.id,
+                                  label: `${x.itemName} (${x.drugName})`,
                                   value: `${x.itemName} (${x.drugName})`,
                                   secondaryText: `Expiry: ${dateUtils.getIsoDateString(
                                     x.expiryDate
@@ -374,7 +377,7 @@ const GenerateInvoiceModal: React.FC<{
                               />
                             </div>
                           </div>
-                          <div className=''>
+                          <div className='flex-grow'>
                             <label
                               htmlFor='patientGender'
                               className='block text-sm font-medium text-gray-700'>

@@ -146,14 +146,16 @@ const AddStockSlideIn: React.FC<{
                                 </div>
                                 <div className='sm:col-span-2'>
                                   <DropdownSearch
+                                    disabled={isEdit}
                                     allowFreeText={true}
-                                    placeholder='select patient'
-                                    selected={values.itemName}
+                                    placeholder='search or enter medicine'
+                                    selected={values.id}
                                     onSearch={async (query) => {
                                       return new Promise<
                                         {
                                           id: number
                                           value: string
+                                          label: string
                                         }[]
                                       >(async (resolve, _) => {
                                         filteredStock =
@@ -165,13 +167,14 @@ const AddStockSlideIn: React.FC<{
                                           (x) => ({
                                             id: x.id,
                                             value: x.itemName,
+                                            label: x.itemName,
                                           })
                                         )
                                         resolve(filterItems)
                                       })
                                     }}
-                                    onSelect={(e) => {
-                                      if (e.id == -1) {
+                                    onSelect={(e, isNew) => {
+                                      if (isNew) {
                                         setFieldValue('itemName', e.value)
                                       } else {
                                         let stock = filteredStock.filter(
