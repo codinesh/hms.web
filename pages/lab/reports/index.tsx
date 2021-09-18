@@ -53,7 +53,7 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
   const router = useRouter()
   const { pageContent: labInvoices } = props
   const [filteredLabInvoice, setFilteredLabInvoices] = useState([
-    ...labInvoices,
+    ...(labInvoices ?? []),
   ])
   const [tests, setTests] = useState<LabTest[]>([])
 
@@ -77,12 +77,12 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
       setFilteredLabInvoices([...labInvoices])
     } else {
       dispatch({ type: LoadingStateAction.Busy })
-      let results = await ApiHelper.getItems<LabInvoice>(
+      let results = await ApiHelper.getItem<LabInvoice>(
         `${constants.labInvoiceById}${a}`
       )
       dispatch({ type: LoadingStateAction.Idle })
 
-      setFilteredLabInvoices(results)
+      setFilteredLabInvoices([results])
     }
   }
 
@@ -188,62 +188,65 @@ const LabReportsPage: React.FC<PageProps<LabInvoice[]>> = (props) => {
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
-                {filteredLabInvoice.map((labInvoice) => (
-                  <tr
-                    onDoubleClick={() => {
-                      setSelectedLabInvoice(labInvoice)
-                      setloading(true)
-                      router.push(`/lab/reports/${labInvoice.id}`)
-                    }}
-                    className={clsx(
-                      'hover:bg-gray-100 cursor-pointer select-none'
-                    )}
-                    key={labInvoice.id}>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                      {labInvoice.id}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {labInvoice.patientId}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {labInvoice.patientName}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {labInvoice.refDoctor}
-                    </td>
-
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {Gender[labInvoice.patientGender]}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {dateUtils.geLocalDateTimeString(labInvoice.invoiceDate)}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {labInvoice ? (
-                        <button
-                          type='button'
-                          className='text-center w-5 h-5'
-                          onClick={() => {
-                            setSelectedLabInvoice((prev) => labInvoice)
-                            setTimeout(() => {
-                              setOpenPrintPage(true)
-                            }, 1)
-                          }}>
-                          <PrinterIcon className='' />
-                        </button>
-                      ) : (
-                        <button
-                          type='button'
-                          onClick={() => {
-                            setSelectedLabInvoice(labInvoice)
-                          }}
-                          className='text-center inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                          Generate invoice
-                        </button>
+                {filteredLabInvoice &&
+                  filteredLabInvoice.map((labInvoice) => (
+                    <tr
+                      onDoubleClick={() => {
+                        setSelectedLabInvoice(labInvoice)
+                        setloading(true)
+                        router.push(`/lab/reports/${labInvoice.id}`)
+                      }}
+                      className={clsx(
+                        'hover:bg-gray-100 cursor-pointer select-none'
                       )}
-                    </td>
-                  </tr>
-                ))}
+                      key={labInvoice.id}>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                        {labInvoice.id}
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                        {labInvoice.patientId}
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                        {labInvoice.patientName}
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                        {labInvoice.refDoctor}
+                      </td>
+
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                        {Gender[labInvoice.patientGender]}
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                        {dateUtils.geLocalDateTimeString(
+                          labInvoice.invoiceDate
+                        )}
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                        {labInvoice ? (
+                          <button
+                            type='button'
+                            className='text-center w-5 h-5'
+                            onClick={() => {
+                              setSelectedLabInvoice((prev) => labInvoice)
+                              setTimeout(() => {
+                                setOpenPrintPage(true)
+                              }, 1)
+                            }}>
+                            <PrinterIcon className='' />
+                          </button>
+                        ) : (
+                          <button
+                            type='button'
+                            onClick={() => {
+                              setSelectedLabInvoice(labInvoice)
+                            }}
+                            className='text-center inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                            Generate invoice
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

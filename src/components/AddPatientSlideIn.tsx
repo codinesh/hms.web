@@ -219,8 +219,8 @@ const AddPatientSlideIn: React.FC<{
                             <div className='sm:col-span-2'>
                               <div className='relative rounded-md shadow-sm'>
                                 <AgeInput
-                                  years={props.patient?.age}
-                                  months={props.patient?.ageInMonths}
+                                  years={age.years}
+                                  months={age.months}
                                   onSelect={(years: number, months: number) => {
                                     setAge({ years, months })
                                   }}

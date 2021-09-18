@@ -73,11 +73,13 @@ const PrintLayout: React.FC<PrintDetails> = (props) => {
               <span className='text-xs'>
                 {!props.nongstinvoice ? `Invoice date:` : 'Report date'}
               </span>
-              <span>{dateUtils.geLocalDateTimeString(props.invoiceDate)}</span>
+              <span className='text-xs'>
+                {dateUtils.geLocalDateTimeString(props.invoiceDate)}
+              </span>
             </div>
             <div>
               <span className='text-xs'>Patient Id: </span>
-              <span>{props.patientId}</span>
+              <span className='text-xs'>{props.patientId}</span>
             </div>
           </div>
         </div>

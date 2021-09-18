@@ -31,7 +31,7 @@ function DropdownSearch<
   const ch = (value: T | OptionsType<T> | null) => {
     if (value) {
       let typ = value as T
-      let isNew = typ.label != null || typ.label != undefined
+      let isNew = typ.id == null || typ.id == undefined
       props.onSelect(typ, isNew)
     }
   }

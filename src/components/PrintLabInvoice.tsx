@@ -7,12 +7,12 @@ const PrintLabInvoice: React.FC<LabInvoice> = (props) => {
   return (
     <PrintLayout
       address={'TPTY'}
-      amount={props.amount}
+      total={props.amount}
       discount={props.discount}
       doctorName={props.refDoctor}
       invoiceDate={props.invoiceDate}
       patientId={props.patientId?.toString() ?? ''}
-      total={props.invoiceDetail.reduce((a, b) => a + b.price, 0)}
+      amount={props.invoiceDetail.reduce((a, b) => a + b.price, 0)}
       patientName={props.patientName}>
       <div className='align-middle inline-block min-w-full '>
         <div className=' overflow-hidden border-b  border-gray-200 sm:rounded-lg'>
@@ -31,20 +31,16 @@ const PrintLabInvoice: React.FC<LabInvoice> = (props) => {
                   className='  px-6 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Item
                 </th>
+
+                <th
+                  scope='col'
+                  className=' px-6 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  SAC Code
+                </th>
                 <th
                   scope='col'
                   className=' px-6 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Price
-                </th>
-                <th
-                  scope='col'
-                  className=' px-6 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Discount
-                </th>
-                <th
-                  scope='col'
-                  className=' px-6 py-3 print:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Total
                 </th>
               </tr>
             </thead>
@@ -60,15 +56,11 @@ const PrintLabInvoice: React.FC<LabInvoice> = (props) => {
                   <td className='px-6 py-4  print:py-1 whitespace-nowrap text-sm text-gray-500'>
                     {invoicedetail.testName}
                   </td>
-                  <td className='px-6 py-4  print:py-1 whitespace-n owrap text-sm text-gray-500'>
-                    {invoicedetail.price}
-                  </td>
-
-                  <td className='px-6 py-4  print:py-1 whitespace-nowrap text-sm text-gray-500'>
-                    {invoicedetail.service}
-                  </td>
                   <td className='px-6 py-4  print:py-1 whitespace-nowrap text-sm text-gray-500'>
                     {invoicedetail.sacCode}
+                  </td>
+                  <td className='px-6 py-4  print:py-1 whitespace-nowrap text-sm text-gray-500'>
+                    {invoicedetail.price}
                   </td>
                 </tr>
               ))}

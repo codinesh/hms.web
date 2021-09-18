@@ -428,6 +428,16 @@ const GenerateLabInvoiceModal: React.FC<{
                                     )}
                                     <tr className='border-t-2 border-dashed'>
                                       <td className=' px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
+                                        Discount
+                                      </td>
+                                      <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'></td>
+                                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'></td>
+                                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                                        {invoice.discount}
+                                      </td>
+                                    </tr>
+                                    <tr className='border-t-2 border-dashed'>
+                                      <td className=' px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
                                         Total
                                       </td>
                                       <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'></td>
@@ -436,7 +446,7 @@ const GenerateLabInvoiceModal: React.FC<{
                                         {invoiceTests.reduce<number>(
                                           (a, b) => a + b.price,
                                           0
-                                        )}
+                                        ) - invoice.discount}
                                       </td>
                                     </tr>
                                   </tbody>
