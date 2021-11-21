@@ -57,7 +57,7 @@ const reducer = (state: IGlobalState, action: GlobalAction): IGlobalState => {
     case GlobalStateAction.Error:
       return { ...state, error: true, errorMessage: action.error }
     case GlobalStateAction.LogIn:
-      return { ...state, user: action.user }
+      return { ...state, user: { ...action.user, loggedIn: true } }
     case GlobalStateAction.LogOut:
       return { ...state, user: undefined }
     case GlobalStateAction.SetPageTitle:

@@ -2,6 +2,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { UserCircleIcon, XIcon } from '@heroicons/react/outline'
 import React, { Dispatch, Fragment, SetStateAction } from 'react'
 import { data } from '../data'
+import { useGlobalState } from '../store/GlobalStore'
 import SidebarItem from './SideBarItem'
 
 const Sidebar: React.FC<{
@@ -9,6 +10,7 @@ const Sidebar: React.FC<{
   setSidebarOpen: Dispatch<SetStateAction<boolean>>
 }> = (props) => {
   const { sidebarOpen, setSidebarOpen } = props
+  const { user } = useGlobalState()
   return (
     <>
       <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -123,7 +125,7 @@ const Sidebar: React.FC<{
                     </div>
                     <div className='ml-3'>
                       <p className='text-base font-medium text-white'>
-                        User name
+                        {user?.fullName}
                       </p>
                       <p className='text-sm font-medium text-gray-400 group-hover:text-gray-300'>
                         Sign out

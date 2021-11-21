@@ -40,7 +40,6 @@ const AddPatientSlideIn: React.FC<{
     insuranceId: 0,
     insuranceNumber: '',
     medicalHistory: '',
-    role: 0,
     updatedOn: new Date(),
   }
 

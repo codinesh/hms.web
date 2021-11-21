@@ -2,6 +2,8 @@ class Constants {
   baseApiUrl = process.env.NEXT_PUBLIC_API_HOST
   // baseApiUrl='https://phmsapi.azurewebsites.net/api/'
 
+  signinUrl = 'user/login'
+
   // patient endpoints
   patientUrl = 'patient/all'
   configUrl = 'general/configuration'

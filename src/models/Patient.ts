@@ -17,7 +17,6 @@ export default interface Patient {
   contactNumber: string
   alternateContactNumber?: any
   email: string
-  role: number
   age?: number
   ageInMonths?: number
   createdOn: Date

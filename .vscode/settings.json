@@ -5,9 +5,6 @@
     "javascript.preferences.quoteStyle": "single",
     "typescript.preferences.quoteStyle": "single",
     "workbench.colorCustomizations": {
-        "editorGroup.border": "#483861",
-        "panel.border": "#483861",
-        "sideBar.border": "#483861",
         "statusBar.background": "#302541",
         "statusBar.border": "#302541",
         "statusBar.debuggingBackground": "#364125",
@@ -15,7 +12,10 @@
         "statusBar.debuggingForeground": "#e7e7e7",
         "statusBar.foreground": "#e7e7e7",
         "statusBarItem.hoverBackground": "#483861",
-        "tab.activeBorder": "#483861"
+        "tab.activeBorder": "#483861",
+        "sash.hoverBorder": "#483861",
+        "statusBarItem.remoteBackground": "#302541",
+        "statusBarItem.remoteForeground": "#e7e7e7"
     },
     "peacock.color": "#302541",
     "git.ignoreLimitWarning": true
