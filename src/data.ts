@@ -8,8 +8,8 @@ import {
   UserIcon,
   UsersIcon,
   CalendarIcon,
-} from '@heroicons/react/outline';
-import { INavigationItem } from './types/INavigationItem';
+} from '@heroicons/react/outline'
+import { INavigationItem } from './types/INavigationItem'
 
 const navigation: INavigationItem[] = [
   {
@@ -30,8 +30,10 @@ const navigation: INavigationItem[] = [
   {
     name: 'Lab',
     icon: NewspaperIcon,
-    children: [{ name: 'Invoice', icon: UsersIcon, path: '/lab/invoice' },
-    { name: 'Reports', icon: UsersIcon, path: '/lab/reports' }],
+    children: [
+      { name: 'Invoice', icon: UsersIcon, path: '/lab/invoice' },
+      { name: 'Reports', icon: UsersIcon, path: '/lab/reports' },
+    ],
   },
   {
     name: 'Doctors',
@@ -55,13 +57,23 @@ const navigation: INavigationItem[] = [
       },
     ],
   },
-];
+  {
+    name: 'Room',
+    icon: FolderIcon,
+    path: '/room',
+  },
+  {
+    name: 'Room Allocation',
+    icon: FolderIcon,
+    path: '/roomallocation',
+  },
+]
 
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
   { name: 'Sign out', href: '#' },
-];
+]
 
 const projects = [
   {
@@ -244,7 +256,7 @@ const projects = [
     pinned: true,
     bgColorClass: 'bg-gray-600',
   },
-];
+]
 
 const cards = [
   { name: 'Account balance', href: '#', icon: ScaleIcon, amount: '$30,659.45' },
@@ -273,7 +285,7 @@ const cards = [
     amount: '$30,659.45',
   },
   // More items...
-];
+]
 
 const transactions = [
   {
@@ -336,15 +348,15 @@ const transactions = [
     date: 'July 11, 2020',
     datetime: '2020-07-11',
   },
-];
+]
 
 const statusStyles = {
   success: 'bg-green-100 text-green-800',
   processing: 'bg-yellow-100 text-yellow-800',
   failed: 'bg-red-300 text-gray-800',
-};
+}
 
-const pinnedProjects = projects.filter((project) => project.pinned);
+const pinnedProjects = projects.filter((project) => project.pinned)
 
 export const data = {
   navigation,
@@ -354,4 +366,4 @@ export const data = {
   transactions,
   cards,
   statusStyles,
-};
+}

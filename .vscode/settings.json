@@ -1,22 +1,16 @@
 {
-    "editor.formatOnSave": true,
-    "prettier.jsxSingleQuote": true,
-    "prettier.singleQuote": true,
-    "javascript.preferences.quoteStyle": "single",
-    "typescript.preferences.quoteStyle": "single",
     "workbench.colorCustomizations": {
-        "editorGroup.border": "#483861",
-        "panel.border": "#483861",
-        "sideBar.border": "#483861",
-        "statusBar.background": "#302541",
-        "statusBar.border": "#302541",
-        "statusBar.debuggingBackground": "#364125",
-        "statusBar.debuggingBorder": "#364125",
-        "statusBar.debuggingForeground": "#e7e7e7",
+        "sash.hoverBorder": "#dc47fa",
+        "statusBar.background": "#d315f9",
+        "statusBar.border": "#d315f9",
+        "statusBar.debuggingBackground": "#3bf915",
+        "statusBar.debuggingBorder": "#3bf915",
+        "statusBar.debuggingForeground": "#15202b",
         "statusBar.foreground": "#e7e7e7",
-        "statusBarItem.hoverBackground": "#483861",
-        "tab.activeBorder": "#483861"
+        "statusBarItem.hoverBackground": "#dc47fa",
+        "statusBarItem.remoteBackground": "#d315f9",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "tab.activeBorder": "#dc47fa"
     },
-    "peacock.color": "#302541",
-    "git.ignoreLimitWarning": true
+    "peacock.color": "#d315f9"
 }

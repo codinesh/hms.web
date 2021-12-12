@@ -43,6 +43,15 @@ class Constants {
   labInvoiceById = 'lab/testResult?invoiceId='
   labSearchInvoice = 'lab/searchinvoice?nameOrId='
   labAddInvoice = 'lab/addinvoice'
+
+  // room
+  availableRooms = 'room/availableRooms'
+  roomByIdUrl = 'room/byid?byid='
+  extendRooom = 'room/extend'
+  assignRooom = 'room/assign'
+  allRooms = 'room/all'
+  assignedRooms = 'room/assigned'
+  roomSearchUrl = 'room/search?searchFilter='
 }
 
 const constants = new Constants()
