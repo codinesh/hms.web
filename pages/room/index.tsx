@@ -1,57 +1,52 @@
 import {
-  ArrowDownIcon,
-  CheckIcon,
-  PencilIcon,
-  TrashIcon,
-  UserAddIcon,
+  ArrowDownIcon, UserAddIcon
 } from '@heroicons/react/outline'
-import { ArrowUpIcon } from '@heroicons/react/solid'
+import {ArrowUpIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
-
-import { GetStaticProps } from 'next'
-import { useRouter } from 'next/dist/client/router'
-import React, { useState } from 'react'
+import {GetStaticProps} from 'next'
+import {useRouter} from 'next/dist/client/router'
+import React, {useState} from 'react'
 import ApiHelper from '../../src/ApiHelper'
+import AddRoomSlideIn from '../../src/components/AddRoomSlideIn'
 import SearchBox from '../../src/components/SearchBox'
 import constants from '../../src/const'
-import Gender from '../../src/models/Gender'
+import Room from '../../src/models/Room'
 import {
   LoadingStateAction,
-  useLoadingDispatch,
+  useLoadingDispatch
 } from '../../src/store/LoadingStore'
-import { IRoom } from '../../src/types/IUser'
-import { PageProps } from '../../src/types/PageProps'
+import {PageProps} from '../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const rooms = await ApiHelper.getItems<IRoom>(constants.availableRooms)
+  const rooms = await ApiHelper.getItems<Room>(constants.availableRooms)
   if (!rooms) {
     return {
       notFound: true,
     }
   }
 
-  let pageProps: PageProps<IRoom[]> = {
+  let pageProps: PageProps<Room[]> = {
     pageContent: rooms,
   }
 
   return {
-    props: { ...pageProps },
+    props: {...pageProps},
     revalidate: 1,
   }
 }
 
-const RoomPage: React.FC<PageProps<IRoom[]>> = (props) => {
-  const { pageContent: rooms } = props
+const RoomPage: React.FC<PageProps<Room[]>> = (props) => {
+  const {pageContent: rooms} = props
   const [filteredRooms, setFilteredRooms] = useState([...rooms])
   const router = useRouter()
   const [loading, setloading] = useState(false)
   const [open, setOpen] = useState(false)
   const dispatch = useLoadingDispatch()
 
-  const addRoom = async (room: IRoom) => {
-    dispatch({ type: LoadingStateAction.Busy })
-    await ApiHelper.postItem<IRoom, number>(constants.assignRooom, room)
-    dispatch({ type: LoadingStateAction.Idle })
+  const addRoom = async (room: Room) => {
+    dispatch({type: LoadingStateAction.Busy})
+    await ApiHelper.postItem<Room, number>(constants.addRooom, room)
+    dispatch({type: LoadingStateAction.Idle})
 
     refreshData()
   }
@@ -61,11 +56,11 @@ const RoomPage: React.FC<PageProps<IRoom[]>> = (props) => {
   }
 
   const search = async (a: string) => {
-    dispatch({ type: LoadingStateAction.Busy })
-    let results = await ApiHelper.getItems<IRoom>(
+    dispatch({type: LoadingStateAction.Busy})
+    let results = await ApiHelper.getItems<Room>(
       `${constants.roomSearchUrl}${a}`
     )
-    dispatch({ type: LoadingStateAction.Idle })
+    dispatch({type: LoadingStateAction.Idle})
 
     setFilteredRooms(results)
   }
@@ -77,15 +72,16 @@ const RoomPage: React.FC<PageProps<IRoom[]>> = (props) => {
           className=''
           placeholderText='search rooms'
           onSearch={search}
-          onClear={() => {}}
+          onClear={() => { }}
         />
 
-        {/* <AddRoomSlideIn
+        <AddRoomSlideIn
           onSubmit={addRoom}
-          onClose={async () => {}}
+          onUpdate={addRoom}
+          onClose={async () => { }}
           open={open}
           setOpen={setOpen}
-        /> */}
+        />
 
         <button
           type='button'
@@ -118,27 +114,22 @@ const RoomPage: React.FC<PageProps<IRoom[]>> = (props) => {
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Name
+                    Floor number
                   </th>
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Email
+                    Bed number
                   </th>
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Phone Number
+                    Building id
                   </th>
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Age
-                  </th>
-                  <th
-                    scope='col'
-                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Gender
+                    Ward type
                   </th>
                 </tr>
               </thead>
@@ -157,7 +148,7 @@ const RoomPage: React.FC<PageProps<IRoom[]>> = (props) => {
                       {room.id}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {room.name}
+                      {room.floorNumber}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {room.bedNumber}

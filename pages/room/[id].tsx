@@ -1,15 +1,14 @@
-import React, { useState } from 'react'
-import { PaperClipIcon, PencilIcon, UserAddIcon } from '@heroicons/react/solid'
-import { GetStaticProps } from 'next'
-import constants from '../../src/const'
+import {PaperClipIcon, PencilIcon} from '@heroicons/react/solid'
+import {GetStaticProps} from 'next'
+import {useRouter} from 'next/dist/client/router'
+import React, {useState} from 'react'
 import ApiHelper from '../../src/ApiHelper'
-import HealthCondition from '../../src/models/HealthCondition'
-import { useRouter } from 'next/dist/client/router'
+import constants from '../../src/const'
+import Room from '../../src/models/Room'
 import {
   LoadingStateAction,
-  useLoadingDispatch,
+  useLoadingDispatch
 } from '../../src/store/LoadingStore'
-import { IRoom } from '../../src/types/IUser'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   if (!context.params?.id) {
@@ -22,7 +21,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     `${constants.baseApiUrl}${constants.roomByIdUrl}${context.params.id}`
   )
 
-  const room: IRoom = await res.json()
+  const room: Room = await res.json()
 
   if (!room) {
     return {
@@ -31,14 +30,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 
   return {
-    props: { room },
+    props: {room},
     revalidate: 1,
   }
 }
 
 export async function getStaticPaths() {
   const res = await fetch(`${constants.baseApiUrl}${constants.availableRooms}`)
-  const rooms: IRoom[] = await res.json()
+  const rooms: Room[] = await res.json()
 
   if (!rooms) {
     return {
@@ -56,19 +55,19 @@ export async function getStaticPaths() {
   }
 }
 
-const RoomDetail: React.FC<{ room: IRoom }> = (props) => {
-  const { room } = props
+const RoomDetail: React.FC<{room: Room}> = (props) => {
+  const {room} = props
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const dispatch = useLoadingDispatch()
 
-  const editRoomUrl = async (roomToEdit: IRoom) => {
-    dispatch({ type: LoadingStateAction.Busy })
-    var response = await ApiHelper.postItem<IRoom, number>(
+  const editRoomUrl = async (roomToEdit: Room) => {
+    dispatch({type: LoadingStateAction.Busy})
+    var response = await ApiHelper.postItem<Room, number>(
       constants.extendRooom,
       roomToEdit
     )
-    dispatch({ type: LoadingStateAction.Idle })
+    dispatch({type: LoadingStateAction.Idle})
   }
 
   if (router.isFallback) {
@@ -82,7 +81,7 @@ const RoomDetail: React.FC<{ room: IRoom }> = (props) => {
         onClick={() => {
           setOpen(true)
         }}
-        className='mb-3 flex-shrink inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
+        className='mb-3 flex-shrink inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2
         focus:ring-indigo-500
         sm:ml-3 sm:w-auto sm:text-sm'>
         <PencilIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
@@ -102,7 +101,7 @@ const RoomDetail: React.FC<{ room: IRoom }> = (props) => {
             <div className='py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500'>Full name</dt>
               <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-                {room.name}
+                {room.id}
               </dd>
             </div>
 
