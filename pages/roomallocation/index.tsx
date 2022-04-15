@@ -1,5 +1,5 @@
 import {
-  ArrowDownIcon, UserAddIcon
+  ArrowDownIcon
 } from '@heroicons/react/outline'
 import {ArrowUpIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
@@ -7,18 +7,19 @@ import {GetStaticProps} from 'next'
 import {useRouter} from 'next/dist/client/router'
 import React, {useState} from 'react'
 import ApiHelper from '../../src/ApiHelper'
+import AssignRoomSlideIn from '../../src/components/AssignRoomSlideIn'
 import SearchBox from '../../src/components/SearchBox'
 import constants from '../../src/const'
-import Room from '../../src/models/Room'
+import Room, {RoomOccupancy} from '../../src/models/Room'
+import {useGlobalState} from '../../src/store/GlobalStore'
 import {
   LoadingStateAction,
   useLoadingDispatch
 } from '../../src/store/LoadingStore'
 import {PageProps} from '../../src/types/PageProps'
 
-
 export const getStaticProps: GetStaticProps = async (context) => {
-  const rooms = await ApiHelper.getItems<Room>(constants.assignedRooms)
+  const rooms = await ApiHelper.getItems<Room>(constants.availableRooms)
   if (!rooms) {
     return {
       notFound: true,
@@ -41,11 +42,13 @@ const RoomPage: React.FC<PageProps<Room[]>> = (props) => {
   const router = useRouter()
   const [loading, setloading] = useState(false)
   const [open, setOpen] = useState(false)
+  const [selectedRoom, setSelectedRoom] = useState<Room>()
   const dispatch = useLoadingDispatch()
+  const {wards} = useGlobalState()
 
-  const addRoom = async (room: Room) => {
+  const addRoom = async (room: RoomOccupancy) => {
     dispatch({type: LoadingStateAction.Busy})
-    await ApiHelper.postItem<Room, number>(constants.assignRooom, room)
+    await ApiHelper.postItem<RoomOccupancy, number>(constants.addRooom, room)
     dispatch({type: LoadingStateAction.Idle})
 
     refreshData()
@@ -53,6 +56,11 @@ const RoomPage: React.FC<PageProps<Room[]>> = (props) => {
 
   const refreshData = () => {
     router.replace(router.asPath)
+  }
+
+  const closeSlideIn = (isOpen: boolean) => {
+    setOpen(isOpen)
+    setSelectedRoom(undefined)
   }
 
   const search = async (a: string) => {
@@ -75,22 +83,15 @@ const RoomPage: React.FC<PageProps<Room[]>> = (props) => {
           onClear={() => { }}
         />
 
-        {/* <AddRoomSlideIn
+        <AssignRoomSlideIn
           onSubmit={addRoom}
-          onClose={async () => {}}
-          open={open}
-          setOpen={setOpen}
-        /> */}
+          onUpdate={addRoom}
+          onClose={() => { }}
+          room={selectedRoom!}
+          open={open || selectedRoom != undefined}
+          setOpen={closeSlideIn}
+        />
 
-        <button
-          type='button'
-          onClick={() => {
-            setOpen(true)
-          }}
-          className='flex-shrink  inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:ml-3 sm:w-auto sm:text-sm'>
-          <UserAddIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
-          Add room
-        </button>
       </div>
       <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
         <div className=' py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
@@ -113,27 +114,22 @@ const RoomPage: React.FC<PageProps<Room[]>> = (props) => {
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Name
+                    Floor number
                   </th>
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Email
+                    Bed number
                   </th>
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Phone Number
+                    Building id
                   </th>
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Age
-                  </th>
-                  <th
-                    scope='col'
-                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Gender
+                    Ward type
                   </th>
                 </tr>
               </thead>
@@ -145,14 +141,14 @@ const RoomPage: React.FC<PageProps<Room[]>> = (props) => {
                     )}
                     key={room.id}
                     onDoubleClick={(e) => {
-                      setloading(true)
-                      router.push(`/room/${room.id}`)
+                      setSelectedRoom(room)
+                      setOpen(true)
                     }}>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
                       {room.id}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {room.bedNumber}
+                      {room.floorNumber}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {room.bedNumber}
@@ -161,7 +157,7 @@ const RoomPage: React.FC<PageProps<Room[]>> = (props) => {
                       {room.buildingId}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {room.wardTypeId}
+                      {wards.find((w) => w.id === room.wardType)?.name}
                     </td>
                   </tr>
                 ))}

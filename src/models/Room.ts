@@ -4,10 +4,18 @@ export default interface Room {
   bedNumber: number
   buildingId: number
   floorNumber: number
-  wardTypeId: string
+  wardType: number
   rent: number
   isAvailable?: boolean
   isCleaned?: boolean
+}
+
+export interface RoomOccupancy {
+  roomId: number
+  patientId: number
+  startTime: Date
+  endTime: Date
+  remarks: string
 }
 
 export enum RoomType {

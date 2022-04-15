@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useEffect, useReducer} from 'react'
-import Doctor, {AppConfig} from '../models/Doctor'
+import Doctor, {AppConfig, WardType} from '../models/Doctor'
 import Patient from '../models/Patient'
 import {IGlobalState} from '../types/IGlobalState'
 import IUser from '../types/IUser'
@@ -14,6 +14,7 @@ export enum GlobalStateAction {
   SetSearchQuery,
   Patients,
   Doctors,
+  Wards,
   AppConfig,
 }
 
@@ -27,6 +28,7 @@ export type GlobalAction =
   | {type: GlobalStateAction.LogOut}
   | {type: GlobalStateAction.Patients; patients: Patient[]}
   | {type: GlobalStateAction.Doctors; doctors: Doctor[]}
+  | {type: GlobalStateAction.Wards; wards: WardType[]}
   | {type: GlobalStateAction.AppConfig; config: AppConfig}
 
 const initialState: IGlobalState = {
@@ -35,6 +37,7 @@ const initialState: IGlobalState = {
   pageTitle: '',
   doctors: [],
   patients: [],
+  wards: [],
   appConfig: {
     cin: '',
     contactNumber: '',
@@ -70,6 +73,8 @@ const reducer = (state: IGlobalState, action: GlobalAction): IGlobalState => {
       return {...state, patients: action.patients}
     case GlobalStateAction.AppConfig:
       return {...state, appConfig: action.config}
+    case GlobalStateAction.Wards:
+      return {...state, wards: action.wards}
     default:
       return state
   }

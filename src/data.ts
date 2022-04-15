@@ -1,13 +1,11 @@
 import {
   FolderIcon,
-  HomeIcon,
   NewspaperIcon,
   OfficeBuildingIcon,
   ScaleIcon,
   UserAddIcon,
   UserIcon,
   UsersIcon,
-  CalendarIcon,
 } from '@heroicons/react/outline'
 import { INavigationItem } from './types/INavigationItem'
 
@@ -56,11 +54,6 @@ const navigation: INavigationItem[] = [
         path: '/pharmacy/invoice',
       },
     ],
-  },
-  {
-    name: 'Room',
-    icon: FolderIcon,
-    path: '/room',
   },
   {
     name: 'Room Allocation',

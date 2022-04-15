@@ -15,6 +15,11 @@ export interface AppConfig {
   cin: string
 }
 
+export interface WardType {
+  id: number
+  name: string
+}
+
 interface Doctor {
   experience: number
   qualification: string

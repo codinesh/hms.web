@@ -3,20 +3,23 @@ import {XIcon} from '@heroicons/react/outline'
 import clsx from 'clsx'
 import {Field, Form, Formik} from 'formik'
 import React, {Fragment, useState} from 'react'
-import Room from '../models/Room'
+import ApiHelper from '../ApiHelper'
+import Room, {RoomOccupancy} from '../models/Room'
+import DropdownSearch from './DropdownSearch'
 
-const AddRoomSlideIn: React.FC<{
-  room?: Room
+const AssignRoomSlideIn: React.FC<{
+  room: Room
+  roomOccupancy?: RoomOccupancy
   open: boolean
   setOpen: (open: boolean) => void
   onClose: () => void
-  onSubmit: (room: Room) => Promise<void>
-  onUpdate: (room: Room) => Promise<void>
+  onSubmit: (room: RoomOccupancy) => Promise<void>
+  onUpdate: (room: RoomOccupancy) => Promise<void>
 }> = (props) => {
-  const {room, open, setOpen} = props
+  const {room, open, setOpen, roomOccupancy} = props
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  let isEdit = room != null ?? false
+  let isEdit = roomOccupancy != null ?? false
   let curDate = new Date()
   let defaultExpiry = new Date()
   defaultExpiry.setUTCFullYear(curDate.getFullYear() + 1)
@@ -28,6 +31,14 @@ const AddRoomSlideIn: React.FC<{
     floorNumber: 0,
     rent: 0,
     wardType: 0
+  }
+
+  const initialRoomOccupancyData: RoomOccupancy = roomOccupancy ?? {
+    roomId: room?.id ?? 0,
+    patientId: 0,
+    endTime: new Date(),
+    startTime: new Date(),
+    remarks: ''
   }
 
   let filteredRoom: Room[]
@@ -66,7 +77,7 @@ const AddRoomSlideIn: React.FC<{
               leaveTo='translate-x-full'>
               <div className='w-screen max-w-2xl'>
                 <Formik
-                  initialValues={initialRoomData}
+                  initialValues={initialRoomOccupancyData}
                   onSubmit={async (values, actions) => {
                     setError(false)
                     setLoading(true)
@@ -74,9 +85,9 @@ const AddRoomSlideIn: React.FC<{
                     try {
                       setLoading(true)
                       if (isEdit) {
-                        await props.onSubmit(values)
+                        // await props.onSubmit(values)
                       } else {
-                        await props.onSubmit(values)
+                        // await props.onSubmit(values)
                       }
                       setOpen(false)
                     } catch (er) {
@@ -100,7 +111,7 @@ const AddRoomSlideIn: React.FC<{
                           <div className='flex items-start justify-between space-x-3'>
                             <div className='space-y-1'>
                               <Dialog.Title className='text-lg font-medium text-gray-900'>
-                                {isEdit ? 'Edit room' : 'Add room'}
+                                {isEdit ? 'Update room allocation' : 'Allocate room'}
                               </Dialog.Title>
                             </div>
                             <div className='h-7 flex items-center'>
@@ -119,17 +130,34 @@ const AddRoomSlideIn: React.FC<{
                           <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
                             <div>
                               <label
-                                htmlFor='fullName'
+                                htmlFor='roomId'
                                 className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Id
+                                Room number
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <Field
-                                type='number'
-                                name='Id'
-                                id='Id'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+                              <input type={'text'}
+                                className='w-full sm:text-sm border-none'
+                                value={room.id} disabled />
+                            </div>
+                          </div>
+
+                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
+                            <div>
+                              <label
+                                htmlFor='patientId'
+                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                Patient
+                              </label>
+                            </div>
+                            <div className='sm:col-span-2'>
+                              <DropdownSearch
+                                placeholder='select patient'
+                                selected={values.patientId}
+                                onSearch={ApiHelper.getPatientsFilter}
+                                onSelect={(e) => {
+                                  values.patientId = e.id
+                                }}
                               />
                             </div>
                           </div>
@@ -143,12 +171,9 @@ const AddRoomSlideIn: React.FC<{
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <Field
-                                type='number'
-                                name='BedNumber'
-                                id='BedNumber'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
+                              <input type={'text'}
+                                className='w-full sm:text-sm border-none'
+                                value={room.bedNumber} disabled />
                             </div>
                           </div>
 
@@ -161,12 +186,9 @@ const AddRoomSlideIn: React.FC<{
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <Field
-                                type='number'
-                                name='BuildingId'
-                                id='BuildingId'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
+                              <input type={'text'}
+                                className='w-full sm:text-sm border-none'
+                                value={room.buildingId} disabled />
                             </div>
                           </div>
 
@@ -179,12 +201,9 @@ const AddRoomSlideIn: React.FC<{
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <Field
-                                type='number'
-                                name='Rent'
-                                id='Rent'
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                              />
+                              <input type={'text'}
+                                className='w-full sm:text-sm border-none'
+                                value={room.rent} disabled />
                             </div>
                           </div>
 
@@ -198,60 +217,10 @@ const AddRoomSlideIn: React.FC<{
                             </div>
                             <div className='sm:col-span-2'>
                               <div className='relative rounded-md shadow-sm'>
-                                <Field
-                                  type='number'
-                                  name='FloorNumber'
-                                  id='FloorNumber '
-                                  className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
-                                />
+                                <input type={'text'}
+                                  className='w-full sm:text-sm border-none'
+                                  value={room.floorNumber} disabled />
                               </div>
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='WardType'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Ward type
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <div className='relative rounded-md shadow-sm'>
-                                <Field
-                                  as='select'
-                                  id='WardType'
-                                  name='WardType'
-                                  className='block w-full focus:ring-indigo-500 focus:border-indigo-500 h-full  sm:text-sm rounded-md'>
-                                  <option value={1}>
-                                    General
-                                  </option>
-                                  <option value={2}>
-                                    ICU
-                                  </option>
-                                </Field>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Project description */}
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='description'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Description
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <Field
-                                as='textarea'
-                                type='textarea'
-                                id='description'
-                                name='description'
-                                rows={3}
-                                className='block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md'
-                              />
                             </div>
                           </div>
                         </div>
@@ -314,4 +283,4 @@ const AddRoomSlideIn: React.FC<{
   )
 }
 
-export default AddRoomSlideIn
+export default AssignRoomSlideIn

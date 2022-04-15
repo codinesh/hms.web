@@ -2,7 +2,7 @@ import {MenuAlt2Icon} from '@heroicons/react/outline'
 import React, {useEffect, useState} from 'react'
 import ApiHelper from '../ApiHelper'
 import constants from '../const'
-import Doctor, {AppConfig} from '../models/Doctor'
+import Doctor, {AppConfig, WardType} from '../models/Doctor'
 import Patient from '../models/Patient'
 import {GlobalStateAction, useGlobalDispatch} from '../store/GlobalStore'
 import {
@@ -28,17 +28,20 @@ const Layout: React.FC<any> = (props) => {
         const doctorsT = ApiHelper.getItems<Doctor>(constants.doctorUrl)
         const patientsT = ApiHelper.getItems<Patient>(constants.patientUrl)
         const configT = ApiHelper.getItem<AppConfig>(constants.configUrl)
+        const wardsT = ApiHelper.getItems<WardType>(constants.wardType)
 
         let res = await Promise.all([
           doctorsT,
           patientsT,
           configT,
+          wardsT
         ])
         dispatch({type: LoadingStateAction.Idle})
         setloaded(true)
         globalDispatch({type: GlobalStateAction.Doctors, doctors: res[0]})
         globalDispatch({type: GlobalStateAction.Patients, patients: res[1]})
         globalDispatch({type: GlobalStateAction.AppConfig, config: res[2]})
+        globalDispatch({type: GlobalStateAction.Wards, wards: res[3]})
       })()
   }, [])
 
