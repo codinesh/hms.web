@@ -36,7 +36,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 }
 
-const RoomPage: React.FC<PageProps<Room[]>> = (props) => {
+const Allocate: React.FC<PageProps<Room[]>> = (props) => {
   const {pageContent: rooms} = props
   const [filteredRooms, setFilteredRooms] = useState([...rooms])
   const router = useRouter()
@@ -170,4 +170,4 @@ const RoomPage: React.FC<PageProps<Room[]>> = (props) => {
   )
 }
 
-export default RoomPage
+export default Allocate

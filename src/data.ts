@@ -56,9 +56,20 @@ const navigation: INavigationItem[] = [
     ],
   },
   {
-    name: 'Room Allocation',
+    name: 'Rooms',
     icon: FolderIcon,
-    path: '/roomallocation',
+    children: [
+      {
+        name: 'Allocate',
+        icon: FolderIcon,
+        path: '/room/allocate',
+      },
+      {
+        name: 'Checkout',
+        icon: FolderIcon,
+        path: '/room/checkout',
+      },
+    ],
   },
 ]
 

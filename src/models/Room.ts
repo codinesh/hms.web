@@ -14,9 +14,10 @@ export interface RoomOccupancy {
   id: number
   roomId: number
   patientId: number
+  patientName?: string
   startDateTime: Date
   endDateTime: Date
-  remarks: string
+  remarks?: string
 }
 
 export enum RoomType {
