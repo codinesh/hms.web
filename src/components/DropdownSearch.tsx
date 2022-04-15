@@ -1,12 +1,10 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react'
-import { OptionsType, ValueType } from 'react-select'
+import React, {PropsWithChildren} from 'react'
+import Select from 'react-select'
 import AsyncSelect from 'react-select/async'
 import AsyncCreatableSelect from 'react-select/async-creatable'
 import CreatableSelect from 'react-select/creatable'
-import Select from 'react-select'
-import { Option } from 'react-select/src/filters'
 
-interface SearchProps<T extends { id: number; value: string; label: string }> {
+interface SearchProps<T extends {id: number; value: string; label: string}> {
   items?: T[]
   onSelect: (value: T, isNew: boolean) => void
   onSearch?: (query: string) => Promise<T[]>
@@ -18,7 +16,7 @@ interface SearchProps<T extends { id: number; value: string; label: string }> {
 }
 
 function DropdownSearch<
-  T extends { id: number; label: string; value: string; secondaryText?: string }
+  T extends {id: number; label: string; value: string; secondaryText?: string}
 >(props: PropsWithChildren<SearchProps<T>>) {
   const promiseOptions = (inputValue: string) =>
     new Promise<T[]>(async (resolve, err) => {
@@ -28,7 +26,7 @@ function DropdownSearch<
       } else err()
     })
 
-  const ch = (value: T | OptionsType<T> | null) => {
+  const ch = (value: T | null) => {
     if (value) {
       let typ = value as T
       let isNew = typ.id == null || typ.id == undefined
@@ -45,7 +43,7 @@ function DropdownSearch<
             placeholder={props.placeholder}
             defaultValue={props.items?.filter((x) => x.id == props.selected)[0]}
             options={props.items}
-            filterOption={(input: Option, raw: string) =>
+            filterOption={(input, raw: string) =>
               input.label.indexOf(raw) >= 0 ||
               input.data.id.toString().indexOf(raw) >= 0
             }
@@ -58,7 +56,7 @@ function DropdownSearch<
             placeholder={props.placeholder}
             defaultValue={props.items?.filter((x) => x.id == props.selected)[0]}
             options={props.items}
-            filterOption={(input: Option, raw: string) =>
+            filterOption={(input, raw: string) =>
               input.label.indexOf(raw) >= 0 ||
               input.data.id.toString().indexOf(raw) >= 0
             }

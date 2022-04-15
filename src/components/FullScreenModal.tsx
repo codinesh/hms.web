@@ -1,11 +1,12 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { CheckIcon, XIcon } from '@heroicons/react/outline'
-import React, { Fragment } from 'react'
+import {Dialog, Transition} from '@headlessui/react'
+import {XIcon} from '@heroicons/react/outline'
+import React, {Fragment, ReactNode} from 'react'
 
 const FullScreenModal: React.FC<{
   open: boolean
   onClose: () => void
   title?: string
+  children: ReactNode
 }> = (props) => {
   return (
     <Transition.Root show={props.open} as={Fragment}>

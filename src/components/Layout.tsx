@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { MenuAlt2Icon } from '@heroicons/react/outline'
-import Sidebar from './Sidebar'
-import Page from './Page'
-import Image from 'next/image'
-import { GlobalStateAction, useGlobalDispatch } from '../store/GlobalStore'
+import {MenuAlt2Icon} from '@heroicons/react/outline'
+import React, {useEffect, useState} from 'react'
 import ApiHelper from '../ApiHelper'
-import Doctor, { AppConfig } from '../models/Doctor'
-import Patient from '../models/Patient'
 import constants from '../const'
+import Doctor, {AppConfig} from '../models/Doctor'
+import Patient from '../models/Patient'
+import {GlobalStateAction, useGlobalDispatch} from '../store/GlobalStore'
 import {
   LoadingStateAction,
   useLoadingDispatch,
-  useLoadingState,
+  useLoadingState
 } from '../store/LoadingStore'
 import LoadingIndicator from './LoadingIndicator'
+import Page from './Page'
+import Sidebar from './Sidebar'
 
-const Layout: React.FC = (props) => {
+const Layout: React.FC<any> = (props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const globalDispatch = useGlobalDispatch()
   const [loaded, setloaded] = useState(false)
@@ -25,21 +24,21 @@ const Layout: React.FC = (props) => {
   useEffect(() => {
     if (!loaded)
       (async () => {
-        dispatch({ type: LoadingStateAction.Busy })
+        dispatch({type: LoadingStateAction.Busy})
         const doctorsT = ApiHelper.getItems<Doctor>(constants.doctorUrl)
         const patientsT = ApiHelper.getItems<Patient>(constants.patientUrl)
         const configT = ApiHelper.getItem<AppConfig>(constants.configUrl)
 
-        let res = await Promise.all<Doctor[], Patient[], AppConfig>([
+        let res = await Promise.all([
           doctorsT,
           patientsT,
           configT,
         ])
-        dispatch({ type: LoadingStateAction.Idle })
+        dispatch({type: LoadingStateAction.Idle})
         setloaded(true)
-        globalDispatch({ type: GlobalStateAction.Doctors, doctors: res[0] })
-        globalDispatch({ type: GlobalStateAction.Patients, patients: res[1] })
-        globalDispatch({ type: GlobalStateAction.AppConfig, config: res[2] })
+        globalDispatch({type: GlobalStateAction.Doctors, doctors: res[0]})
+        globalDispatch({type: GlobalStateAction.Patients, patients: res[1]})
+        globalDispatch({type: GlobalStateAction.AppConfig, config: res[2]})
       })()
   }, [])
 

@@ -3,3 +3,5 @@ node_modules
 yarn.lock
 .env.local
 yarn-error.log
+
+.vscode/settings.json

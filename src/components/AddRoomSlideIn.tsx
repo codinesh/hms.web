@@ -27,7 +27,7 @@ const AddRoomSlideIn: React.FC<{
     buildingId: 0,
     floorNumber: 0,
     rent: 0,
-    wardType: ''
+    wardTypeId: ''
   }
 
   let filteredRoom: Room[]

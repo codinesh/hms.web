@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
+import {useEffect, useState} from 'react'
 import constants from '../const'
 
 function useFetchForGetItem<T>(
   url: string,
   headers?: string
-): { data: T; error: string } {
+): {data: T; error: string} {
   const [data, setData] = useState<T>({} as T)
   const [error, setError] = useState('')
 
@@ -34,13 +34,13 @@ function useFetchForGetItem<T>(
     fetchData()
   }, [url])
 
-  return { data, error }
+  return {data, error}
 }
 
 function useFetchForGetItems<T>(
   url: string,
   headers?: string
-): { data: T[]; error: string } {
+): {data: T[]; error: string} {
   const [data, setData] = useState<T[]>([])
   const [error, setError] = useState('')
   useEffect(() => {
@@ -59,14 +59,14 @@ function useFetchForGetItems<T>(
           setError('data not available')
         }
       } catch (err) {
-        setError(err)
+        setError(err as string)
       }
     }
 
     fetchData()
   }, [url])
 
-  return { data, error }
+  return {data, error}
 }
 
 export default useFetchForGetItems

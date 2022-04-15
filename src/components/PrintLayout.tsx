@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react'
-import Image from 'next/image'
-import { PrinterIcon } from '@heroicons/react/solid'
-import { dateUtils } from '../helpers/JSUtils'
-import { useGlobalState } from '../store/GlobalStore'
+import {PrinterIcon} from '@heroicons/react/solid'
+import React, {PropsWithChildren} from 'react'
+import {dateUtils} from '../helpers/JSUtils'
+import {useGlobalState} from '../store/GlobalStore'
 
 interface PrintDetails {
   id?: number
@@ -19,9 +18,10 @@ interface PrintDetails {
   amount: number
 }
 
-const PrintLayout: React.FC<PrintDetails> = (props) => {
-  const { appConfig } = useGlobalState()
 
+
+const PrintLayout: React.FC<PropsWithChildren<PrintDetails>> = (props) => {
+  const {appConfig} = useGlobalState()
   return (
     <div className='border border-black  bg-white w-full h-full flex justify-between items-stretch flex-col'>
       <header className='flex justify-between'>
