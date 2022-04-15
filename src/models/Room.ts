@@ -11,10 +11,11 @@ export default interface Room {
 }
 
 export interface RoomOccupancy {
+  id: number
   roomId: number
   patientId: number
-  startTime: Date
-  endTime: Date
+  startDateTime: Date
+  endDateTime: Date
   remarks: string
 }
 

@@ -48,7 +48,7 @@ const RoomPage: React.FC<PageProps<Room[]>> = (props) => {
 
   const addRoom = async (room: RoomOccupancy) => {
     dispatch({type: LoadingStateAction.Busy})
-    await ApiHelper.postItem<RoomOccupancy, number>(constants.addRooom, room)
+    await ApiHelper.postItem<RoomOccupancy, number>(constants.assignRooom, room)
     dispatch({type: LoadingStateAction.Idle})
 
     refreshData()

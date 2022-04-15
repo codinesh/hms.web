@@ -5,6 +5,7 @@ import {Field, Form, Formik} from 'formik'
 import React, {Fragment, useState} from 'react'
 import ApiHelper from '../ApiHelper'
 import Room, {RoomOccupancy} from '../models/Room'
+import DateTimePicker from './DateTimePicker'
 import DropdownSearch from './DropdownSearch'
 
 const AssignRoomSlideIn: React.FC<{
@@ -34,10 +35,11 @@ const AssignRoomSlideIn: React.FC<{
   }
 
   const initialRoomOccupancyData: RoomOccupancy = roomOccupancy ?? {
+    id: 0,
     roomId: room?.id ?? 0,
     patientId: 0,
-    endTime: new Date(),
-    startTime: new Date(),
+    endDateTime: new Date(),
+    startDateTime: new Date(),
     remarks: ''
   }
 
@@ -82,12 +84,17 @@ const AssignRoomSlideIn: React.FC<{
                     setError(false)
                     setLoading(true)
                     actions.setSubmitting(false)
+                    if (values.patientId === 0 || values.startDateTime === null || values.endDateTime === null) {
+                      setError(true)
+                      return
+                    }
                     try {
                       setLoading(true)
+                      console.log(values)
                       if (isEdit) {
-                        // await props.onSubmit(values)
+                        await props.onSubmit(values)
                       } else {
-                        // await props.onSubmit(values)
+                        await props.onSubmit(values)
                       }
                       setOpen(false)
                     } catch (er) {
@@ -136,9 +143,62 @@ const AssignRoomSlideIn: React.FC<{
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <input type={'text'}
+                              <span
                                 className='w-full sm:text-sm border-none'
-                                value={room.id} disabled />
+                              >{room?.id}</span>
+                            </div>
+                            <div>
+                              <label
+                                htmlFor='BedNumber'
+                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                Bed number
+                              </label>
+                            </div>
+                            <div className='sm:col-span-2'>
+                              <span
+                                className='w-full sm:text-sm border-none'
+                              >{room?.bedNumber}</span>
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor='BuildingId'
+                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                Building id
+                              </label>
+                            </div>
+                            <div className='sm:col-span-2'>
+                              <span
+                                className='w-full sm:text-sm border-none'
+                              >{room?.buildingId}</span>
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor='Rent'
+                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                Rent
+                              </label>
+                            </div>
+                            <div className='sm:col-span-2'>
+                              <span
+                                className='w-full sm:text-sm border-none'
+                              >{room?.rent}</span>
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor='FloorNumber'
+                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
+                                Floor number
+                              </label>
+                            </div>
+                            <div className='sm:col-span-2'>
+                              <div className='relative rounded-md shadow-sm'>
+                                <span
+                                  className='w-full sm:text-sm border-none'
+                                >{room?.floorNumber}</span>
+                              </div>
                             </div>
                           </div>
 
@@ -165,62 +225,40 @@ const AssignRoomSlideIn: React.FC<{
                           <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
                             <div>
                               <label
-                                htmlFor='BedNumber'
+                                htmlFor='startTime'
                                 className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Bed number
+                                Start time
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <input type={'text'}
-                                className='w-full sm:text-sm border-none'
-                                value={room.bedNumber} disabled />
+                              <DateTimePicker
+                                showTime={true}
+                                min={new Date()}
+                                value={values.startDateTime}
+                                onSelect={(date) => {
+                                  values.startDateTime = date
+                                }}
+                              />
                             </div>
                           </div>
 
                           <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
                             <div>
                               <label
-                                htmlFor='BuildingId'
+                                htmlFor='endTime'
                                 className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Building id
+                                End time
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <input type={'text'}
-                                className='w-full sm:text-sm border-none'
-                                value={room.buildingId} disabled />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='Rent'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Rent
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <input type={'text'}
-                                className='w-full sm:text-sm border-none'
-                                value={room.rent} disabled />
-                            </div>
-                          </div>
-
-                          <div className='space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5'>
-                            <div>
-                              <label
-                                htmlFor='FloorNumber'
-                                className='block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2'>
-                                Floor number
-                              </label>
-                            </div>
-                            <div className='sm:col-span-2'>
-                              <div className='relative rounded-md shadow-sm'>
-                                <input type={'text'}
-                                  className='w-full sm:text-sm border-none'
-                                  value={room.floorNumber} disabled />
-                              </div>
+                              <DateTimePicker
+                                showTime={true}
+                                min={new Date()}
+                                value={values.endDateTime}
+                                onSelect={(date) => {
+                                  values.endDateTime = date
+                                }}
+                              />
                             </div>
                           </div>
                         </div>
@@ -266,7 +304,7 @@ const AssignRoomSlideIn: React.FC<{
                                     d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
                                 </svg>
                               )}
-                              {isEdit ? 'Update' : 'Create'}
+                              {isEdit ? 'Update' : 'Allocate'}
                             </button>
                           </div>
                         </div>
