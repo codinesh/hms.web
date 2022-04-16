@@ -54,6 +54,11 @@ class Constants {
   addRooom = 'room/add'
   allRooms = 'room/all'
   roomSearchUrl = 'room/search?searchFilter='
+
+  // reports
+  pharmacyReport = 'reports/pharmacyQuantitySold'
+  dashboardDataReport = 'reports/dashboardData'
+  invoiceReport = 'reports/invoice'
 }
 
 const constants = new Constants()

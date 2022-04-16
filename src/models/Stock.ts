@@ -21,3 +21,10 @@ export interface Stock {
   ratePerUnit: number
   isReturned: boolean
 }
+
+export interface PharmacyReport {
+  itemName: string
+  date: Date
+  manufacturer: string
+  quantitySold: number
+}
