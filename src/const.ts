@@ -50,7 +50,7 @@ class Constants {
   roomByIdUrl = 'room/byid?byid='
   extendRooom = 'room/extend'
   assignRooom = 'room/assign'
-  assignedRooms = 'room/assignedRooms'
+  assignedRooms = 'room/assigned'
   addRooom = 'room/add'
   allRooms = 'room/all'
   roomSearchUrl = 'room/search?searchFilter='

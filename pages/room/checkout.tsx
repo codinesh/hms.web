@@ -11,8 +11,7 @@ import CheckoutRoomSlideIn from '../../src/components/CheckoutRoomSlideIn'
 import SearchBox from '../../src/components/SearchBox'
 import constants from '../../src/const'
 import {dateUtils} from '../../src/helpers/JSUtils'
-import {RoomOccupancy} from '../../src/models/Room'
-import {useGlobalState} from '../../src/store/GlobalStore'
+import {RoomOccupancy} from "../../src/models/RoomOccupancy"
 import {
   LoadingStateAction,
   useLoadingDispatch
@@ -45,7 +44,6 @@ const Checkout: React.FC<PageProps<RoomOccupancy[]>> = (props) => {
   const [open, setOpen] = useState(false)
   const [selectedRoom, setSelectedRoom] = useState<RoomOccupancy>()
   const dispatch = useLoadingDispatch()
-  const {wards} = useGlobalState()
 
   const addRoom = async (room: RoomOccupancy) => {
     dispatch({type: LoadingStateAction.Busy})
@@ -125,6 +123,11 @@ const Checkout: React.FC<PageProps<RoomOccupancy[]>> = (props) => {
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    Room name
+                  </th>
+                  <th
+                    scope='col'
+                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Start date
                   </th>
                   <th
@@ -146,7 +149,7 @@ const Checkout: React.FC<PageProps<RoomOccupancy[]>> = (props) => {
                       setOpen(true)
                     }}>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                      {room.id}
+                      {room.roomId}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {room.patientId}
@@ -155,11 +158,13 @@ const Checkout: React.FC<PageProps<RoomOccupancy[]>> = (props) => {
                       {room.patientName}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                      {room.roomName}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {dateUtils.geLocalDateTimeString(room.startDateTime)}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {dateUtils.geLocalDateTimeString(room.endDateTime)}
-
                     </td>
                   </tr>
                 ))}

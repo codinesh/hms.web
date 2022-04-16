@@ -3,7 +3,8 @@ import {XIcon} from '@heroicons/react/outline'
 import clsx from 'clsx'
 import {Field, Form, Formik} from 'formik'
 import React, {Fragment, useState} from 'react'
-import {RoomOccupancy} from '../models/Room'
+import {dateUtils} from '../helpers/JSUtils'
+import {RoomOccupancy} from "../models/RoomOccupancy"
 import DateTimePicker from './DateTimePicker'
 
 const CheckoutRoomSlideIn: React.FC<{
@@ -50,20 +51,19 @@ const CheckoutRoomSlideIn: React.FC<{
               leaveFrom='translate-x-0'
               leaveTo='translate-x-full'>
               <div className='w-screen max-w-2xl'>
-                <Formik
+                {room && <Formik
                   initialValues={room}
                   onSubmit={async (values, actions) => {
                     setError(false)
                     setLoading(true)
                     actions.setSubmitting(false)
-                    if (values.patientId === 0 || values.startDateTime === null || values.endDateTime === null) {
+                    if (values.patientId === 0 || values.endDateTime === null) {
                       setError(true)
                       return
                     }
                     try {
-                      setLoading(true)
                       console.log(values)
-
+                      setLoading(true)
                       await props.onSubmit(values)
                       setOpen(false)
                     } catch (er) {
@@ -139,14 +139,7 @@ const CheckoutRoomSlideIn: React.FC<{
                               </label>
                             </div>
                             <div className='sm:col-span-2'>
-                              <DateTimePicker
-                                showTime={true}
-                                min={new Date()}
-                                value={values.startDateTime}
-                                onSelect={(date) => {
-                                  values.startDateTime = date
-                                }}
-                              />
+                              <span>{dateUtils.geLocalDateTimeString(room?.startDateTime)}</span>
                             </div>
                           </div>
 
@@ -219,7 +212,7 @@ const CheckoutRoomSlideIn: React.FC<{
                       </div>
                     </Form>
                   )}
-                </Formik>
+                </Formik>}
               </div>
             </Transition.Child>
           </div>

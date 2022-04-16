@@ -10,7 +10,8 @@ import ApiHelper from '../../src/ApiHelper'
 import AssignRoomSlideIn from '../../src/components/AssignRoomSlideIn'
 import SearchBox from '../../src/components/SearchBox'
 import constants from '../../src/const'
-import Room, {RoomOccupancy} from '../../src/models/Room'
+import Room from '../../src/models/Room'
+import {RoomOccupancy} from "../../src/models/RoomOccupancy"
 import {useGlobalState} from '../../src/store/GlobalStore'
 import {
   LoadingStateAction,
@@ -114,22 +115,27 @@ const Allocate: React.FC<PageProps<Room[]>> = (props) => {
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Floor number
+                    Name
                   </th>
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Bed number
+                    Floor
                   </th>
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Building id
+                    Bed
                   </th>
                   <th
                     scope='col'
                     className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Ward type
+                    Building
+                  </th>
+                  <th
+                    scope='col'
+                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    Ward
                   </th>
                 </tr>
               </thead>
@@ -146,6 +152,9 @@ const Allocate: React.FC<PageProps<Room[]>> = (props) => {
                     }}>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
                       {room.id}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                      {room.name}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                       {room.floorNumber}

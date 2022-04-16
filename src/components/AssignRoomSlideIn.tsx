@@ -4,7 +4,8 @@ import clsx from 'clsx'
 import {Field, Form, Formik} from 'formik'
 import React, {Fragment, useState} from 'react'
 import ApiHelper from '../ApiHelper'
-import Room, {RoomOccupancy} from '../models/Room'
+import Room from '../models/Room'
+import {RoomOccupancy} from "../models/RoomOccupancy"
 import DateTimePicker from './DateTimePicker'
 import DropdownSearch from './DropdownSearch'
 
