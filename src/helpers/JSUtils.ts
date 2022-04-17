@@ -32,7 +32,6 @@ const getIsoTimeString = (date: Date | string) => {
   let dateval: Date
   if (typeof date == 'string') {
     dateval = new Date(Date.parse(date + 'Z'))
-
   } else dateval = date
 
   const hours = dateval.getHours()
@@ -40,7 +39,7 @@ const getIsoTimeString = (date: Date | string) => {
   const hoursString = hours > 9 ? hours.toString() : `0${hours.toString()}`
   const minutesString =
     minutes > 9 ? minutes.toString() : `0${minutes.toString()}`
-    return `${hoursString}:${minutesString}`
+  return `${hoursString}:${minutesString}`
 }
 
 const geLocalDateString = (date: Date | string) => {
@@ -66,5 +65,5 @@ export const dateUtils = {
   geLocalDateString,
   getIsoDateTimeString,
   geLocalDateTimeString,
-  getIsoTimeString
+  getIsoTimeString,
 }

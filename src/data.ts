@@ -1,7 +1,11 @@
 import {
+  ChartBarIcon,
+  DocumentReportIcon,
+  DocumentTextIcon,
   FolderIcon,
   NewspaperIcon,
   OfficeBuildingIcon,
+  ReceiptRefundIcon,
   ScaleIcon,
   UserAddIcon,
   UserIcon,
@@ -40,18 +44,23 @@ const navigation: INavigationItem[] = [
   },
   {
     name: 'Pharmacy',
-    icon: FolderIcon,
+    icon: DocumentTextIcon,
     path: '/pharmacy',
     children: [
       {
         name: 'Manage stock',
-        icon: FolderIcon,
+        icon: DocumentReportIcon,
         path: '/pharmacy/stock',
       },
       {
         name: 'Invoice',
-        icon: FolderIcon,
+        icon: ReceiptRefundIcon,
         path: '/pharmacy/invoice',
+      },
+      {
+        name: 'Report',
+        icon: ChartBarIcon,
+        path: '/pharmacy/report',
       },
     ],
   },
