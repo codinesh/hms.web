@@ -58,6 +58,7 @@ class Constants {
   // reports
   pharmacyReport = 'reports/pharmacyQuantitySold'
   dashboardDataReport = 'reports/dashboardData'
+  patientRevenueReport = 'reports/patientRevenue'
   invoiceReport = 'reports/invoice'
 }
 

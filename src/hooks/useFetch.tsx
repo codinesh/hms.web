@@ -1,72 +1,88 @@
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import constants from '../const'
 
-function useFetchForGetItem<T>(
+
+function useFetch<T>(
   url: string,
+  method: 'GET' | 'POST',
   headers?: string
-): {data: T; error: string} {
+): {
+  data: T
+  error: string
+  beginWithQueryString: (queryString: string) => void
+  beginWithBody: (input: T) => void
+  inProgress: boolean
+} {
   const [data, setData] = useState<T>({} as T)
   const [error, setError] = useState('')
+  const [inProgress, setInProgress] = useState(false)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let response = await fetch([constants.baseApiUrl, url].join(''))
-        if (response.ok) {
-          if (response.status == 204) {
-            setData({} as T)
-          }
+  const beginWithQueryString = (queryStringInput: string) => {
+    fetchData(queryStringInput)
+  }
 
-          let item: T = await response.json()
-          if (item) {
-            setData(item)
-          } else {
-            setError('data not available')
-          }
+  const beginWithBody = (body: T) => {
+    fetchDataWithBody(body)
+  }
+
+  const fetchData = async (queryString: string) => {
+    try {
+      setInProgress(true)
+      let response = await fetch([constants.baseApiUrl, url, queryString].join(''), {
+        method: method,
+        mode: 'cors',
+      })
+
+      if (response.ok) {
+        if (response.status == 204) {
+          setData({} as T)
+        }
+
+        let item: T = await response.json()
+        if (item) {
+          setData(item)
         } else {
           setError('data not available')
         }
-      } catch (err) {
+      } else {
         setError('data not available')
       }
+    } catch (err) {
+      setError('data not available')
     }
+    setInProgress(false)
+  }
 
-    fetchData()
-  }, [url])
+  const fetchDataWithBody = async (data: T) => {
+    try {
+      setInProgress(true)
+      let response = await fetch([constants.baseApiUrl, url].join(''), {
+        method: method,
+        mode: 'cors',
+        body: JSON.stringify(data),
+      })
 
-  return {data, error}
-}
+      if (response.ok) {
+        if (response.status == 204) {
+          setData({} as T)
+        }
 
-function useFetchForGetItems<T>(
-  url: string,
-  headers?: string
-): {data: T[]; error: string} {
-  const [data, setData] = useState<T[]>([])
-  const [error, setError] = useState('')
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let response = await fetch([constants.baseApiUrl, url].join(''))
-        if (response.ok) {
-          if (response.status == 204) {
-            setData([])
-          }
-
-          let item: T[] = await response.json()
-          if (item) setData(item)
-          else setError('data not available')
+        let item: T = await response.json()
+        if (item) {
+          setData(item)
         } else {
           setError('data not available')
         }
-      } catch (err) {
-        setError(err as string)
+      } else {
+        setError('data not available')
       }
+    } catch (err) {
+      setError('data not available')
     }
+    setInProgress(false)
+  }
 
-    fetchData()
-  }, [url])
-
-  return {data, error}
+  return {data, error, inProgress, beginWithQueryString, beginWithBody}
 }
 
-export default useFetchForGetItems
+export default useFetch

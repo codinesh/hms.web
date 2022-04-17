@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import constants from '../const'
 
 function useFetchMultiple<T>(
@@ -49,10 +49,6 @@ function useFetchMultiple<T>(
         }
         setInProgress(false)
     }
-
-    useEffect(() => {
-        // begin && fetchData()
-    }, [begin])
 
     return {data, error, inProgress, beginCall}
 }
