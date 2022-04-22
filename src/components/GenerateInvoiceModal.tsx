@@ -1,28 +1,27 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { CheckIcon, ExclamationIcon } from '@heroicons/react/outline'
-import DropdownSearch from './DropdownSearch'
-import { PharmacyInvoice } from '../models/PharmacyInvoice'
-import { useGlobalState } from '../store/GlobalStore'
-import enumKeys from '../helpers/enumUtils'
-import Gender from '../models/Gender'
-import { PaymentMode } from '../models/PaymentMode'
-import DateTimePicker from './DateTimePicker'
-import { Stock } from '../models/Stock'
+import {Dialog, Transition} from '@headlessui/react'
+import React, {Fragment, useEffect, useRef, useState} from 'react'
 import ApiHelper from '../ApiHelper'
 import constants from '../const'
-import { dateUtils } from '../helpers/JSUtils'
-import { LoadingStateAction, useLoadingDispatch } from '../store/LoadingStore'
+import enumKeys from '../helpers/enumUtils'
+import {dateUtils} from '../helpers/JSUtils'
+import Gender from '../models/Gender'
+import {PaymentMode} from '../models/PaymentMode'
+import {PharmacyInvoice} from '../models/PharmacyInvoice'
+import {Stock} from '../models/Stock'
+import {useGlobalState} from '../store/GlobalStore'
+import {LoadingStateAction, useLoadingDispatch} from '../store/LoadingStore'
 import AgeInput from './AgeInput'
+import DateTimePicker from './DateTimePicker'
+import DropdownSearch from './DropdownSearch'
 
-type invoiceMedicineType = Stock & { quantity: number }
+type invoiceMedicineType = Stock & {quantity: number}
 
 const GenerateInvoiceModal: React.FC<{
   open: boolean
   setOpen: (open: boolean) => void
   onSubmit: (invoice: PharmacyInvoice) => void
 }> = (props) => {
-  const { patients, doctors } = useGlobalState()
+  const {patients, doctors} = useGlobalState()
   const [medicines, setMedicines] = useState<Stock[]>([])
   const [invoiceMedicines, setInvoiceMedicines] = useState<
     invoiceMedicineType[]
@@ -44,19 +43,19 @@ const GenerateInvoiceModal: React.FC<{
     createdOn: new Date(),
     PharmacyItems: [],
   }
-  const [invoice, setInvoice] = useState<PharmacyInvoice>({ ...initialInvoice })
+  const [invoice, setInvoice] = useState<PharmacyInvoice>({...initialInvoice})
 
   useEffect(() => {
-    ;(async () => {
-      dispatch({ type: LoadingStateAction.Busy })
+    ; (async () => {
+      dispatch({type: LoadingStateAction.Busy})
       const stocks = await ApiHelper.getItems<Stock>(constants.stockUrl)
-      dispatch({ type: LoadingStateAction.Idle })
+      dispatch({type: LoadingStateAction.Idle})
       setMedicines(stocks)
     })()
   }, [])
 
   const reset = () => {
-    setInvoice({ ...initialInvoice })
+    setInvoice({...initialInvoice})
   }
 
   return (
@@ -181,7 +180,7 @@ const GenerateInvoiceModal: React.FC<{
                               }))}
                               onSelect={(e, isNew) => {
                                 setDoctorId(isNew ? -1 : e.id)
-                                setInvoice({ ...invoice, refDoctor: e.value })
+                                setInvoice({...invoice, refDoctor: e.value})
                               }}
                             />
                           </div>
@@ -227,8 +226,8 @@ const GenerateInvoiceModal: React.FC<{
                                 })
                               }
                               className='mt-1 block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'>
-                              {enumKeys(Gender).map((a) => (
-                                <option value={Gender[a]}>{a}</option>
+                              {enumKeys(Gender).map((a, i) => (
+                                <option key={i} value={Gender[a]}>{a}</option>
                               ))}
                             </select>
                           </div>
@@ -275,8 +274,8 @@ const GenerateInvoiceModal: React.FC<{
                                 })
                               }
                               className='mt-1 block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'>
-                              {enumKeys(PaymentMode).map((a) => (
-                                <option value={PaymentMode[a]}>{a}</option>
+                              {enumKeys(PaymentMode).map((a, i) => (
+                                <option key={i} value={PaymentMode[a]}>{a}</option>
                               ))}
                             </select>
                           </div>
@@ -513,9 +512,9 @@ const GenerateInvoiceModal: React.FC<{
                                   <tbody>
                                     {invoiceMedicines.map((medicine, idx) => (
                                       <tr
-                                        key={medicine.itemName}
+                                        key={idx}
                                         onDoubleClick={() => {
-                                          setCurMedicines({ ...medicine })
+                                          setCurMedicines({...medicine})
                                         }}>
                                         <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
                                           {medicine.itemName}
