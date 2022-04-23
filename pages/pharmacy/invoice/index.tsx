@@ -2,26 +2,26 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
   PrinterIcon,
-  UserAddIcon,
+  UserAddIcon
 } from '@heroicons/react/outline'
 import clsx from 'clsx'
-import { GetStaticProps } from 'next'
-import { useRouter } from 'next/dist/client/router'
-import React, { useEffect, useState } from 'react'
+import {GetStaticProps} from 'next'
+import {useRouter} from 'next/dist/client/router'
+import React, {useState} from 'react'
 import ApiHelper from '../../../src/ApiHelper'
 import FullScreenModal from '../../../src/components/FullScreenModal'
 import GenerateInvoiceModal from '../../../src/components/GenerateInvoiceModal'
 import PrintInvoice from '../../../src/components/PrintInvoice'
 import SearchBox from '../../../src/components/SearchBox'
 import constants from '../../../src/const'
-import { dateUtils } from '../../../src/helpers/JSUtils'
-import { PaymentMode } from '../../../src/models/PaymentMode'
-import { PharmacyInvoice } from '../../../src/models/PharmacyInvoice'
+import {dateUtils} from '../../../src/helpers/JSUtils'
+import {PaymentMode} from '../../../src/models/PaymentMode'
+import {PharmacyInvoice} from '../../../src/models/PharmacyInvoice'
 import {
   LoadingStateAction,
-  useLoadingDispatch,
+  useLoadingDispatch
 } from '../../../src/store/LoadingStore'
-import { PageProps } from '../../../src/types/PageProps'
+import {PageProps} from '../../../src/types/PageProps'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const invoices = await ApiHelper.getItems<PharmacyInvoice>(
@@ -38,13 +38,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 
   return {
-    props: { ...pageProps },
+    props: {...pageProps},
     revalidate: 1,
   }
 }
 
 const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
-  const { pageContent: pharmacyInvoices } = props
+  const {pageContent: pharmacyInvoices} = props
   const [filteredPharmacyInvoices, setFilteredPharmacyInvoices] = useState([
     ...pharmacyInvoices,
   ])
@@ -57,12 +57,12 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
   const dispatch = useLoadingDispatch()
 
   const addPharmacyInvoice = async (pharmacyInvoice: PharmacyInvoice) => {
-    dispatch({ type: LoadingStateAction.Busy })
+    dispatch({type: LoadingStateAction.Busy})
     await ApiHelper.postItem<PharmacyInvoice, number>(
       constants.addInvoice,
       pharmacyInvoice
     )
-    dispatch({ type: LoadingStateAction.Idle })
+    dispatch({type: LoadingStateAction.Idle})
 
     refreshData()
   }
@@ -75,11 +75,11 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
     if ((a?.length ?? 0) == 0) {
       setFilteredPharmacyInvoices([...pharmacyInvoices])
     } else {
-      dispatch({ type: LoadingStateAction.Busy })
+      dispatch({type: LoadingStateAction.Busy})
       let results = await ApiHelper.getItems<PharmacyInvoice>(
         `${constants.searchInvoice}nameOrId=${a}`
       )
-      dispatch({ type: LoadingStateAction.Idle })
+      dispatch({type: LoadingStateAction.Idle})
 
       setFilteredPharmacyInvoices(results)
     }
@@ -121,7 +121,7 @@ const PharmacyInvoicePage: React.FC<PageProps<PharmacyInvoice[]>> = (props) => {
             className=''
             placeholderText='search invoices'
             onSearch={search}
-            onClear={() => {}}
+            onClear={() => { }}
           />
 
           <button

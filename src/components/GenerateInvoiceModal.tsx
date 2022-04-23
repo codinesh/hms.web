@@ -1,5 +1,5 @@
 import {Dialog, Transition} from '@headlessui/react'
-import React, {Fragment, useEffect, useRef, useState} from 'react'
+import React, {Fragment, useRef, useState} from 'react'
 import ApiHelper from '../ApiHelper'
 import constants from '../const'
 import enumKeys from '../helpers/enumUtils'
@@ -22,7 +22,7 @@ const GenerateInvoiceModal: React.FC<{
   onSubmit: (invoice: PharmacyInvoice) => void
 }> = (props) => {
   const {patients, doctors} = useGlobalState()
-  const [medicines, setMedicines] = useState<Stock[]>([])
+  let medicines: Stock[] = []
   const [invoiceMedicines, setInvoiceMedicines] = useState<
     invoiceMedicineType[]
   >([])
@@ -45,17 +45,12 @@ const GenerateInvoiceModal: React.FC<{
   }
   const [invoice, setInvoice] = useState<PharmacyInvoice>({...initialInvoice})
 
-  useEffect(() => {
-    ; (async () => {
-      dispatch({type: LoadingStateAction.Busy})
-      const stocks = await ApiHelper.getItems<Stock>(constants.stockUrl)
-      dispatch({type: LoadingStateAction.Idle})
-      setMedicines(stocks)
-    })()
-  }, [])
-
   const reset = () => {
     setInvoice({...initialInvoice})
+    setCurMedicines(undefined)
+    setInvoiceMedicines([])
+    medicines = []
+    setDoctorId(0)
   }
 
   return (
@@ -105,6 +100,7 @@ const GenerateInvoiceModal: React.FC<{
                   try {
                     setLoading(true)
                     await props.onSubmit(invoice)
+                    reset()
                   } catch (error) {
                     setError(true)
                   }
@@ -354,14 +350,34 @@ const GenerateInvoiceModal: React.FC<{
                             <div className='mt-1 flex rounded-md '>
                               <DropdownSearch
                                 placeholder='search medicine'
-                                items={medicines.map((x) => ({
-                                  id: x.id,
-                                  label: `${x.itemName} (${x.drugName})`,
-                                  value: `${x.itemName} (${x.drugName})`,
-                                  secondaryText: `Expiry: ${dateUtils.getIsoDateString(
-                                    x.expiryDate
-                                  )}`,
-                                }))}
+                                onSearch={async (query) => {
+                                  if (query.length < 3)
+                                    return []
+                                  return new Promise<
+                                    {
+                                      id: number
+                                      value: string
+                                      label: string
+                                    }[]
+                                  >(async (resolve, _) => {
+                                    dispatch({type: LoadingStateAction.Busy})
+                                    medicines =
+                                      await ApiHelper.getItems<Stock>(
+                                        `${constants.stockSearchUrl}${query}`
+                                      )
+
+
+                                    var filterItems = medicines.map(
+                                      (x) => ({
+                                        id: x.id,
+                                        value: x.itemName,
+                                        label: `${x.itemName} (${x.manufacturer}) - ${x.totalQuantityAvailable} Available`,
+                                      })
+                                    )
+                                    resolve(filterItems)
+                                    dispatch({type: LoadingStateAction.Idle})
+                                  })
+                                }}
                                 onSelect={(m) => {
                                   let medicine = medicines.filter(
                                     (x) => x.id == m.id
@@ -372,7 +388,7 @@ const GenerateInvoiceModal: React.FC<{
                                     quantity: 1,
                                   })
                                 }}
-                                selected={curMedicine?.id ?? undefined}
+                                selected={curMedicine?.id ?? 0}
                               />
                             </div>
                           </div>
@@ -390,6 +406,10 @@ const GenerateInvoiceModal: React.FC<{
                                 name='quantity'
                                 value={curMedicine?.quantity ?? 1}
                                 onChange={(e) => {
+                                  if (parseInt(e.target.value) > (curMedicine?.totalQuantityAvailable ?? 1)) {
+                                    alert('Quantity cannot be greater than available quantity')
+                                    return
+                                  }
                                   setCurMedicines({
                                     ...curMedicine,
                                     quantity: parseInt(e.target.value),
@@ -408,6 +428,7 @@ const GenerateInvoiceModal: React.FC<{
                               <button
                                 type='button'
                                 onClick={(e) => {
+
                                   e.preventDefault()
                                   let newInvoiceMedicines = []
                                   if (curMedicine && curMedicine.quantity > 0) {
@@ -567,7 +588,10 @@ const GenerateInvoiceModal: React.FC<{
                     <button
                       type='button'
                       className='inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm'
-                      onClick={() => props.setOpen(false)}
+                      onClick={() => {
+                        reset()
+                        props.setOpen(false)
+                      }}
                       ref={cancelButtonRef}>
                       Cancel
                     </button>
@@ -602,8 +626,8 @@ const GenerateInvoiceModal: React.FC<{
             </div>
           </Transition.Child>
         </div>
-      </Dialog>
-    </Transition.Root>
+      </Dialog >
+    </Transition.Root >
   )
 }
 
