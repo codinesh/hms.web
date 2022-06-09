@@ -13,6 +13,8 @@ export interface AppConfig {
   pharmacyContactNumber: string
   gstin: string
   cin: string
+  dl1: string
+  dl2: string
 }
 
 export interface WardType {

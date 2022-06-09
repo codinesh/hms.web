@@ -25,7 +25,7 @@ const navigation: INavigationItem[] = [
     path: '/patient',
   },
   {
-    name: 'Appontment',
+    name: 'Appointment',
     icon: UserIcon,
     path: '/appointment',
   },

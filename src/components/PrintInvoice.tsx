@@ -8,7 +8,7 @@ const PrintInvoice: React.FC<PharmacyInvoice> = (props) => {
     <>
       <PrintLayout
         id={props.id}
-        address={'Nellore'}
+        address={''}
         discount={props.discountAmount}
         doctorName={props.refDoctor}
         patientName={props.patientName ?? ''}

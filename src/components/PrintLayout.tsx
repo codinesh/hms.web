@@ -31,7 +31,7 @@ const PrintLayout: React.FC<PropsWithChildren<PrintDetails>> = (props) => {
             Near Gopal Reddy Statue, Ravi Nagar, Kota,
           </span>
           <span className='text-sm block'>
-            Nellore Dt., Andhra Pradesh - 524411
+            Tirupati Dt., Andhra Pradesh - 524411
           </span>
           <span className='text-sm block'>
             Phone: {appConfig.contactNumber}
@@ -41,16 +41,12 @@ const PrintLayout: React.FC<PropsWithChildren<PrintDetails>> = (props) => {
           <h2 className='text-lg font-medium'>
             Patient Name: {props.patientName}
           </h2>
-          <span className='text-sm block'>
-            Patient Address: {props.address}
-          </span>
+          
           {!props.nongstinvoice && (
             <span className='text-sm block'>Bill No.: {props.id}</span>
           )}
           <span className='text-sm block'>Dr Name: {props.doctorName}</span>
-          {props.id && (
-            <span className='text-sm block'>Invoice Id: {props.id}</span>
-          )}
+          
         </div>
       </header>
       <main className='mt-2 flex-grow flex flex-col'>
@@ -59,7 +55,8 @@ const PrintLayout: React.FC<PropsWithChildren<PrintDetails>> = (props) => {
             {!props.nongstinvoice && (
               <>
                 <span className='text-md block'>GSTIN: {appConfig.gstin}</span>
-                <span className='text-md block'>CIN No: {appConfig.cin}</span>
+                <span className='text-md block'>DL No: {appConfig.dl1}</span>
+                <span className='text-md block'>DL No: {appConfig.dl2}</span>
               </>
             )}
           </div>
@@ -103,12 +100,7 @@ const PrintLayout: React.FC<PropsWithChildren<PrintDetails>> = (props) => {
               Goods once sold will not be taken back or exchanged
             </span>
             <span className=''>
-              Bills not paid due date will attract 24% interest
-            </span>
-            <span className=''>All disputes subject to Jurisdiction only</span>
-            <span className=''>
-              Presbribed Sales Tax declaration will be given
-            </span>
+              </span>
             <span className=''>Remark:</span>
           </div>
           <div className=' flex flex-col justify-between items-center'>
