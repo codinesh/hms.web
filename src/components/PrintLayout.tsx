@@ -24,7 +24,7 @@ const PrintLayout: React.FC<PropsWithChildren<PrintDetails>> = (props) => {
   const {appConfig} = useGlobalState()
   return (
     <div className='border border-black  bg-white w-full h-full flex justify-between items-stretch flex-col'>
-      <header className='flex justify-between'>
+      <header className='flex justify-between px-3'>
         <div className=''>
           <h2 className='text-xl font-medium'>Pragathi Hospital</h2>
           <span className='text-sm block'>
@@ -42,21 +42,23 @@ const PrintLayout: React.FC<PropsWithChildren<PrintDetails>> = (props) => {
             Patient Name: {props.patientName}
           </h2>
           
+          
+          <span className='text-sm block'>Dr Name: {props.doctorName}</span>
           {!props.nongstinvoice && (
             <span className='text-sm block'>Bill No.: {props.id}</span>
           )}
-          <span className='text-sm block'>Dr Name: {props.doctorName}</span>
+          <span className='text-sm block'>{!props.nongstinvoice ? `Invoice date:` : 'Report date'} : {dateUtils.geLocalDateString(props.invoiceDate)}</span>
           
         </div>
       </header>
       <main className='mt-2 flex-grow flex flex-col'>
         <div className='flex items-center border-t justify-between border-b border-black'>
-          <div className='text-xs '>
+          <div className='text-xs px-3 '>
             {!props.nongstinvoice && (
               <>
-                <span className='text-md block'>GSTIN: {appConfig.gstin}</span>
-                <span className='text-md block'>DL No: {appConfig.dl1}</span>
-                <span className='text-md block'>DL No: {appConfig.dl2}</span>
+                <span className='text-md block'>GSTIN: {appConfig.gstin} </span>
+                <span className='text-md block'>DL No: {appConfig.dL1}</span>
+                <span className='text-md block'>DL No: {appConfig.dL2}</span>
               </>
             )}
           </div>
@@ -65,20 +67,11 @@ const PrintLayout: React.FC<PropsWithChildren<PrintDetails>> = (props) => {
               {props.title ?? 'GST INVOICE'}
             </span>
           </div>
-          <div>
-            <div>
-              <span className='text-xs'>
-                {!props.nongstinvoice ? `Invoice date:` : 'Report date'}
-              </span>
-              <span className='text-xs'>
-                {dateUtils.geLocalDateTimeString(props.invoiceDate)}
-              </span>
+            <div className='pr-10'>
+              <span className='text-sm block'>Patient Id: {props.patientId}</span>
+              
             </div>
-            <div>
-              <span className='text-xs'>Patient Id: </span>
-              <span className='text-xs'>{props.patientId}</span>
-            </div>
-          </div>
+         
         </div>
 
         <div className=''>{props.children}</div>

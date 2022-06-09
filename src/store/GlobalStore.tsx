@@ -42,8 +42,8 @@ const initialState: IGlobalState = {
     cin: '',
     contactNumber: '',
     gstin: '37BBJPK3611A1Z5',
-    dl1: '20 : AP/09/02/2021 - 14918',
-    dl2: '21 : AP/09/02/2021 - 14919',
+    dL1: '20 : AP/09/02/2021 - 14918',
+    dL2: '21 : AP/09/02/2021 - 14919',
     pharmacyContactNumber: '',
   },
 }
