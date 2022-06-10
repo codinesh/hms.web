@@ -9,6 +9,7 @@ import DateTimePicker from './DateTimePicker'
 import DropdownSearch from './DropdownSearch'
 import clsx from 'clsx'
 import ApiHelper from '../ApiHelper'
+import { dateUtils } from '../../src/helpers/JSUtils'
 
 const AddAppointmentSlideIn: React.FC<{
   appointment?: AddAppointment
@@ -28,7 +29,7 @@ const AddAppointmentSlideIn: React.FC<{
     id: 0,
     doctorId: 0,
     patientId: 0,
-    appointmentDate: new Date(Date.now()),
+    appointmentDate: dateUtils.geLocalDateTimeString(new Date(Date.now())).toString(),
     issue: '',
   }
 
@@ -189,14 +190,16 @@ const AddAppointmentSlideIn: React.FC<{
 
                       <div className='flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6'>
                         <div className='items-center space-x-3 flex justify-between'>
-                          <span
+                        {/* 
+                        <span
                             className={clsx(
                               'text-red-700 opacity-0',
                               error && 'opacity-100'
                             )}>
                             {error &&
                               'Error! Please fix the errors and try again.'}
-                          </span>
+                          </span> 
+                            */}
 
                           <div className='flex gap-2'>
                             <button
