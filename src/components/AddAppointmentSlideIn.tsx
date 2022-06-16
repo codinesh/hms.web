@@ -29,7 +29,7 @@ const AddAppointmentSlideIn: React.FC<{
     id: 0,
     doctorId: 0,
     patientId: 0,
-    appointmentDate: dateUtils.geLocalDateTimeString(new Date(Date.now())).toString(),
+    appointmentDate: new Date(Date.now()),
     issue: '',
   }
 
