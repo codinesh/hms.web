@@ -8,11 +8,11 @@ const PrintConsultationInvoice: React.FC<Appointment> = (props) => {
     <PrintLayout
       id={props.invoice.id}
       address={props.address}
-      amount={props.invoice.amount}
+      amount={props.invoice.invoiceDetail.reduce((a, b) => a + b.price, 0)}
       doctorName={props.doctorName}
       discount={props.invoice.discount}
       invoiceDate={props.invoice.invoiceDate}
-      total={props.invoice.invoiceDetail.reduce((a, b) => a + b.price, 0)}
+      total={props.invoice.amount}
       patientId={props.patientId?.toString() ?? ''}
       patientName={props.patientName}>
       <div className='align-middle inline-block min-w-full'>

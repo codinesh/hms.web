@@ -46,7 +46,7 @@ const geLocalDateString = (date: Date | string) => {
   let dateval: Date
   if (typeof date == 'string') {
     dateval = new Date(date)
-  } else dateval = date
+  } else dateval = new Date(date)
 
   return dateval.toLocaleDateString('en-IN')
 }
@@ -55,7 +55,7 @@ const geLocalDateTimeString = (date: Date | string) => {
   let dateval: Date
   if (typeof date == 'string') {
     dateval = new Date(date)
-  } else dateval = date
+  } else dateval = new Date(date)
 
   return dateval.toLocaleString('en-IN', { hour12: false })
 }
