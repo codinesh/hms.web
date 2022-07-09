@@ -12,7 +12,7 @@ const PrintInvoice: React.FC<PharmacyInvoice> = (props) => {
         discount={props.discountAmount}
         doctorName={props.refDoctor}
         patientName={props.patientName ?? ''}
-        invoiceDate={new Date()}
+        invoiceDate={props.createdOn}
         amount={props.discountAmount + props.roundedOffAmount}
         patientId={props.patientId?.toString() ?? ''}
         total={props.roundedOffAmount}>
