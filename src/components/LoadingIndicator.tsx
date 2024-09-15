@@ -1,6 +1,6 @@
 import React from "react";
 
-const LoadingIndicator = (props: any) => {
+const LoadingIndicator: React.FC<{ open: boolean }> = (props) => {
   if (!props.open) return null;
 
   return (
