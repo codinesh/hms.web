@@ -1,171 +1,177 @@
-import {
-  ArrowDownIcon
-} from '@heroicons/react/outline'
-import {ArrowUpIcon} from '@heroicons/react/solid'
-import clsx from 'clsx'
-import {GetStaticProps} from 'next'
-import {useRouter} from 'next/dist/client/router'
-import React, {useState} from 'react'
-import ApiHelper from '../../src/ApiHelper'
-import AssignRoomSlideIn from '../../src/components/AssignRoomSlideIn'
-import SearchBox from '../../src/components/SearchBox'
-import constants from '../../src/const'
-import Room from '../../src/models/Room'
-import {RoomOccupancy} from "../../src/models/RoomOccupancy"
-import {useGlobalState} from '../../src/store/GlobalStore'
+import { ArrowDownIcon } from "@heroicons/react/outline";
+import { ArrowUpIcon } from "@heroicons/react/solid";
+import clsx from "clsx";
+import { useRouter } from "next/dist/client/router";
+import React, { useState } from "react";
+import ApiHelper from "../../src/ApiHelper";
+import AssignRoomSlideIn from "../../src/components/AssignRoomSlideIn";
+import SearchBox from "../../src/components/SearchBox";
+import constants from "../../src/const";
+import Room from "../../src/models/Room";
+import { RoomOccupancy } from "../../src/models/RoomOccupancy";
+import { useGlobalState } from "../../src/store/GlobalStore";
 import {
   LoadingStateAction,
-  useLoadingDispatch
-} from '../../src/store/LoadingStore'
-import {PageProps} from '../../src/types/PageProps'
+  useLoadingDispatch,
+} from "../../src/store/LoadingStore";
+import { PageProps } from "../../src/types/PageProps";
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const rooms = await ApiHelper.getItems<Room>(constants.availableRooms)
+export const getServerSideProps = async (context: any) => {
+  const rooms = await ApiHelper.getItems<Room>(constants.availableRooms);
   if (!rooms) {
     return {
       notFound: true,
-    }
+    };
   }
 
   let pageProps: PageProps<Room[]> = {
     pageContent: rooms,
-  }
+  };
 
   return {
-    props: {...pageProps},
+    props: { ...pageProps },
     revalidate: 1,
-  }
-}
+  };
+};
 
 const Allocate: React.FC<PageProps<Room[]>> = (props) => {
-  const {pageContent: rooms} = props
-  const [filteredRooms, setFilteredRooms] = useState([...rooms])
-  const router = useRouter()
-  const [loading, setloading] = useState(false)
-  const [open, setOpen] = useState(false)
-  const [selectedRoom, setSelectedRoom] = useState<Room>()
-  const dispatch = useLoadingDispatch()
-  const {wards} = useGlobalState()
+  const { pageContent: rooms } = props;
+  const [filteredRooms, setFilteredRooms] = useState([...rooms]);
+  const router = useRouter();
+  const [loading, setloading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<Room>();
+  const dispatch = useLoadingDispatch();
+  const { wards } = useGlobalState();
 
   const addRoom = async (room: RoomOccupancy) => {
-    dispatch({type: LoadingStateAction.Busy})
-    await ApiHelper.postItem<RoomOccupancy, number>(constants.assignRooom, room)
-    dispatch({type: LoadingStateAction.Idle})
+    dispatch({ type: LoadingStateAction.Busy });
+    await ApiHelper.postItem<RoomOccupancy, number>(
+      constants.assignRooom,
+      room
+    );
+    dispatch({ type: LoadingStateAction.Idle });
 
-    refreshData()
-  }
+    refreshData();
+  };
 
   const refreshData = () => {
-    router.replace(router.asPath)
-  }
+    router.replace(router.asPath);
+  };
 
   const closeSlideIn = (isOpen: boolean) => {
-    setOpen(isOpen)
-    setSelectedRoom(undefined)
-  }
+    setOpen(isOpen);
+    setSelectedRoom(undefined);
+  };
 
   const search = async (a: string) => {
-    dispatch({type: LoadingStateAction.Busy})
+    dispatch({ type: LoadingStateAction.Busy });
     let results = await ApiHelper.getItems<Room>(
       `${constants.roomSearchUrl}${a}`
-    )
-    dispatch({type: LoadingStateAction.Idle})
+    );
+    dispatch({ type: LoadingStateAction.Idle });
 
-    setFilteredRooms(results)
-  }
+    setFilteredRooms(results);
+  };
 
   return (
-    <div className='flex flex-col gap-2'>
-      <div className='flex justify-between items-center'>
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between items-center">
         <SearchBox
-          className=''
-          placeholderText='search rooms'
+          className=""
+          placeholderText="search rooms"
           onSearch={search}
-          onClear={() => { }}
+          onClear={() => {}}
         />
 
         <AssignRoomSlideIn
           onSubmit={addRoom}
           onUpdate={addRoom}
-          onClose={() => { }}
+          onClose={() => {}}
           room={selectedRoom!}
           open={open || selectedRoom != undefined}
           setOpen={closeSlideIn}
         />
-
       </div>
-      <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
-        <div className=' py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
-          <div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'>
-            <table className=' min-w-full divide-y divide-gray-200'>
-              <thead className='bg-gray-50'>
+      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className=" py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+          <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <table className=" min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
                   <th
-                    scope='col'
-                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    <div className='flex'>
-                      <span className='inline'>Id</span>
+                    scope="col"
+                    className="hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    <div className="flex">
+                      <span className="inline">Id</span>
                       {loading ? (
-                        <ArrowUpIcon className='inline' width='16' />
+                        <ArrowUpIcon className="inline" width="16" />
                       ) : (
-                        <ArrowDownIcon className='inline' width='16' />
+                        <ArrowDownIcon className="inline" width="16" />
                       )}
                     </div>
                   </th>
                   <th
-                    scope='col'
-                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    scope="col"
+                    className="hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
                     Name
                   </th>
                   <th
-                    scope='col'
-                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    scope="col"
+                    className="hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
                     Floor
                   </th>
                   <th
-                    scope='col'
-                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    scope="col"
+                    className="hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
                     Bed
                   </th>
                   <th
-                    scope='col'
-                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    scope="col"
+                    className="hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
                     Building
                   </th>
                   <th
-                    scope='col'
-                    className='hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    scope="col"
+                    className="hover:bg-gray-200 hover:cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
                     Ward
                   </th>
                 </tr>
               </thead>
-              <tbody className='bg-white divide-y divide-gray-200'>
+              <tbody className="bg-white divide-y divide-gray-200">
                 {filteredRooms.map((room) => (
                   <tr
                     className={clsx(
-                      'hover:bg-gray-100 cursor-pointer select-none'
+                      "hover:bg-gray-100 cursor-pointer select-none"
                     )}
                     key={room.id}
                     onDoubleClick={(e) => {
-                      setSelectedRoom(room)
-                      setOpen(true)
-                    }}>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                      setSelectedRoom(room);
+                      setOpen(true);
+                    }}
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {room.id}
                     </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {room.name}
                     </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {room.floorNumber}
                     </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {room.bedNumber}
                     </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {room.buildingId}
                     </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {wards.find((w) => w.id === room.wardType)?.name}
                     </td>
                   </tr>
@@ -176,7 +182,7 @@ const Allocate: React.FC<PageProps<Room[]>> = (props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Allocate
+export default Allocate;

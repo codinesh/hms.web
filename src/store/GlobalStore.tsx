@@ -1,8 +1,8 @@
-import React, {createContext, useContext, useEffect, useReducer} from 'react'
-import Doctor, {AppConfig, WardType} from '../models/Doctor'
-import Patient from '../models/Patient'
-import {IGlobalState} from '../types/IGlobalState'
-import IUser from '../types/IUser'
+import React, { createContext, useContext, useEffect, useReducer } from "react";
+import Doctor, { AppConfig, WardType } from "../models/Doctor";
+import Patient from "../models/Patient";
+import { IGlobalState } from "../types/IGlobalState";
+import IUser from "../types/IUser";
 
 export enum GlobalStateAction {
   Busy,
@@ -19,75 +19,75 @@ export enum GlobalStateAction {
 }
 
 export type GlobalAction =
-  | {type: GlobalStateAction.Busy}
-  | {type: GlobalStateAction.Idle}
-  | {type: GlobalStateAction.Error; error: string}
-  | {type: GlobalStateAction.SetPageTitle; title: string}
-  | {type: GlobalStateAction.SetSearchQuery; searchQuery: string}
-  | {type: GlobalStateAction.LogIn; user: IUser}
-  | {type: GlobalStateAction.LogOut}
-  | {type: GlobalStateAction.Patients; patients: Patient[]}
-  | {type: GlobalStateAction.Doctors; doctors: Doctor[]}
-  | {type: GlobalStateAction.Wards; wards: WardType[]}
-  | {type: GlobalStateAction.AppConfig; config: AppConfig}
+  | { type: GlobalStateAction.Busy }
+  | { type: GlobalStateAction.Idle }
+  | { type: GlobalStateAction.Error; error: string }
+  | { type: GlobalStateAction.SetPageTitle; title: string }
+  | { type: GlobalStateAction.SetSearchQuery; searchQuery: string }
+  | { type: GlobalStateAction.LogIn; user: IUser }
+  | { type: GlobalStateAction.LogOut }
+  | { type: GlobalStateAction.Patients; patients: Patient[] }
+  | { type: GlobalStateAction.Doctors; doctors: Doctor[] }
+  | { type: GlobalStateAction.Wards; wards: WardType[] }
+  | { type: GlobalStateAction.AppConfig; config: AppConfig };
 
 const initialState: IGlobalState = {
   busy: false,
   error: false,
-  pageTitle: '',
+  pageTitle: "",
   doctors: [],
   patients: [],
   wards: [],
   appConfig: {
-    cin: '',
-    contactNumber: '',
-    gstin: '37BBJPK3611A1Z5',
-    dL1: '20 : AP/09/02/2021 - 14918',
-    dL2: '21 : AP/09/02/2021 - 14919',
-    pharmacyContactNumber: '',
+    cin: "",
+    contactNumber: "",
+    gstin: "37BBJPK3611A1Z5",
+    dL1: "20 : AP/09/02/2021 - 14918",
+    dL2: "21 : AP/09/02/2021 - 14919",
+    pharmacyContactNumber: "",
   },
-}
+};
 
-const globalStateContext = createContext<IGlobalState>(initialState)
+const globalStateContext = createContext<IGlobalState>(initialState);
 const globalDispatchContext = createContext<React.Dispatch<GlobalAction>>(
-  () => { }
-)
+  () => {}
+);
 
 const reducer = (state: IGlobalState, action: GlobalAction): IGlobalState => {
   switch (action.type) {
     case GlobalStateAction.Busy:
-      return {...state, busy: true}
+      return { ...state, busy: true };
     case GlobalStateAction.Idle:
-      return {...state, busy: false}
+      return { ...state, busy: false };
     case GlobalStateAction.Error:
-      return {...state, error: true, errorMessage: action.error}
+      return { ...state, error: true, errorMessage: action.error };
     case GlobalStateAction.LogIn:
-      return {...state, user: action.user}
+      return { ...state, user: action.user };
     case GlobalStateAction.LogOut:
-      return {...state, user: undefined}
+      return { ...state, user: undefined };
     case GlobalStateAction.SetPageTitle:
-      return {...state, pageTitle: action.title}
+      return { ...state, pageTitle: action.title };
     case GlobalStateAction.SetSearchQuery:
-      return {...state, searchQuery: action.searchQuery}
+      return { ...state, searchQuery: action.searchQuery };
     case GlobalStateAction.Doctors:
-      return {...state, doctors: action.doctors}
+      return { ...state, doctors: action.doctors };
     case GlobalStateAction.Patients:
-      return {...state, patients: action.patients}
+      return { ...state, patients: action.patients };
     case GlobalStateAction.AppConfig:
-      return {...state, appConfig: action.config}
+      return { ...state, appConfig: action.config };
     case GlobalStateAction.Wards:
-      return {...state, wards: action.wards}
+      return { ...state, wards: action.wards };
     default:
-      return state
+      return state;
   }
-}
+};
 
-const GlobalStateProvider: React.FC<any> = ({children}) => {
+const GlobalStateProvider: React.FC<any> = ({ children }) => {
   const [state, dispatch] = useReducer<
     React.Reducer<IGlobalState, GlobalAction>
-  >(reducer, initialState)
+  >(reducer, initialState);
 
-  useEffect(() => { }, [])
+  useEffect(() => {}, []);
 
   return (
     <globalStateContext.Provider value={state}>
@@ -95,11 +95,10 @@ const GlobalStateProvider: React.FC<any> = ({children}) => {
         {children}
       </globalDispatchContext.Provider>
     </globalStateContext.Provider>
-  )
-}
+  );
+};
 
-const useGlobalState = () => useContext(globalStateContext)
-const useGlobalDispatch = () => useContext(globalDispatchContext)
+const useGlobalState = () => useContext(globalStateContext);
+const useGlobalDispatch = () => useContext(globalDispatchContext);
 
-export {GlobalStateProvider, useGlobalState, useGlobalDispatch}
-
+export { GlobalStateProvider, useGlobalState, useGlobalDispatch };

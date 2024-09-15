@@ -1,88 +1,91 @@
-import {useState} from 'react'
-import constants from '../const'
-
+import { useState } from "react";
+import constants from "../const";
 
 function useFetch<T>(
   url: string,
-  method: 'GET' | 'POST',
+  method: "GET" | "POST",
   headers?: string
 ): {
-  data: T
-  error: string
-  beginWithQueryString: (queryString: string) => void
-  beginWithBody: (input: T) => void
-  inProgress: boolean
+  data: T;
+  error: string;
+  beginWithQueryString: (queryString: string) => void;
+  beginWithBody: (input: T) => void;
+  inProgress: boolean;
 } {
-  const [data, setData] = useState<T>({} as T)
-  const [error, setError] = useState('')
-  const [inProgress, setInProgress] = useState(false)
+  const [data, setData] = useState<T>({} as T);
+  const [error, setError] = useState("");
+  const [inProgress, setInProgress] = useState(false);
 
   const beginWithQueryString = (queryStringInput: string) => {
-    fetchData(queryStringInput)
-  }
+    fetchData(queryStringInput);
+  };
 
   const beginWithBody = (body: T) => {
-    fetchDataWithBody(body)
-  }
+    fetchDataWithBody(body);
+  };
 
   const fetchData = async (queryString: string) => {
     try {
-      setInProgress(true)
-      let response = await fetch([constants.baseApiUrl, url, queryString].join(''), {
-        method: method,
-        mode: 'cors',
-      })
+      setInProgress(true);
+      let response = await fetch(
+        [constants.baseApiUrl, url, queryString].join(""),
+        {
+          method: method,
+          mode: "cors",
+          cache: "no-store",
+        }
+      );
 
       if (response.ok) {
         if (response.status == 204) {
-          setData({} as T)
+          setData({} as T);
         }
 
-        let item: T = await response.json()
+        let item: T = await response.json();
         if (item) {
-          setData(item)
+          setData(item);
         } else {
-          setError('data not available')
+          setError("data not available");
         }
       } else {
-        setError('data not available')
+        setError("data not available");
       }
     } catch (err) {
-      setError('data not available')
+      setError("data not available");
     }
-    setInProgress(false)
-  }
+    setInProgress(false);
+  };
 
   const fetchDataWithBody = async (data: T) => {
     try {
-      setInProgress(true)
-      let response = await fetch([constants.baseApiUrl, url].join(''), {
+      setInProgress(true);
+      let response = await fetch([constants.baseApiUrl, url].join(""), {
         method: method,
-        mode: 'cors',
+        mode: "cors",
         body: JSON.stringify(data),
-      })
+      });
 
       if (response.ok) {
         if (response.status == 204) {
-          setData({} as T)
+          setData({} as T);
         }
 
-        let item: T = await response.json()
+        let item: T = await response.json();
         if (item) {
-          setData(item)
+          setData(item);
         } else {
-          setError('data not available')
+          setError("data not available");
         }
       } else {
-        setError('data not available')
+        setError("data not available");
       }
     } catch (err) {
-      setError('data not available')
+      setError("data not available");
     }
-    setInProgress(false)
-  }
+    setInProgress(false);
+  };
 
-  return {data, error, inProgress, beginWithQueryString, beginWithBody}
+  return { data, error, inProgress, beginWithQueryString, beginWithBody };
 }
 
-export default useFetch
+export default useFetch;
