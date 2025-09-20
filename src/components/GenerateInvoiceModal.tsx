@@ -1,38 +1,36 @@
-import {Dialog, Transition} from '@headlessui/react'
-import React, {Fragment, useRef, useState} from 'react'
-import ApiHelper from '../ApiHelper'
-import constants from '../const'
-import enumKeys from '../helpers/enumUtils'
-import {dateUtils} from '../helpers/JSUtils'
-import Gender from '../models/Gender'
-import {PaymentMode} from '../models/PaymentMode'
-import {PharmacyInvoice} from '../models/PharmacyInvoice'
-import {Stock} from '../models/Stock'
-import {useGlobalState} from '../store/GlobalStore'
-import {LoadingStateAction, useLoadingDispatch} from '../store/LoadingStore'
-import AgeInput from './AgeInput'
-import DateTimePicker from './DateTimePicker'
-import DropdownSearch from './DropdownSearch'
+import { Dialog, Transition } from '@headlessui/react';
+import React, { Fragment, useRef, useState } from 'react';
+import ApiHelper from '../ApiHelper';
+import constants from '../const';
+import enumKeys from '../helpers/enumUtils';
+import { dateUtils } from '../helpers/JSUtils';
+import Gender from '../models/Gender';
+import { PaymentMode } from '../models/PaymentMode';
+import { PharmacyInvoice } from '../models/PharmacyInvoice';
+import { Stock } from '../models/Stock';
+import { useGlobalState } from '../store/GlobalStore';
+import { LoadingStateAction, useLoadingDispatch } from '../store/LoadingStore';
+import AgeInput from './AgeInput';
+import DateTimePicker from './DateTimePicker';
+import DropdownSearch from './DropdownSearch';
 
-type invoiceMedicineType = Stock & {quantity: number}
+type invoiceMedicineType = Stock & { quantity: number };
 
 const GenerateInvoiceModal: React.FC<{
-  open: boolean
-  setOpen: (open: boolean) => void
-  onSubmit: (invoice: PharmacyInvoice) => void
-}> = (props) => {
-  const {patients, doctors} = useGlobalState()
-  let medicines: Stock[] = []
-  const [invoiceMedicines, setInvoiceMedicines] = useState<
-    invoiceMedicineType[]
-  >([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  onSubmit: (invoice: PharmacyInvoice) => void;
+}> = props => {
+  const { patients, doctors } = useGlobalState();
+  let medicines: Stock[] = [];
+  const [invoiceMedicines, setInvoiceMedicines] = useState<invoiceMedicineType[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
-  const [curMedicine, setCurMedicines] = useState<invoiceMedicineType>()
-  const cancelButtonRef = useRef(null)
-  const dispatch = useLoadingDispatch()
-  const [doctorId, setDoctorId] = useState<number>(0)
+  const [curMedicine, setCurMedicines] = useState<invoiceMedicineType>();
+  const cancelButtonRef = useRef(null);
+  const dispatch = useLoadingDispatch();
+  const [doctorId, setDoctorId] = useState<number>(0);
   const initialInvoice = {
     patientId: 0,
     refDoctor: '',
@@ -42,92 +40,93 @@ const GenerateInvoiceModal: React.FC<{
     paymentMode: 0,
     createdOn: new Date(),
     PharmacyItems: [],
-  }
-  const [invoice, setInvoice] = useState<PharmacyInvoice>({...initialInvoice})
+  };
+  const [invoice, setInvoice] = useState<PharmacyInvoice>({ ...initialInvoice });
 
   const reset = () => {
-    setInvoice({...initialInvoice})
-    setCurMedicines(undefined)
-    setInvoiceMedicines([])
-    medicines = []
-    setDoctorId(0)
-  }
+    setInvoice({ ...initialInvoice });
+    setCurMedicines(undefined);
+    setInvoiceMedicines([]);
+    medicines = [];
+    setDoctorId(0);
+  };
 
   return (
     <Transition.Root show={props.open} as={Fragment}>
       <Dialog
-        as='div'
+        as="div"
         static
-        className='fixed z-10 inset-0 overflow-y-auto'
+        className="fixed z-10 inset-0 overflow-y-auto"
         initialFocus={cancelButtonRef}
         open={props.open}
         onClose={() => {
-          reset()
-          props.setOpen(false)
-        }}>
-        <div className='flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
+          reset();
+          props.setOpen(false);
+        }}
+      >
+        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
-            enter='ease-out duration-300'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='ease-in duration-200'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'>
-            <Dialog.Overlay className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
           {/* This element is to trick the browser into centering the modal contents. */}
-          <span
-            className='hidden sm:inline-block sm:align-middle sm:h-screen'
-            aria-hidden='true'>
+          <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
             &#8203;
           </span>
 
           <Transition.Child
             as={Fragment}
-            enter='ease-out duration-300'
-            enterFrom='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
-            enterTo='opacity-100 translate-y-0 sm:scale-100'
-            leave='ease-in duration-200'
-            leaveFrom='opacity-100 translate-y-0 sm:scale-100'
-            leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'>
-            <div className='inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full sm:p-6'>
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enterTo="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full sm:p-6">
               <form
-                className=''
-                onSubmit={async (e) => {
-                  e.preventDefault()
+                className=""
+                onSubmit={async e => {
+                  e.preventDefault();
 
                   try {
-                    setLoading(true)
-                    await props.onSubmit(invoice)
-                    reset()
+                    setLoading(true);
+                    await props.onSubmit(invoice);
+                    reset();
                   } catch (error) {
-                    setError(true)
+                    setError(true);
                   }
 
-                  setLoading(false)
-                }}>
-                <div className='mt-3  sm:mt-5'>
-                  <Dialog.Title
-                    as='h3'
-                    className='text-lg leading-6 font-medium text-gray-900'>
+                  setLoading(false);
+                }}
+              >
+                <div className="mt-3  sm:mt-5">
+                  <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
                     Generate Invoice
                   </Dialog.Title>
-                  <div className='mt-2'>
-                    <div className='divide-y-2 space-y-8 divide-gray-200 divide-dashed divide-opacity-60'>
-                      <section className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2'>
-                        <div className='w-9/12'>
+                  <div className="mt-2">
+                    <div className="divide-y-2 space-y-8 divide-gray-200 divide-dashed divide-opacity-60">
+                      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
+                        <div className="w-9/12">
                           <label
-                            htmlFor='patientId'
-                            className='block text-sm font-medium text-gray-700'>
+                            htmlFor="patientId"
+                            className="block text-sm font-medium text-gray-700"
+                          >
                             Patient
                           </label>
-                          <div className='mt-1 flex rounded-md '>
+                          <div className="mt-1 flex rounded-md ">
                             <DropdownSearch
                               allowFreeText={true}
-                              placeholder='select patient'
+                              placeholder="select patient"
                               selected={invoice.patientId}
-                              items={patients.map((x) => ({
+                              items={patients.map(x => ({
                                 id: x.id,
                                 value: x.fullName,
                                 label: x.fullName,
@@ -138,11 +137,9 @@ const GenerateInvoiceModal: React.FC<{
                                     ...invoice,
                                     patientName: e.value,
                                     patientId: e.id,
-                                  })
+                                  });
                                 } else {
-                                  let patient = patients.find(
-                                    (x) => x.id == e.id
-                                  )
+                                  let patient = patients.find(x => x.id == e.id);
                                   if (patient) {
                                     setInvoice({
                                       ...invoice,
@@ -151,43 +148,45 @@ const GenerateInvoiceModal: React.FC<{
                                       patientGender: patient.gender,
                                       patientName: e.value,
                                       patientId: e.id,
-                                    })
+                                    });
                                   }
                                 }
                               }}
                             />
                           </div>
                         </div>
-                        <div className='w-9/12'>
+                        <div className="w-9/12">
                           <label
-                            htmlFor='doctorId'
-                            className='block text-sm font-medium text-gray-700'>
+                            htmlFor="doctorId"
+                            className="block text-sm font-medium text-gray-700"
+                          >
                             Doctor
                           </label>
-                          <div className='mt-1 flex rounded-md w-9/12'>
+                          <div className="mt-1 flex rounded-md w-9/12">
                             <DropdownSearch
                               allowFreeText={true}
-                              placeholder='select doctor'
+                              placeholder="select doctor"
                               selected={doctorId}
-                              items={doctors.map((x) => ({
+                              items={doctors.map(x => ({
                                 id: x.id,
                                 value: x.fullName,
                                 label: x.fullName,
                               }))}
                               onSelect={(e, isNew) => {
-                                setDoctorId(isNew ? -1 : e.id)
-                                setInvoice({...invoice, refDoctor: e.value})
+                                setDoctorId(isNew ? -1 : e.id);
+                                setInvoice({ ...invoice, refDoctor: e.value });
                               }}
                             />
                           </div>
                         </div>
-                        <div className='w-full'>
+                        <div className="w-full">
                           <label
-                            htmlFor='patientAge'
-                            className='block text-sm font-medium text-gray-700'>
+                            htmlFor="patientAge"
+                            className="block text-sm font-medium text-gray-700"
+                          >
                             Patient age
                           </label>
-                          <div className='mt-1 flex rounded-md w-9/12'>
+                          <div className="mt-1 flex rounded-md w-9/12">
                             <AgeInput
                               readonly={invoice.patientId > 0}
                               years={invoice.age}
@@ -198,52 +197,57 @@ const GenerateInvoiceModal: React.FC<{
                                   ...invoice,
                                   age: years,
                                   ageInMonths: months,
-                                })
+                                });
                               }}
                             />
                           </div>
                         </div>
-                        <div className=''>
+                        <div className="">
                           <label
-                            htmlFor='patientGender'
-                            className='block text-sm font-medium text-gray-700'>
+                            htmlFor="patientGender"
+                            className="block text-sm font-medium text-gray-700"
+                          >
                             Patient gender
                           </label>
-                          <div className='mt-1 flex rounded-md ='>
+                          <div className="mt-1 flex rounded-md =">
                             <select
-                              id='patientGender'
-                              name='patientGender'
+                              id="patientGender"
+                              name="patientGender"
                               disabled={invoice.patientId > 0}
                               value={invoice.patientGender}
-                              onChange={(e) =>
+                              onChange={e =>
                                 setInvoice({
                                   ...invoice,
                                   patientGender: parseInt(e.target.value),
                                 })
                               }
-                              className='mt-1 block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'>
+                              className="mt-1 block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            >
                               {enumKeys(Gender).map((a, i) => (
-                                <option key={i} value={Gender[a]}>{a}</option>
+                                <option key={i} value={Gender[a]}>
+                                  {a}
+                                </option>
                               ))}
                             </select>
                           </div>
                         </div>
-                        <div className=''>
+                        <div className="">
                           <label
-                            htmlFor='discountAmount'
-                            className='block text-sm font-medium text-gray-700'>
+                            htmlFor="discountAmount"
+                            className="block text-sm font-medium text-gray-700"
+                          >
                             Discount amount
                           </label>
-                          <div className='mt-1 flex rounded-md '>
+                          <div className="mt-1 flex rounded-md ">
                             <input
-                              type='number'
+                              type="number"
                               min={0}
                               step={0.01}
-                              name='discountAmount'
-                              className='shadow-md rounded-md'
-                              placeholder='discount amount'
+                              name="discountAmount"
+                              className="shadow-md rounded-md"
+                              placeholder="discount amount"
                               value={invoice.discountAmount}
-                              onChange={(e) =>
+                              onChange={e =>
                                 setInvoice({
                                   ...invoice,
                                   discountAmount: parseFloat(e.target.value),
@@ -252,44 +256,49 @@ const GenerateInvoiceModal: React.FC<{
                             />
                           </div>
                         </div>
-                        <div className=''>
+                        <div className="">
                           <label
-                            htmlFor='patientGender'
-                            className='block text-sm font-medium text-gray-700'>
+                            htmlFor="patientGender"
+                            className="block text-sm font-medium text-gray-700"
+                          >
                             Payment mode
                           </label>
-                          <div className='mt-1 flex rounded-md ='>
+                          <div className="mt-1 flex rounded-md =">
                             <select
-                              id='patientGender'
-                              name='patientGender'
+                              id="patientGender"
+                              name="patientGender"
                               value={invoice.paymentMode}
-                              onChange={(e) =>
+                              onChange={e =>
                                 setInvoice({
                                   ...invoice,
                                   paymentMode: parseInt(e.target.value),
                                 })
                               }
-                              className='mt-1 block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'>
+                              className="mt-1 block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            >
                               {enumKeys(PaymentMode).map((a, i) => (
-                                <option key={i} value={PaymentMode[a]}>{a}</option>
+                                <option key={i} value={PaymentMode[a]}>
+                                  {a}
+                                </option>
                               ))}
                             </select>
                           </div>
                         </div>
-                        <div className=''>
+                        <div className="">
                           <label
-                            htmlFor='contactNumber'
-                            className='block text-sm font-medium text-gray-700'>
+                            htmlFor="contactNumber"
+                            className="block text-sm font-medium text-gray-700"
+                          >
                             Contact number
                           </label>
-                          <div className='mt-1 flex rounded-md '>
+                          <div className="mt-1 flex rounded-md ">
                             <input
-                              type='text'
-                              name='contactNumber'
-                              className='shadow-md rounded-md'
-                              placeholder='contact number'
+                              type="text"
+                              name="contactNumber"
+                              className="shadow-md rounded-md"
+                              placeholder="contact number"
                               value={invoice.contactNumber}
-                              onChange={(e) =>
+                              onChange={e =>
                                 setInvoice({
                                   ...invoice,
                                   contactNumber: e.target.value,
@@ -298,20 +307,21 @@ const GenerateInvoiceModal: React.FC<{
                             />
                           </div>
                         </div>
-                        <div className=''>
+                        <div className="">
                           <label
-                            htmlFor='paymentReference'
-                            className='block text-sm font-medium text-gray-700'>
+                            htmlFor="paymentReference"
+                            className="block text-sm font-medium text-gray-700"
+                          >
                             Payment reference
                           </label>
-                          <div className='mt-1 flex rounded-md '>
+                          <div className="mt-1 flex rounded-md ">
                             <input
-                              type='text'
-                              name='paymentReference'
-                              className='shadow-md rounded-md'
-                              placeholder='payment reference'
+                              type="text"
+                              name="paymentReference"
+                              className="shadow-md rounded-md"
+                              placeholder="payment reference"
                               value={invoice.paymentReference}
-                              onChange={(e) =>
+                              onChange={e =>
                                 setInvoice({
                                   ...invoice,
                                   paymentReference: e.target.value,
@@ -320,16 +330,17 @@ const GenerateInvoiceModal: React.FC<{
                             />
                           </div>
                         </div>
-                        <div className=''>
+                        <div className="">
                           <label
-                            htmlFor='patientGender'
-                            className='block text-sm font-medium text-gray-700'>
+                            htmlFor="patientGender"
+                            className="block text-sm font-medium text-gray-700"
+                          >
                             Invoice date
                           </label>
-                          <div className='mt-1 flex rounded-md ='>
+                          <div className="mt-1 flex rounded-md =">
                             <DateTimePicker
                               value={invoice.createdOn}
-                              onSelect={(e) =>
+                              onSelect={e =>
                                 setInvoice({
                                   ...invoice,
                                   createdOn: e,
@@ -339,193 +350,191 @@ const GenerateInvoiceModal: React.FC<{
                           </div>
                         </div>
                       </section>
-                      <section className='pt-4'>
-                        <div className=' flex gap-2 mb-4'>
-                          <div className='flex-grow'>
+                      <section className="pt-4">
+                        <div className=" flex gap-2 mb-4">
+                          <div className="flex-grow">
                             <label
-                              htmlFor='patientGender'
-                              className='block text-sm font-medium text-gray-700'>
+                              htmlFor="patientGender"
+                              className="block text-sm font-medium text-gray-700"
+                            >
                               Medicine
                             </label>
-                            <div className='mt-1 flex rounded-md '>
+                            <div className="mt-1 flex rounded-md ">
                               <DropdownSearch
-                                placeholder='search medicine'
-                                onSearch={async (query) => {
-                                  if (query.length < 3)
-                                    return []
+                                placeholder="search medicine"
+                                onSearch={async query => {
+                                  if (query.length < 3) return [];
                                   return new Promise<
                                     {
-                                      id: number
-                                      value: string
-                                      label: string
+                                      id: number;
+                                      value: string;
+                                      label: string;
                                     }[]
                                   >(async (resolve, _) => {
-                                    dispatch({type: LoadingStateAction.Busy})
-                                    medicines =
-                                      await ApiHelper.getItems<Stock>(
-                                        `${constants.stockSearchUrl}${query}`
-                                      )
+                                    dispatch({ type: LoadingStateAction.Busy });
+                                    medicines = await ApiHelper.getItems<Stock>(
+                                      `${constants.stockSearchUrl}${query}`,
+                                    );
 
-
-                                    var filterItems = medicines.map(
-                                      (x) => ({
-                                        id: x.id,
-                                        value: x.itemName,
-                                        label: `${x.itemName} (${x.manufacturer}) - ${x.totalQuantityAvailable} Available`,
-                                      })
-                                    )
-                                    resolve(filterItems)
-                                    dispatch({type: LoadingStateAction.Idle})
-                                  })
+                                    var filterItems = medicines.map(x => ({
+                                      id: x.id,
+                                      value: x.itemName,
+                                      label: `${x.itemName} (${x.manufacturer}) - ${x.totalQuantityAvailable} Available`,
+                                    }));
+                                    resolve(filterItems);
+                                    dispatch({ type: LoadingStateAction.Idle });
+                                  });
                                 }}
-                                onSelect={(m) => {
-                                  let medicine = medicines.filter(
-                                    (x) => x.id == m.id
-                                  )[0]
+                                onSelect={m => {
+                                  let medicine = medicines.filter(x => x.id == m.id)[0];
 
                                   setCurMedicines({
                                     ...medicine,
                                     quantity: 1,
-                                  })
+                                  });
                                 }}
                                 selected={curMedicine?.id ?? 0}
                               />
                             </div>
                           </div>
-                          <div className='flex-grow'>
+                          <div className="flex-grow">
                             <label
-                              htmlFor='patientGender'
-                              className='block text-sm font-medium text-gray-700'>
+                              htmlFor="patientGender"
+                              className="block text-sm font-medium text-gray-700"
+                            >
                               Quantity
                             </label>
-                            <div className='mt-1 flex rounded-md ='>
+                            <div className="mt-1 flex rounded-md =">
                               <input
-                                type='number'
+                                type="number"
                                 min={1}
-                                className='shadow-md rounded-md'
-                                name='quantity'
+                                className="shadow-md rounded-md"
+                                name="quantity"
                                 value={curMedicine?.quantity ?? 1}
-                                onChange={(e) => {
-                                  if (parseInt(e.target.value) > (curMedicine?.totalQuantityAvailable ?? 1)) {
-                                    alert('Quantity cannot be greater than available quantity')
-                                    return
+                                onChange={e => {
+                                  if (
+                                    parseInt(e.target.value) >
+                                    (curMedicine?.totalQuantityAvailable ?? 1)
+                                  ) {
+                                    alert('Quantity cannot be greater than available quantity');
+                                    return;
                                   }
                                   setCurMedicines({
                                     ...curMedicine,
                                     quantity: parseInt(e.target.value),
-                                  } as invoiceMedicineType)
+                                  } as invoiceMedicineType);
                                 }}
                               />
                             </div>
                           </div>
-                          <div className=''>
+                          <div className="">
                             <label
-                              htmlFor='patientGender'
-                              className='opacity-0 block text-sm font-medium text-gray-700'>
+                              htmlFor="patientGender"
+                              className="opacity-0 block text-sm font-medium text-gray-700"
+                            >
                               Add medicine
                             </label>
-                            <div className='mt-1 flex rounded-md ='>
+                            <div className="mt-1 flex rounded-md =">
                               <button
-                                type='button'
-                                onClick={(e) => {
-
-                                  e.preventDefault()
-                                  let newInvoiceMedicines = []
+                                type="button"
+                                onClick={e => {
+                                  e.preventDefault();
+                                  let newInvoiceMedicines: any[] = [];
                                   if (curMedicine && curMedicine.quantity > 0) {
-                                    let med = invoiceMedicines.find(
-                                      (x) => x.id == curMedicine.id
-                                    )
+                                    let med = invoiceMedicines.find(x => x.id == curMedicine.id);
                                     if (med) {
-                                      let index = invoiceMedicines.indexOf(med)
-                                      invoiceMedicines.splice(
-                                        index,
-                                        1,
-                                        curMedicine
-                                      )
+                                      let index = invoiceMedicines.indexOf(med);
+                                      invoiceMedicines.splice(index, 1, curMedicine);
 
-                                      newInvoiceMedicines = [
-                                        ...invoiceMedicines,
-                                      ]
+                                      newInvoiceMedicines = [...invoiceMedicines];
                                     } else {
                                       newInvoiceMedicines = [
                                         ...invoiceMedicines,
                                         {
                                           ...curMedicine,
                                         },
-                                      ]
+                                      ];
                                     }
 
-                                    setInvoiceMedicines(newInvoiceMedicines)
+                                    setInvoiceMedicines(newInvoiceMedicines);
 
                                     setInvoice({
                                       ...invoice,
-                                      PharmacyItems: newInvoiceMedicines.map(
-                                        (x) => ({
-                                          pharmacyStockId: x.id,
-                                          quantity: x.quantity,
-                                        })
-                                      ),
-                                    })
-                                    setCurMedicines(undefined)
+                                      PharmacyItems: newInvoiceMedicines.map(x => ({
+                                        pharmacyStockId: x.id,
+                                        quantity: x.quantity,
+                                      })),
+                                    });
+                                    setCurMedicines(undefined);
                                   }
                                 }}
-                                className='flex-shrink  inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:ml-3 sm:w-auto sm:text-sm'>
+                                className="flex-shrink  inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:ml-3 sm:w-auto sm:text-sm"
+                              >
                                 Add
                               </button>
                             </div>
                           </div>
                         </div>
                         {/*  medicines Table */}
-                        <div className='flex flex-col'>
-                          <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
-                            <div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
-                              <div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'>
-                                <table className='min-w-full divide-y divide-gray-200'>
-                                  <thead className='bg-gray-50'>
+                        <div className="flex flex-col">
+                          <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                              <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                  <thead className="bg-gray-50">
                                     <tr>
                                       <th
-                                        scope='col'
-                                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                                        scope="col"
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                      >
                                         Medicine name
                                       </th>
                                       <th
-                                        scope='col'
-                                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                                        scope="col"
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                      >
                                         Measuring Unit
                                       </th>
                                       <th
-                                        scope='col'
-                                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                                        scope="col"
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                      >
                                         HSN Code
                                       </th>
                                       <th
-                                        scope='col'
-                                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                                        scope="col"
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                      >
                                         Batch id
                                       </th>
                                       <th
-                                        scope='col'
-                                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                                        scope="col"
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                      >
                                         Expiry
                                       </th>
                                       <th
-                                        scope='col'
-                                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                                        scope="col"
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                      >
                                         Manufacturer
                                       </th>
                                       <th
-                                        scope='col'
-                                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                                        scope="col"
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                      >
                                         QTY
                                       </th>
                                       <th
-                                        scope='col'
-                                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                                        scope="col"
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                      >
                                         MRP
                                       </th>
                                       <th
-                                        scope='col'
-                                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                                        scope="col"
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                      >
                                         Total
                                       </th>
                                     </tr>
@@ -535,37 +544,35 @@ const GenerateInvoiceModal: React.FC<{
                                       <tr
                                         key={idx}
                                         onDoubleClick={() => {
-                                          setCurMedicines({...medicine})
-                                        }}>
-                                        <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
+                                          setCurMedicines({ ...medicine });
+                                        }}
+                                      >
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                           {medicine.itemName}
                                         </td>
-                                        <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                           {medicine.measuringUnit}
                                         </td>
-                                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                           {medicine.hsnCode}
                                         </td>
-                                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                           {medicine.batchNo}
                                         </td>
-                                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                                          {dateUtils.geLocalDateString(
-                                            medicine.expiryDate
-                                          )}
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                          {dateUtils.geLocalDateString(medicine.expiryDate)}
                                         </td>
-                                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                           {medicine.manufacturer}
                                         </td>
-                                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                           {medicine.quantity}
                                         </td>
-                                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                           {medicine.mrpPerUnit}
                                         </td>
-                                        <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
-                                          {medicine.mrpPerUnit *
-                                            medicine.quantity}
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                          {medicine.mrpPerUnit * medicine.quantity}
                                         </td>
                                       </tr>
                                     ))}
@@ -579,43 +586,48 @@ const GenerateInvoiceModal: React.FC<{
                     </div>
                   </div>
                 </div>
-                <div className='flex pt-10 sm:mt-6 items-center justify-between'>
-                  <span className='text-red-900'>
+                <div className="flex pt-10 sm:mt-6 items-center justify-between">
+                  <span className="text-red-900">
                     {error && 'Error! Please fix and try again.'}
                   </span>
 
-                  <div className='print:hidden  flex items-center justify-end gap-3'>
+                  <div className="print:hidden  flex items-center justify-end gap-3">
                     <button
-                      type='button'
-                      className='inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm'
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
                       onClick={() => {
-                        reset()
-                        props.setOpen(false)
+                        reset();
+                        props.setOpen(false);
                       }}
-                      ref={cancelButtonRef}>
+                      ref={cancelButtonRef}
+                    >
                       Cancel
                     </button>
 
                     <button
                       disabled={loading}
-                      className='inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:text-sm'>
+                      className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  sm:text-sm"
+                    >
                       {loading && (
                         <svg
-                          className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
-                          xmlns='http://www.w3.org/2000/svg'
-                          fill='none'
-                          viewBox='0 0 24 24'>
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
                           <circle
-                            className='opacity-25'
-                            cx='12'
-                            cy='12'
-                            r='10'
-                            stroke='currentColor'
-                            stroke-width='4'></circle>
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
                           <path
-                            className='opacity-75'
-                            fill='currentColor'
-                            d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                       )}
                       Generate Invoice
@@ -626,9 +638,9 @@ const GenerateInvoiceModal: React.FC<{
             </div>
           </Transition.Child>
         </div>
-      </Dialog >
-    </Transition.Root >
-  )
-}
+      </Dialog>
+    </Transition.Root>
+  );
+};
 
-export default GenerateInvoiceModal
+export default GenerateInvoiceModal;
